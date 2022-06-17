@@ -33,6 +33,7 @@
     "typescript": "^4.7.3"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^4.6.0"
+    "@openzeppelin/contracts": "^4.6.0",
+    "@polkadot/api": "^8.8.2"
   }
 }
