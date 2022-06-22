@@ -15,11 +15,17 @@ interface IFactory {
         string name,
         string symbol,
         string indexed version,
-        address indexed owner,
+        address indexed deployer,
         address indexed deployedAddress
     );
 
     function deployCollectible(address _implement, Settings calldata _settings)
         external
         returns (address deployedAddress);
+
+    function deployMultipleCollectibles(
+        address[] calldata _deployers,
+        address[] calldata _implements,
+        Settings[] calldata _settings
+    ) external returns (address[] memory deployedAddresses);
 }
