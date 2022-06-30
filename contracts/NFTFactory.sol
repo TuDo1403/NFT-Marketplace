@@ -1,54 +1,70 @@
 // SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.15;
 
-import "./Interfaces/INFTFactory.sol";
-import "@openzeppelin/contracts-upgradeable/proxy/ClonesUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
+import "./Interfaces/ICollectible.sol";
+import "@openzeppelin/contracts/proxy/Clones.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract NFTFactory is OwnableUpgradeable, INFTFactory {
-    // State Variables
-    using ClonesUpgradeable for address;
-    using CountersUpgradeable for CountersUpgradeable.Counter;
-    address public ERC1155Implementation;
-    address public ERC721Implementation;
-    CountersUpgradeable.Counter public contractId;
-    mapping(uint256 => address) public idToContractAddress;
+error invalidAddress();
 
-    // Modifiers
+contract NFTFactory is Initializable, Ownable {
+    using Clones for address;
+    using Counters for Counters.Counter;
+    //State Variables
+    // address public s_implement; //the address of the base nft contract
+    Counters.Counter public s_contractId;
+    mapping(uint256 => address) public s_idToContractAddress;
+    struct nftData {
+        string uri;
+        string name;
+        string symbol;
+    }
+
+    //modifier
     modifier nonZeroAddress(address _addr) {
-        require(_addr != address(0), "Address is a zero address");
+        if (_addr == address(0)) {
+            revert invalidAddress();
+        }
         _;
     }
 
-    function initialize() external initializer {
-        __Ownable_init();
+    //methods
+    constructor() Ownable() {}
+
+    function deployNftContract(
+        address _implement,
+        string calldata _uri,
+        string calldata _name,
+        string calldata _symbol
+    ) external returns (address deployedAddress) {
+        nftData memory data = nftData({
+            uri: _uri,
+            name: _name,
+            symbol: _symbol
+        });
+        deployedAddress = _deployNftContract(_implement, _msgSender(), data);
     }
 
-    //Deploy NFT contract
-    function deployNFT(
+    function _deployNftContract(
         address _implement,
-        string calldata _name,
-        string calldata _symbol,
-        string calldata _uri
-    )
-        external
-        override
-        nonZeroAddress(_implement)
-        returns (address deployedAddress)
-    {
-        deployedAddress = _deployNFT(_implement, _name, _symbol, _uri);
-    }
-
-    function _deployNFT(
-        address _implement,
-        string calldata _name,
-        string calldata _symbol,
-        string calldata _uri
+        address _nftCreator,
+        nftData memory _data
     ) internal returns (address deployedAddress) {
-        bytes32 salt = keccak256(abi.encodePacked(_name, _symbol, _uri));
+        bytes32 salt = keccak256(
+            abi.encodePacked(_data.uri, _data.name, _data.symbol)
+        );
         deployedAddress = _implement.cloneDeterministic(salt);
-        idToContractAddress[contractId.current()] = deployedAddress;
-        contractId.increment();
+        ICollectible newCollectible = ICollectible(deployedAddress);
+        newCollectible.initialize(
+            _nftCreator,
+            _data.uri,
+            _data.name,
+            _data.symbol
+        );
+        s_idToContractAddress[s_contractId.current()] = deployedAddress;
+        s_contractId.increment();
     }
+    //pure, view method
 }
