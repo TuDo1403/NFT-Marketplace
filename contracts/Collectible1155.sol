@@ -23,7 +23,10 @@ contract Collectible1155 is ERC1155Upgradeable, ICollectible1155
 
     // Functional
     function initialize(
-        string calldata uri_
+        address admin_,
+        string calldata uri_,
+        string calldata name_,
+        string calldata symbol_
     ) external override initializer {
         __ERC1155_init(uri_);
         factory = _msgSender();
@@ -41,6 +44,10 @@ contract Collectible1155 is ERC1155Upgradeable, ICollectible1155
 
         // Assign creator address for tokenId
         creator[tokenId] = to;
+    }
+
+    function mint(address to, uint256 tokenId) external override {
+        revert("Collectible1155: Not support this function!");
     }
 
     function mintBatch(

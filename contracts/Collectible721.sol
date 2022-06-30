@@ -36,10 +36,14 @@ contract Collectible721 is ERC721Upgradeable, ICollectible721
         factory = _msgSender();
     }
 
-    function mint(address to, uint256 tokenId, uint256 amount, bytes memory data) external override {
+    function mint(address to, uint256 tokenId) external override {
         require(to != address(0), "Collectible721: Address must be not NULL!");
         _safeMint(to, tokenId);
         creator[tokenId] = to;
+    }
+
+    function mint(address to, uint256 tokenId, uint256 amount, bytes memory data) external override {
+        revert("Collectible721: Not support this function!");
     }
 
     function mintBatch(address to, uint256[] memory ids, uint256[] memory amounts, bytes memory data ) external override {
