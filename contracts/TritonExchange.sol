@@ -22,11 +22,19 @@ contract TritonMarketplace is ITritonMarketplace, Context
 
     uint256 public marketItemCounter;
     uint256 public soldItemCounter;
+    uint256 public offerItemCounter;
+    uint256 feePercent; // Maximum 1000 ~ 100% (1 ~ 0.1%)
 
-    uint256 feePercent; // Maximum 1000
+    struct Offer {
+        uint256 itemId;
+        address payable buyer;
+        uint256 offerPrice;
+        bool withdrawn;
+        bool accepted;
+        bool isDone;
+    }
 
-    ITritonFactory tritonFactory;
-
+    ITritonFactory public tritonFactory;
 
     struct MarketItem {
         address nftContract;
@@ -42,6 +50,9 @@ contract TritonMarketplace is ITritonMarketplace, Context
     }
 
     mapping(uint256 => MarketItem) public marketItems;
+    mapping(uint256 => Offer) public offers;
+
+    uint256 public depositFund;
 
     // Modifier
     modifier onlyOwner() {
@@ -54,6 +65,8 @@ contract TritonMarketplace is ITritonMarketplace, Context
     ) {
         marketItemCounter = 0;
         soldItemCounter = 0;
+        offerItemCounter = 0;
+        depositFund = 0;
         feePercent = 25;
 
         marketOwner = payable(msg.sender);
@@ -78,7 +91,6 @@ contract TritonMarketplace is ITritonMarketplace, Context
         if (nft.getApproved(tokenId) != address(this)) {
             nft.approve(address(this), tokenId);
         }
-
         marketItems[marketItemCounter] = MarketItem(
             nftContract,
             tokenId,
@@ -168,6 +180,56 @@ contract TritonMarketplace is ITritonMarketplace, Context
             marketItems[itemId].tokenId, 
             marketItems[itemId].nftContract
         );
+    }
+
+    function offerNft(address nftContract, uint256 itemId, uint256 _offerPrice) external payable override {
+        // Check enough money to buy nft
+        require(_offerPrice > 0, "Marketplace: Offer price must be greater than 0!");
+        require(!marketItems[itemId].sold && marketItems[itemId].listed, "Marketplace: Item must be on sale and not sold yet!");
+
+        depositFund += _offerPrice;
+
+        offers[offerItemCounter] = Offer({
+            itemId: itemId,
+            buyer: payable(msg.sender),
+            offerPrice: _offerPrice,
+            withdrawn: false,
+            accepted: false,
+            isDone: false
+        });
+
+        offerItemCounter += 1;
+    }
+
+    function acceptOrCancelOffer(uint256 offerItemId) external override {
+        require(marketItems[offers[offerItemId].itemId].owner == msg.sender, "TritonExchange: You're not owner!");
+
+        uint256 fee = offers[offerItemId].offerPrice * feePercent / 1000;
+        payable(msg.sender).transfer(offers[offerItemId].offerPrice - fee);
+        payable(marketOwner).transfer(fee);
+
+        for (uint256 i = 0; i < offerItemCounter; i++) {
+            if (i == offerItemId) {
+                offers[i].accepted = true;
+                offers[i].withdrawn = true;
+                offers[i].isDone = true;
+            } else {
+                if (offers[i].itemId == offers[offerItemId].itemId) {
+                    offers[i].accepted = false;
+                    offers[i].withdrawn = false;
+                    offers[i].isDone = true;
+                }
+            }
+        
+        }
+    }
+
+    function withdrawOffer(uint256 offerItemId) external override {
+        require(msg.sender == offers[offerItemId].buyer, "TritonExchange: You're not offer owner!");
+        require(offers[offerItemId].isDone && !offers[offerItemId].withdrawn, "TritonExchange: Offer have been withdrawn!");
+
+        payable(msg.sender).transfer(offers[offerItemId].offerPrice);
+        depositFund -= offers[offerItemId].offerPrice;
     }
 
     // Only owner

@@ -44,4 +44,10 @@ interface ITritonMarketplace {
     function buyNft(address nftContract, uint256 itemId) external payable;
 
     function changeItemPrice(uint256 itemId, uint256 newPrice) external;
+
+    function offerNft(address nftContract, uint256 itemId, uint256 offerPrice) external payable;
+
+    function acceptOrCancelOffer(uint256 offerItem) external;
+
+    function withdrawOffer(uint256 offItem) external;
 }

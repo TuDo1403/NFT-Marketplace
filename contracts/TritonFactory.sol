@@ -81,29 +81,4 @@ contract TritonFactory is ITritonFactory, Context {
         require(nftContract != address(0) && nftContractOwner[nftContract] != address(0), "TritonFactory: Nft Contract invalid!");
         nftContractOwner[nftContract] = nftOnwer;
     }
-
-    // function deployMultipleCollectibles(
-    //     address[] calldata deployers_,
-    //     address[] calldata implements_,
-    //     Settings[] calldata settings_
-    // ) external override returns (address[] memory deployedAddresses) {
-    //     require(
-    //         deployers_.length == implements_.length &&
-    //             implements_.length == settings_.length,
-    //         "Factory: invalid arguments"
-    //     );
-
-    //     uint256 numCalls = implements_.length;
-
-    //     for (uint256 i; i < numCalls; ) {
-    //         deployedAddresses[i] = _deployCollectible(
-    //             deployers_[i],
-    //             implements_[i],
-    //             settings_[i]
-    //         );
-    //         unchecked {
-    //             ++i;
-    //         }
-    //     }
-    // }
 }
