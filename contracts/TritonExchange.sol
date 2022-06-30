@@ -18,10 +18,12 @@ import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 contract TritonMarketplace is ITritonMarketplace, Context
 {
     // State variables
-    address payable private marketOwner;
+    address public marketOwner;
 
     uint256 public marketItemCounter;
     uint256 public soldItemCounter;
+
+    uint256 feePercent; // Maximum 1000
 
     ITritonFactory tritonFactory;
 
@@ -30,6 +32,7 @@ contract TritonMarketplace is ITritonMarketplace, Context
         address nftContract;
         uint256 tokenId;
         string ercType;
+        address payable creator;
         address payable owner;
         address payable buyer;
         uint256 price;
@@ -40,11 +43,18 @@ contract TritonMarketplace is ITritonMarketplace, Context
 
     mapping(uint256 => MarketItem) public marketItems;
 
+    // Modifier
+    modifier onlyOwner() {
+        require(marketOwner == msg.sender, "TritonExchange: Sender must be market owner!");
+        _;
+    }
+
     constructor(
         address _factory
     ) {
         marketItemCounter = 0;
         soldItemCounter = 0;
+        feePercent = 25;
 
         marketOwner = payable(msg.sender);
 
@@ -59,8 +69,10 @@ contract TritonMarketplace is ITritonMarketplace, Context
     ) external override {
         // Check nft contract is strategy
         require(tritonFactory.getContractOwner(nftContract) != address(0), "Marketplace: NFT Contract must be strategy!");
+        
         // Check price > 0
         require(price > 0, "Marketplace: Price must be greater than 0!");
+        
         // Check nft approval to marketplace
         IERC721Upgradeable nft = IERC721Upgradeable(nftContract);
         if (nft.getApproved(tokenId) != address(this)) {
@@ -71,6 +83,7 @@ contract TritonMarketplace is ITritonMarketplace, Context
             nftContract,
             tokenId,
             "1155",
+            payable(ICollectible(nftContract).getCreator(tokenId)),
             payable(msg.sender),
             payable(address(0)),
             price,
@@ -112,11 +125,11 @@ contract TritonMarketplace is ITritonMarketplace, Context
         require(marketItems[itemId].price >= msg.value, "Marketplace: Not enough money to buy this NFT!");
 
         // Transaction fee
-        marketOwner.transfer(msg.value * 25 / 1000);
+        payable(marketOwner).transfer(msg.value * feePercent / 1000);
         address seller = marketItems[itemId].owner;
 
         // Send money to seller
-        payable(seller).transfer(msg.value * 975 / 1000);
+        payable(seller).transfer(msg.value * (1000 - feePercent) / 1000);
 
         // Send NFT to buyer
         IERC721(nftContract).transferFrom(payable(seller), payable(msg.sender), marketItems[itemId].tokenId);
@@ -155,5 +168,10 @@ contract TritonMarketplace is ITritonMarketplace, Context
             marketItems[itemId].tokenId, 
             marketItems[itemId].nftContract
         );
+    }
+
+    // Only owner
+    function setFeePercentage(uint256 _feePercent) external onlyOwner {
+        feePercent = _feePercent;
     }
 }

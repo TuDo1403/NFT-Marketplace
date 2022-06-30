@@ -24,4 +24,6 @@ interface ICollectible {
     function mintBatch(address to, uint256[] memory ids, uint256[] memory amounts, bytes memory data) external;
 
     function getType() external pure returns (uint96);
+
+    function getCreator(uint256 tokenId) external view returns (address);
 }

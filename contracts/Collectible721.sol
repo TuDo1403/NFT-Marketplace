@@ -18,6 +18,8 @@ contract Collectible721 is ERC721Upgradeable, ICollectible721
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant URI_SETTER_ROLE = keccak256("URI_SETTER_ROLE");
 
+    mapping(uint256 => address) creator;
+
     modifier onlyFactory() {
         require(factory == _msgSender(), "Collectible721: Only Factory");
         _;
@@ -37,6 +39,7 @@ contract Collectible721 is ERC721Upgradeable, ICollectible721
     function mint(address to, uint256 tokenId, uint256 amount, bytes memory data) external override {
         require(to != address(0), "Collectible721: Address must be not NULL!");
         _safeMint(to, tokenId);
+        creator[tokenId] = to;
     }
 
     function mintBatch(address to, uint256[] memory ids, uint256[] memory amounts, bytes memory data ) external override {
@@ -45,5 +48,9 @@ contract Collectible721 is ERC721Upgradeable, ICollectible721
 
     function getType() external pure override returns (uint96) {
         return TYPE;
+    }
+
+    function getCreator(uint256 tokenId) external view override returns (address) {
+        return creator[tokenId];
     }
 }

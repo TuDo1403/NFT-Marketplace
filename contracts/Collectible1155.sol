@@ -11,6 +11,8 @@ contract Collectible1155 is ERC1155Upgradeable, ICollectible1155
     address public factory;
     address public owner;
 
+    mapping(uint256 => address) creator;
+
     uint96 public constant TYPE = 1155;
 
     // Modifier
@@ -36,6 +38,9 @@ contract Collectible1155 is ERC1155Upgradeable, ICollectible1155
     ) external override {
         require(to != address(0), "Collectible1155: Address must be not 0x0000...000!");
         _mint(to, tokenId, amount, data);
+
+        // Assign creator address for tokenId
+        creator[tokenId] = to;
     }
 
     function mintBatch(
@@ -46,10 +51,19 @@ contract Collectible1155 is ERC1155Upgradeable, ICollectible1155
     ) public {
         require(to != address(0), "Collectible1155: Address must be not NULL!");
         _mintBatch(to, ids, amounts, data);
+
+        // Assign creator address for tokenId
+        for (uint256 i = 0; i < ids.length; i++) {
+            creator[ids[i]] = to;
+        }
     }
 
     function getType() external pure override returns (uint96) {
         return TYPE;
+    }
+
+    function getCreator(uint256 tokenId) external view override returns (address) {
+        return creator[tokenId];
     }
 }
 

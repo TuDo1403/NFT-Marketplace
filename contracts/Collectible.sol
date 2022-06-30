@@ -43,4 +43,6 @@ abstract contract Collectible is
     function mintBatch(address to, uint256[] memory ids, uint256[] memory amounts, bytes memory data) external virtual;
 
     function getType() external pure virtual returns (uint96);
+
+    function getCreator(uint256 tokenId) external view virtual returns (address);
 }
