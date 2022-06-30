@@ -1,19 +1,29 @@
 // SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.15;
 
-import "./interfaces/INFTFactory.sol";
+import "./interfaces/ITritonFactory.sol";
 import "./interfaces/ICollectible.sol";
 import "@openzeppelin/contracts/proxy/Clones.sol";
+import "@openzeppelin/contracts/utils/Context.sol";
 
-contract NFTFactory is INFTFactory {
+contract TritonFactory is ITritonFactory, Context {
     // State variables
     uint256 public contractCounter;
-    mapping(uint256 => address) public deployedContracts;
 
+    mapping(uint256 => address) public deployedContracts;
     mapping(address => address) public nftContractOwner;
+    
+    address factory;
+
+    // Modifier
+    modifier onlyFactory() {
+        require(factory == _msgSender(), "Collectible1155: Only Factory");
+        _;
+    }
 
     constructor() {
         contractCounter = 0;
+        factory = _msgSender();
     }
 
     // Functional
@@ -65,6 +75,11 @@ contract NFTFactory is INFTFactory {
     function getContractOwner(address nftContract) external view override returns (address) {
         address owner = nftContractOwner[nftContract];
         return owner;
+    }
+
+    function addStrategy(address nftContract, address nftOnwer) external override onlyFactory {
+        require(nftContract != address(0) && nftContractOwner[nftContract] != address(0), "TritonFactory: Nft Contract invalid!");
+        nftContractOwner[nftContract] = nftOnwer;
     }
 
     // function deployMultipleCollectibles(

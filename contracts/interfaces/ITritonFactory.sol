@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.15;
 
-interface INFTFactory {
+interface ITritonFactory {
     struct Settings {
         string uri;
         string name;
@@ -25,6 +25,8 @@ interface INFTFactory {
     ) external returns (address deployedAddress);
 
     function getContractOwner(address nftContract) external view returns (address);
+
+    function addStrategy(address nftContract, address nftOwner) external;
 
     // function deployMultipleCollectibles(
     //     address[] calldata deployers_,

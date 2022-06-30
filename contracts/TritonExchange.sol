@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: Unlisened
 pragma solidity ^0.8.15;
 
-import "./interfaces/IMarketplace.sol";
+import "./interfaces/ITritonExchange.sol";
 import "./interfaces/ICollectible.sol";
+import "./interfaces/ITritonFactory.sol";
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
@@ -14,13 +15,16 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 
 /// @custom:security-contact datndt@inspirelab.io
-contract Marketplace is IMarketplace, Context
+contract TritonMarketplace is ITritonMarketplace, Context
 {
     // State variables
     address payable private marketOwner;
 
     uint256 public marketItemCounter;
     uint256 public soldItemCounter;
+
+    ITritonFactory tritonFactory;
+
 
     struct MarketItem {
         address nftContract;
@@ -36,11 +40,15 @@ contract Marketplace is IMarketplace, Context
 
     mapping(uint256 => MarketItem) public marketItems;
 
-    constructor() {
+    constructor(
+        address _factory
+    ) {
         marketItemCounter = 0;
         soldItemCounter = 0;
 
         marketOwner = payable(msg.sender);
+
+        tritonFactory = ITritonFactory(_factory);
     }
 
     // Functional
@@ -49,6 +57,8 @@ contract Marketplace is IMarketplace, Context
         uint256 tokenId,
         uint256 price
     ) external override {
+        // Check nft contract is strategy
+        require(tritonFactory.getContractOwner(nftContract) != address(0), "Marketplace: NFT Contract must be strategy!");
         // Check price > 0
         require(price > 0, "Marketplace: Price must be greater than 0!");
         // Check nft approval to marketplace
@@ -107,6 +117,8 @@ contract Marketplace is IMarketplace, Context
 
         // Send money to seller
         payable(seller).transfer(msg.value * 975 / 1000);
+
+        // Send NFT to buyer
         IERC721(nftContract).transferFrom(payable(seller), payable(msg.sender), marketItems[itemId].tokenId);
 
         // Change state when nft had sold 

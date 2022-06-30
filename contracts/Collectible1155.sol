@@ -34,7 +34,7 @@ contract Collectible1155 is ERC1155Upgradeable, ICollectible1155
         uint256 amount,
         bytes memory data
     ) external override {
-        require(to != address(0), "Collectible1155: Address must be not NULL!");
+        require(to != address(0), "Collectible1155: Address must be not 0x0000...000!");
         _mint(to, tokenId, amount, data);
     }
 
