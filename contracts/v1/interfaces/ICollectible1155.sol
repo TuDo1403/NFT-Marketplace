@@ -13,6 +13,10 @@ interface ICollectible1155 is ICollectible {
         address indexed newAddress
     );
 
+    function mint(address to, uint256 tokenId, uint256 amount, bytes memory data) external;
+
+    function mintBatch(address to, uint256[] memory ids, uint256[] memory amounts, bytes memory data) external;
+
     // function mint(address to, uint256 tokenId, uint256 amount, bytes memory data) external;
 
     // function mintBatch(address to, uint256[] memory ids, uint256[] memory amounts, bytes memory data ) external;

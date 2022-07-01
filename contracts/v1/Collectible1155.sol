@@ -2,14 +2,17 @@
 pragma solidity ^0.8.15;
 
 import "./interfaces/ICollectible1155.sol";
-import "node_modules/@openzeppelin/contracts-upgradeable/token/ERC1155/ERC1155Upgradeable.sol";
+import "node_modules/@openzeppelin/contracts-upgradeable/token/ERC1155/extensions/ERC1155URIStorageUpgradeable.sol";
+
 
 /// @custom:security-contact datndt@inspirelab.io
-contract Collectible1155 is ERC1155Upgradeable, ICollectible1155
+contract Collectible1155 is ICollectible1155, ERC1155URIStorageUpgradeable
 {
     // State variables
     address public factory;
-    address public owner;
+
+    string public name;
+    string public symbol;
 
     mapping(uint256 => address) creator;
 
@@ -29,6 +32,8 @@ contract Collectible1155 is ERC1155Upgradeable, ICollectible1155
         string calldata symbol_
     ) external override initializer {
         __ERC1155_init(uri_);
+        name = name_;
+        symbol = symbol_;
         factory = _msgSender();
     }
 
@@ -46,9 +51,9 @@ contract Collectible1155 is ERC1155Upgradeable, ICollectible1155
         creator[tokenId] = to;
     }
 
-    function mint(address to, uint256 tokenId) external override {
-        revert("Collectible1155: Not support this function!");
-    }
+    // function mint(address to, uint256 tokenId) external override {
+    //     revert("Collectible1155: Not support this function!");
+    // }
 
     function mintBatch(
         address to,
@@ -64,6 +69,12 @@ contract Collectible1155 is ERC1155Upgradeable, ICollectible1155
             creator[ids[i]] = to;
         }
     }
+
+    function setTokenUri(uint256 tokenId, string memory uri) external override {
+        _setURI(tokenId, uri);
+    }
+
+    function freezeTokenData(uint256 id) external override {}
 
     function getType() external pure override returns (uint96) {
         return TYPE;

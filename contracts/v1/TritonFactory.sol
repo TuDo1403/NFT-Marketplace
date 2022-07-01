@@ -13,11 +13,11 @@ contract TritonFactory is ITritonFactory, Context {
     mapping(uint256 => address) public deployedContracts;
     mapping(address => address) public nftContractOwner;
     
-    address factory;
+    address private factory;
 
     // Modifier
     modifier onlyFactory() {
-        require(factory == _msgSender(), "Collectible1155: Only Factory");
+        require(factory == _msgSender(), "Collectible1155: Only Factory Owner");
         _;
     }
 
