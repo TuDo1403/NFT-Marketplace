@@ -2,20 +2,20 @@
 pragma solidity ^0.8.15;
 
 import "./Collectible.sol";
+import "./Interfaces/IERC721Collectible.sol";
 import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URIStorageUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
-contract ERC721Collectible is Collectible, ERC721Upgradeable {
+contract ERC721Collectible is
+    Collectible,
+    IERC721Collectibe,
+    ERC721Upgradeable,
+    OwnableUpgradeable
+{
     using CountersUpgradeable for CountersUpgradeable.Counter;
     CountersUpgradeable.Counter public s_tokenCounter;
-
-    modifier onlyOwner(address owner) {
-        if (msg.sender == owner || isApprovedForAll(owner, msg.sender)) {
-            revert mustBeOwner();
-        }
-        _;
-    }
 
     function _initialize(
         address _admin,
@@ -28,10 +28,7 @@ contract ERC721Collectible is Collectible, ERC721Upgradeable {
     }
 
     //mint - call ony by the owner of the nft contract
-    function mint(address to, string memory tokenUri)
-        external
-        onlyOwner(msg.sender)
-    {
+    function mint(address to, string memory tokenUri) external onlyOwner {
         _mint(to, tokenUri);
     }
 
@@ -39,17 +36,14 @@ contract ERC721Collectible is Collectible, ERC721Upgradeable {
     // Not forzen
     // Only the owner of the NFT contract can call this function
     // emit a URI event
-    function setTokenUri(uint256 tokenId, string memory uri)
-        public
-        onlyOwner(msg.sender)
-    {
+    function setTokenUri(uint256 tokenId, string memory uri) public onlyOwner {
         _setTokenUri(tokenId, uri);
     }
 
     //Freeze a token
     // only the owner of the NFT contract can call this function
     // emit a PermanentURI event
-    function freezeTokenData(uint256 tokenId) public onlyOwner(msg.sender) {
+    function freezeTokenData(uint256 tokenId) public {
         _freezeTokenData(tokenId);
     }
 
@@ -59,7 +53,7 @@ contract ERC721Collectible is Collectible, ERC721Upgradeable {
         uint256 id = s_tokenCounter.current();
         s_metaURIs[id] = tokenUri;
         _safeMint(_to, id);
-        emit TokenMinted(id, tokenUri, block.timestamp, _to);
+        emit Token721Minted(id, tokenUri, block.timestamp, _to);
     }
 
     function _setTokenUri(uint256 _tokenId, string memory _uri) internal {

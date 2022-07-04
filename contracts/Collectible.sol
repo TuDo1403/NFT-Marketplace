@@ -31,8 +31,6 @@ abstract contract Collectible is ICollectible, Initializable {
         address creator
     );
 
-    event URI(string value, uint256 indexed id);
-
     event PermanentURI(uint256 indexed tokenId, string uri);
 
     function initialize(

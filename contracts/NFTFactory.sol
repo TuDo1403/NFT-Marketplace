@@ -73,6 +73,5 @@ contract NFTFactory is INFTFactory, OwnableUpgradeable {
     }
 
     // deploy ERC1155 contract
-
     //pure, view method
 }
