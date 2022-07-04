@@ -1,51 +1,65 @@
 // SPDX-License-Identifier: Unlisened
-pragma solidity ^0.8.15;
+pragma solidity 0.8.15;
 
 interface IMarketplace {
-    event ItemListed(
-        address owner,
-        uint256 price,
-        uint256 listedTime,
-        uint256 indexed itemId,
-        uint256 indexed tokenId,
-        address indexed nftContract
-    );
-    event ItemUnListed(
-        address owner,
-        uint256 price,
-        uint256 unListedTime,
-        uint256 indexed itemId,
-        uint256 indexed tokenId,
-        address indexed nftContract
-    );
-    event ItemSold(
-        uint256 price,
-        uint256 payout,
-        address oldOwner,
-        address newOwner,
-        uint256 tradedTime,
-        uint256 indexed itemId,
-        uint256 indexed tokenId,
-        address indexed nftContract
-    );
-    event PriceChanged(
-        uint256 oldPrice,
-        uint256 newPrice,
-        uint256 priceChangedTime,
-        uint256 indexed itemId,
-        uint256 indexed tokenId,
-        address indexed nftContract
-    );
+    struct Item {
+        uint256 amount;
+        uint256 tokenId;
+        uint256 unitPrice;
+        string tokenURI;
+    }
 
-    function listItem(
-        address nftContract,
-        uint256 itemId,
-        uint256 price
-    ) external;
+    struct Payment {
+        address paymentToken;
+        uint256 subTotal;
+        uint256 creatorPayout;
+        uint256 servicePayout;
+        uint256 total;
+    }
 
-    function unListItem(uint256 itemId) external;
+    struct Receipt {
+        address buyer;
+        address seller;
+        address creator;
+        address creatorPayoutAddr;
+        Item item;
+        Payment payment;
+        uint256 deadline;
+        uint256 nonce;
+    }
 
-    function buyNft(address nftContract, uint256 itemId) external payable;
+    event Received(address caller, uint256 amount, string message);
 
-    function changeItemPrice(uint256 itemId, uint256 newPrice) external;
+    function multiDelegatecall(bytes[] calldata data)
+        external
+        payable
+        returns (bytes[] memory results);
+
+    function redeem(
+        address seller_,
+        address paymentToken_,
+        address creatorPayoutAddr_,
+        uint256 amount_,
+        uint256 tokenId_,
+        uint256 deadline_,
+        uint256 unitPrice_,
+        string calldata tokenURI_,
+        bytes calldata signature_
+    ) external payable;
+
+    function setName(string calldata name_) external;
+
+    function setSymbol(string calldata symbol_) external;
+
+    function setAdmin(address admin_) external;
+
+    function freezeBaseURI() external;
+
+    function createTokenId(
+        uint256 type_,
+        uint256 creatorFee_,
+        uint256 index_,
+        uint256 supply_,
+        address creator_
+    ) external pure returns (uint256);
 }
