@@ -2,25 +2,19 @@
 pragma solidity ^0.8.15;
 
 import "./Interfaces/ICollectible.sol";
-import "@openzeppelin/contracts/proxy/Clones.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
-import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "./Interfaces/INFTFactory.sol";
+import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/ClonesUpgradeable.sol";
 
 error invalidAddress();
 
-contract NFTFactory is Initializable, Ownable {
-    using Clones for address;
-    using Counters for Counters.Counter;
+contract NFTFactory is INFTFactory, OwnableUpgradeable {
+    using ClonesUpgradeable for address;
+    using CountersUpgradeable for CountersUpgradeable.Counter;
     //State Variables
-    // address public s_implement; //the address of the base nft contract
-    Counters.Counter public s_contractId;
+    CountersUpgradeable.Counter public s_contractId;
     mapping(uint256 => address) public s_idToContractAddress;
-    struct nftData {
-        string uri;
-        string name;
-        string symbol;
-    }
 
     //modifier
     modifier nonZeroAddress(address _addr) {
@@ -31,23 +25,26 @@ contract NFTFactory is Initializable, Ownable {
     }
 
     //methods
-    constructor() Ownable() {}
+    function initialize() external {
+        __Ownable_init();
+    }
 
-    function deployNftContract(
+    //deploy ERC721 contract
+    function createNft(
         address _implement,
         string calldata _uri,
         string calldata _name,
         string calldata _symbol
-    ) external returns (address deployedAddress) {
+    ) external override returns (address deployedAddress) {
         nftData memory data = nftData({
             uri: _uri,
             name: _name,
             symbol: _symbol
         });
-        deployedAddress = _deployNftContract(_implement, _msgSender(), data);
+        deployedAddress = _createNft(_implement, _msgSender(), data);
     }
 
-    function _deployNftContract(
+    function _createNft(
         address _implement,
         address _nftCreator,
         nftData memory _data
@@ -63,8 +60,19 @@ contract NFTFactory is Initializable, Ownable {
             _data.name,
             _data.symbol
         );
+        emit nftCreated(
+            deployedAddress,
+            _nftCreator,
+            _data.uri,
+            _data.name,
+            _data.symbol,
+            block.timestamp
+        );
         s_idToContractAddress[s_contractId.current()] = deployedAddress;
         s_contractId.increment();
     }
+
+    // deploy ERC1155 contract
+
     //pure, view method
 }
