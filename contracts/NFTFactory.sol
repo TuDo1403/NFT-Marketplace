@@ -1,24 +1,25 @@
 // SPDX-License-Identifier: Unlicense
-pragma solidity ^0.8.15;
+pragma solidity 0.8.15;
 
-import "./interfaces/INFTFactory.sol";
-import "./interfaces/ICollectible.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/ClonesUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
+
+import "./interfaces/INFTFactory.sol";
+import "./interfaces/ICollectible.sol";
 
 contract NFTFactory is INFTFactory, OwnableUpgradeable {
     using ClonesUpgradeable for address;
     using CountersUpgradeable for CountersUpgradeable.Counter;
 
-    bytes32 public constant VERSION = keccak256("Factory1155_v1");
+    bytes32 public constant VERSION = keccak256("NFTFactoryv1");
 
     CountersUpgradeable.Counter public contractCounter;
 
     mapping(uint256 => address) public deployedContracts;
 
-    modifier validAddress(address address_) {
-        require(address_ != address(0), "Factory1155: invalid address");
+    modifier validAddress(address addr_) {
+        require(addr_ != address(0), "NFTFactory: INVALID_ADDRESS");
         _;
     }
 
@@ -35,73 +36,56 @@ contract NFTFactory is INFTFactory, OwnableUpgradeable {
         external
         override
         validAddress(implement_)
-        returns (address deployedAddress)
+        returns (address deployedAddr)
     {
-        Settings memory settings = Settings({
-            uri: uri_,
-            name: name_,
-            symbol: symbol_
-        });
-        deployedAddress = _deployCollectible(
-            _msgSender(),
-            implement_,
-            settings
-        );
+        Settings memory settings = Settings(uri_, name_, symbol_);
+        deployedAddr = __deployCollectible(_msgSender(), implement_, settings);
     }
 
-    function _deployCollectible(
+    function __deployCollectible(
         address deployer_,
         address implement_,
         Settings memory settings_
-    ) internal returns (address deployedAddress) {
+    ) private returns (address deployedAddr) {
         bytes32 salt = keccak256(
             abi.encodePacked(
-                settings_.name,
-                settings_.symbol,
+                VERSION,
                 settings_.uri,
-                VERSION
+                settings_.name,
+                settings_.symbol
             )
         );
-        deployedAddress = implement_.cloneDeterministic(salt);
-        ICollectible instance = ICollectible(deployedAddress);
+        deployedAddr = implement_.cloneDeterministic(salt);
+        ICollectible instance = ICollectible(deployedAddr);
         instance.initialize({
-            admin_: deployer_,
+            owner_: deployer_,
             name_: settings_.name,
             symbol_: settings_.symbol,
-            uri_: settings_.uri
+            baseURI_: settings_.uri
         });
-        deployedContracts[contractCounter.current()] = deployedAddress;
+        deployedContracts[contractCounter.current()] = deployedAddr;
         contractCounter.increment();
         emit TokenDeployed({
-            deployedAddress: deployedAddress,
+            deployedAddress: deployedAddr,
             deployer: deployer_,
             standard: instance.getType(),
             uri: settings_.uri,
             name: settings_.name,
-            symbol: settings_.symbol,
-            createdTime: block.timestamp
+            symbol: settings_.symbol
         });
     }
 
-    function deployMultipleCollectibles(
-        address[] calldata deployers_,
-        address[] calldata implements_,
-        Settings[] calldata settings_
-    ) external override returns (address[] memory deployedAddresses) {
-        require(
-            deployers_.length == implements_.length &&
-                implements_.length == settings_.length,
-            "Factory: invalid arguments"
-        );
-
-        uint256 numCalls = implements_.length;
-
-        for (uint256 i; i < numCalls; ) {
-            deployedAddresses[i] = _deployCollectible(
-                deployers_[i],
-                implements_[i],
-                settings_[i]
+    function multiDelegatecall(bytes[] calldata data)
+        external
+        returns (bytes[] memory results)
+    {
+        results = new bytes[](data.length);
+        for (uint256 i; i < data.length; ) {
+            (bool ok, bytes memory result) = address(this).delegatecall(
+                data[i]
             );
+            require(ok, "NFTFactory: DELEGATECALL_FAILED");
+            results[i] = result;
             unchecked {
                 ++i;
             }

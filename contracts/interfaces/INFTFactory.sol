@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Unlicense
-pragma solidity ^0.8.15;
+pragma solidity 0.8.15;
 
 interface INFTFactory {
     struct Settings {
@@ -9,11 +9,10 @@ interface INFTFactory {
     }
 
     event TokenDeployed(
-        uint256 createdTime,
         string uri,
         string name,
         string symbol,
-        uint96 indexed standard,
+        string indexed standard,
         address indexed deployer,
         address indexed deployedAddress
     );
@@ -25,9 +24,7 @@ interface INFTFactory {
         string calldata symbol_
     ) external returns (address deployedAddress);
 
-    function deployMultipleCollectibles(
-        address[] calldata deployers_,
-        address[] calldata implemetns_,
-        Settings[] calldata settings_
-    ) external returns (address[] memory deployedAddresses);
+    function multiDelegatecall(bytes[] calldata data)
+        external
+        returns (bytes[] memory);
 }
