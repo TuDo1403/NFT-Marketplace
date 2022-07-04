@@ -34,15 +34,15 @@ abstract contract Collectible is
         symbol = symbol_;
         _factory = _msgSender();
 
-        _initialize(admin_, name_, symbol_, uri_);
+        // _initialize(admin_, name_, symbol_, uri_);
     }
 
-    function _initialize(
-        address admin_,
-        string memory name_,
-        string memory symbol_,
-        string memory uri_
-    ) internal virtual;
+    // function _initialize(
+    //     address admin_,
+    //     string memory name_,
+    //     string memory symbol_,
+    //     string memory uri_
+    // ) internal virtual;
 
     function mint(address to, uint256 tokenId, uint256 amount) external virtual;
 
