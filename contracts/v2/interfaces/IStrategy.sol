@@ -15,7 +15,7 @@ interface IStrategy {
             uint256
         );
 
-    function canExcuteTakerBid(
+    function canExecuteTakerBid(
         OrderTypes.TakerOrder calldata takerBid,
         OrderTypes.MakerOrder calldata makerAsk
     )

@@ -38,7 +38,7 @@ contract Collectible721 is ICollectible721, ERC721URIStorageUpgradeable {
         _safeTransfer(from, to, tokenId, _data);
     }
 
-    function getType() external override returns (uint96) {
+    function getType() external pure override returns (uint96) {
         return TYPE;
     }
 

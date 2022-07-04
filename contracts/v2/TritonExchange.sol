@@ -32,7 +32,7 @@ contract TritonExchange is ITritonExchange, Context {
     bytes32 public immutable DOMAIN_SEPARATOR;
 
     constructor(
-        address _strategyAddress,
+        // address _strategyAddress,
         address _royaltyManagerAddress,
         address _protocolFeeRecipient,
         address _WETH
@@ -60,12 +60,12 @@ contract TritonExchange is ITritonExchange, Context {
     ) external payable override {
         require(
             (makerAsk.isOrderAsk) && (!takerBid.isOrderAsk),
-            "Order: Wrong sides"
+            "TritonExchange: Wrong sides"
         );
-        require(makerAsk.currency == WETH, "Order: Currency must be WETH");
+        require(makerAsk.currency == WETH, "TritonExchange: Currency must be WETH");
         require(
             msg.sender == takerBid.taker,
-            "Order: Taker must be the sender"
+            "TritonExchange: Taker must be the sender"
         );
 
         // If not enough ETH to cover the price, use WETH
@@ -76,14 +76,14 @@ contract TritonExchange is ITritonExchange, Context {
                 (takerBid.price - msg.value)
             );
         } else {
-            require(takerBid.price == msg.value, "Order: Msg.value too high");
+            require(takerBid.price == msg.value, "TritonExchange: Msg.value too high");
         }
 
         // Wrap ETH sent to this contract
         IWETH(WETH).deposit{value: msg.value}();
 
         // Check the maker ask order
-        bytes32 askHash = makerAsk.hash();
+        bytes32 askHash = OrderTypes.hash(makerAsk);
         _validateOrder(makerAsk, askHash);
 
         // Retrieve execution parameters
@@ -91,7 +91,7 @@ contract TritonExchange is ITritonExchange, Context {
             makerAsk.strategy
         ).canExecuteTakerBid(takerBid, makerAsk);
 
-        require(isExecutionValid, "Strategy: Execution invalid");
+        require(isExecutionValid, "TritonExchange: Execution invalid");
 
         // Update maker ask order status to true (prevents replay)
         _isUserOrderNonceExecutedOrCancelled[makerAsk.signer][
@@ -101,7 +101,7 @@ contract TritonExchange is ITritonExchange, Context {
         // Execution part 1/2
         _transferFeesAndFundsWithWETH(
             makerAsk.strategy,
-            makerAsk.collection,
+            makerAsk.nftAddress,
             tokenId,
             makerAsk.signer,
             takerBid.price,
@@ -110,7 +110,7 @@ contract TritonExchange is ITritonExchange, Context {
 
         // Execution part 2/2
         _transferNonFungibleToken(
-            makerAsk.collection,
+            makerAsk.nftAddress,
             makerAsk.signer,
             takerBid.taker,
             tokenId,
@@ -121,7 +121,7 @@ contract TritonExchange is ITritonExchange, Context {
     function matchBidWithTakerAsk(
         OrderTypes.TakerOrder calldata takerAsk,
         OrderTypes.MakerOrder calldata makerBid
-    ) external override {
+    ) external payable override {
         require(
             takerAsk.isOrderAsk && !makerBid.isOrderAsk,
             "TritonExchange: Wrong side!"
@@ -135,7 +135,7 @@ contract TritonExchange is ITritonExchange, Context {
             "TritonExchange: ms.value must be equal to order price!"
         );
 
-        bytes32 askHash = makerBid.hash();
+        bytes32 askHash = OrderTypes.hash(makerBid);
         _validateOrder(makerBid, askHash);
 
         // Update maker bid order status to true (prevents replay)
@@ -144,7 +144,7 @@ contract TritonExchange is ITritonExchange, Context {
         ] = true;
 
         // Check the maker bid order
-        bytes32 bidHash = makerBid.hash();
+        bytes32 bidHash = OrderTypes.hash(makerBid);
         _validateOrder(makerBid, bidHash);
 
         (bool isExecutionValid, uint256 tokenId, uint256 amount) = IStrategy(
@@ -176,7 +176,7 @@ contract TritonExchange is ITritonExchange, Context {
     function matchAskWithTakerBid(
         OrderTypes.TakerOrder calldata takerBid,
         OrderTypes.MakerOrder calldata makerAsk
-    ) external override {
+    ) external payable override {
         require(
             takerBid.isOrderAsk && !makerAsk.isOrderAsk,
             "TritonExchange: Wrong side!"
@@ -190,7 +190,7 @@ contract TritonExchange is ITritonExchange, Context {
             "TritonExchange: ms.value must be equal to order price!"
         );
 
-        bytes32 askHash = makerAsk.hash();
+        bytes32 askHash = OrderTypes.hash(makerAsk);
         _validateOrder(makerAsk, askHash);
 
         // Update maker bid order status to true (prevents replay)
@@ -199,7 +199,7 @@ contract TritonExchange is ITritonExchange, Context {
         ] = true;
 
         // Check the maker bid order
-        bytes32 bidHash = makerAsk.hash();
+        bytes32 bidHash = OrderTypes.hash(makerAsk);
         _validateOrder(makerAsk, bidHash);
 
         (bool isExecutionValid, uint256 tokenId, uint256 amount) = IStrategy(
@@ -243,7 +243,7 @@ contract TritonExchange is ITritonExchange, Context {
 
         // 1. Protocol fee
         {
-            uint256 protocolFeeAmount = (IStrategy(strategy).getProtocolFee() *
+            uint256 protocolFeeAmount = (IStrategy(strategy).viewProtocolFee() *
                 finalSellerAmount) / 10000;
 
             // Check if the protocol fee is different than 0 for this strategy
@@ -265,7 +265,6 @@ contract TritonExchange is ITritonExchange, Context {
                 uint256 royaltyFeeAmount
             ) = royaltyManager.calculateRoyaltyFeeAndGetRecipient(
                     nftAddress,
-                    tokenId,
                     amount
                 );
 
@@ -306,7 +305,7 @@ contract TritonExchange is ITritonExchange, Context {
 
         // 1. Protocol fee
         {
-            uint256 protocolFeeAmount = (IStrategy(strategy).getProtocolFee() *
+            uint256 protocolFeeAmount = (IStrategy(strategy).viewProtocolFee() *
                 finalSellerAmount) / 10000;
 
             // Check if the protocol fee is different than 0 for this strategy
@@ -329,7 +328,6 @@ contract TritonExchange is ITritonExchange, Context {
                 uint256 royaltyFeeAmount
             ) = royaltyManager.calculateRoyaltyFeeAndGetRecipient(
                     nftAddress,
-                    tokenId,
                     amount
                 );
 

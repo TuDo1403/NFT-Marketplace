@@ -22,5 +22,5 @@ interface ICollectible {
 
     function setTokenURI(uint256 token, bytes memory uri) external;
 
-    function freezeTokenURI(uint256) external;
+    function freezeTokenURI(uint256 tokenId) external;
 }

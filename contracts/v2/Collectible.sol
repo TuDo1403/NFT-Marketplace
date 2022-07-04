@@ -2,11 +2,10 @@
 pragma solidity ^0.8.15;
 
 import "./interfaces/ICollectible.sol";
-import "node_modules/@openzeppelin/contracts/proxy/utils/Initializable.sol";
+// import "node_modules/@openzeppelin/contracts/proxy/utils/Initializable.sol";
 
 contract Collectible is 
-    ICollectible,
-    Initializable
+    ICollectible
 {
     // State variables
     address private factory;
@@ -19,5 +18,11 @@ contract Collectible is
         string calldata _uri,
         string calldata _name,
         string calldata _symbol
-    ) external virtual;
+    ) external virtual {}
+
+    function getType() external virtual returns (uint96) {}
+
+    function setTokenURI(uint256 token, bytes memory uri) external virtual {}
+
+    function freezeTokenURI(uint256 tokenId) external virtual {}
 }

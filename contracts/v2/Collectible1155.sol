@@ -46,13 +46,13 @@ contract Collectible1155 is ICollectible1155, ERC1155URIStorageUpgradeable {
         _mintBatch(to, ids, amounts, data);
     }
 
-    function getType() external override {
+    function getType() external pure override returns (uint96) {
         return TYPE;
     }
 
     function transferFrom(address from, address to, uint256 tokenId, uint256 amount, bytes memory _data) external override {
         _safeTransferFrom(from, to, tokenId, amount, _data);
-    }id
+    }
     function setTokenURI(uint256 token, bytes memory uri) external override {}
 
     function freezeTokenURI(uint256) external override {}
