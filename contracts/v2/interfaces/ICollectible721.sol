@@ -5,6 +5,5 @@ import "./ICollectible.sol";
 
 interface ICollectible721 is ICollectible {
     function mint(address to, uint256 tokenId) external;
-
     function transferFrom(address from, address to, uint256 tokenId, bytes memory _data) external;
 }
