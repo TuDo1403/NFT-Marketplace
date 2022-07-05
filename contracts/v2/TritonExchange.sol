@@ -15,26 +15,36 @@ import "./libraries/SignatureChecker.sol";
 import {Context} from "node_modules/@openzeppelin/contracts/utils/Context.sol";
 import {IERC20, SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
+/**
+ * @title Exchange logic
+ * @author Dat Nguyen (datndt@inspirelab.io)
+ * @dev Core functions of Triton Marketplace
+ */
+
 contract TritonExchange is ITritonExchange, Context {
-    // State variables
     using SafeERC20 for IERC20;
 
     address public protocolFeeRecipient;
-
     address public immutable WETH;
 
-    mapping(address => uint256) private userMinOrderNonce;
+    mapping(address => uint256) private _userMinOrderNonce; /**Nonce < minNonce => Orders[Nonce] invalid */
     mapping(address => mapping(uint256 => bool))
-        private _isUserOrderNonceExecutedOrCancelled;
+        private _isUserOrderNonceExecutedOrCancelled; /**Avoid reentrancy */
 
-    IRotaltyManager private immutable royaltyManager;
+    IRotaltyManager private immutable _royaltyManager;
 
     bytes32 public immutable DOMAIN_SEPARATOR;
 
+    /**
+     * @notice Constructor
+     * @param royaltyManagerAddress_ Address of royalty fee manager
+     * @param protocolFeeRecipient_ Address of protocol fee reciever
+     * @param _WETH Address of WETH
+     */
     constructor(
         // address _strategyAddress,
-        address _royaltyManagerAddress,
-        address _protocolFeeRecipient,
+        address royaltyManagerAddress_,
+        address protocolFeeRecipient_,
         address _WETH
     ) {
         DOMAIN_SEPARATOR = keccak256(
@@ -46,14 +56,17 @@ contract TritonExchange is ITritonExchange, Context {
                 address(this)
             )
         );
-        protocolFeeRecipient = _protocolFeeRecipient;
-
-        royaltyManager = IRotaltyManager(_royaltyManagerAddress);
+        protocolFeeRecipient = protocolFeeRecipient_;
+        _royaltyManager = IRotaltyManager(royaltyManagerAddress_);
 
         WETH = _WETH;
     }
 
-    // Functions
+    /**
+     * @notice Match order with taker bid using ETH and WETH
+     * @param takerBid Taker Bid (buyer)
+     * @param makerAsk Maker Ask (seller)
+     */
     function matchAskWithTakerBidUsingETHAndWETH(
         OrderTypes.TakerOrder calldata takerBid,
         OrderTypes.MakerOrder calldata makerAsk
@@ -62,7 +75,10 @@ contract TritonExchange is ITritonExchange, Context {
             (makerAsk.isOrderAsk) && (!takerBid.isOrderAsk),
             "TritonExchange: Wrong sides"
         );
-        require(makerAsk.currency == WETH, "TritonExchange: Currency must be WETH");
+        require(
+            makerAsk.currency == WETH,
+            "TritonExchange: Currency must be WETH"
+        );
         require(
             msg.sender == takerBid.taker,
             "TritonExchange: Taker must be the sender"
@@ -76,7 +92,10 @@ contract TritonExchange is ITritonExchange, Context {
                 (takerBid.price - msg.value)
             );
         } else {
-            require(takerBid.price == msg.value, "TritonExchange: Msg.value too high");
+            require(
+                takerBid.price == msg.value,
+                "TritonExchange: Msg.value too high"
+            );
         }
 
         // Wrap ETH sent to this contract
@@ -118,6 +137,11 @@ contract TritonExchange is ITritonExchange, Context {
         );
     }
 
+    /**
+     * @notice Match order with taker ask
+     * @param takerAsk make offer
+     * @param makerBid NFT owner
+     */
     function matchBidWithTakerAsk(
         OrderTypes.TakerOrder calldata takerAsk,
         OrderTypes.MakerOrder calldata makerBid
@@ -173,6 +197,11 @@ contract TritonExchange is ITritonExchange, Context {
         );
     }
 
+    /**
+     * @notice Match order with taker bid
+     * @param takerBid Buyer
+     * @param makerAsk Seller
+     */
     function matchAskWithTakerBid(
         OrderTypes.TakerOrder calldata takerBid,
         OrderTypes.MakerOrder calldata makerAsk
@@ -228,8 +257,15 @@ contract TritonExchange is ITritonExchange, Context {
         );
     }
 
-    // Internal function
-
+    /**
+     * @notice Transfer fees & funds with weth
+     * @param strategy Execution strategy
+     * @param nftAddress Address of nftAddress
+     * @param tokenId Token Id of NFT
+     * @param to Address of reciever
+     * @param amount Amount of NFT
+     * @param minPercentageToAsk Protect seller
+     */
     function _transferFeesAndFundsWithWETH(
         address strategy,
         address nftAddress,
@@ -263,7 +299,7 @@ contract TritonExchange is ITritonExchange, Context {
             (
                 address royaltyFeeRecipient,
                 uint256 royaltyFeeAmount
-            ) = royaltyManager.calculateRoyaltyFeeAndGetRecipient(
+            ) = _royaltyManager.calculateRoyaltyFeeAndGetRecipient(
                     nftAddress,
                     amount
                 );
@@ -291,6 +327,16 @@ contract TritonExchange is ITritonExchange, Context {
         }
     }
 
+    /**
+     * @notice Transfer fees & funds
+     * @param strategy Execution strategy
+     * @param nftAddress Address of nftAddress
+     * @param tokenId Token Id of NFT
+     * @param currency Payment currency
+     * @param to Address of reciever
+     * @param amount Amount of NFT
+     * @param minPercentageToAsk Protect seller
+     */
     function _transferFeesAndFunds(
         address strategy,
         address nftAddress,
@@ -326,7 +372,7 @@ contract TritonExchange is ITritonExchange, Context {
             (
                 address royaltyFeeRecipient,
                 uint256 royaltyFeeAmount
-            ) = royaltyManager.calculateRoyaltyFeeAndGetRecipient(
+            ) = _royaltyManager.calculateRoyaltyFeeAndGetRecipient(
                     nftAddress,
                     amount
                 );
@@ -355,6 +401,13 @@ contract TritonExchange is ITritonExchange, Context {
         }
     }
 
+    /**
+     * @notice Transfer NFT
+     * @param nftAddress Address of NFT
+     * @param from Address of seller
+     * @param to Address of buyer
+     * @param amount Amount of NFT
+     */
     function _transferNonFungibleToken(
         address nftAddress,
         address from,
@@ -385,7 +438,7 @@ contract TritonExchange is ITritonExchange, Context {
         require(
             !_isUserOrderNonceExecutedOrCancelled[makerOrder.signer][
                 makerOrder.nonce
-            ] && makerOrder.nonce >= userMinOrderNonce[makerOrder.signer],
+            ] && makerOrder.nonce >= _userMinOrderNonce[makerOrder.signer],
             "TritonExchange: Matching order expired!"
         );
 

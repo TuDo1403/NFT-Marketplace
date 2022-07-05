@@ -5,20 +5,34 @@ import "./interfaces/ICurrencyManager.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {EnumerableSet} from "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 
+/**
+ * @title Manage payment currency on the Triton marketplace
+ * @author Dat Nguyen (datndt@inspirelab.io)
+ */
+
 contract CurrencyManager is ICurrencyManager, Ownable {
     using EnumerableSet for EnumerableSet.AddressSet;
 
     EnumerableSet.AddressSet private _whitelistedCurrencies;
 
+    /**
+     * @notice Add new payment currency
+     * @dev Only owner of contract can add currency
+     * @param currency Address of new currency
+     */
     function addCurrency(address currency) external override onlyOwner {
         require(
             !_whitelistedCurrencies.contains(currency),
             "Currency: Already whitelisted"
         );
         _whitelistedCurrencies.add(currency);
-
     }
 
+    /**
+     * @notice Remove payment currency on the market
+     * @dev Only owner of contract can remove currency
+     * @param currency Address of new currency
+     */
     function removeCurrency(address currency) external override onlyOwner {
         require(
             _whitelistedCurrencies.contains(currency),
@@ -27,6 +41,11 @@ contract CurrencyManager is ICurrencyManager, Ownable {
         _whitelistedCurrencies.remove(currency);
     }
 
+    /**
+     * @notice Check valid payment currency
+     * @param currency Currency need to check
+     * @return bool Result (true/false)
+     */
     function isCurrencyWhitelisted(address currency)
         external
         view
@@ -36,6 +55,12 @@ contract CurrencyManager is ICurrencyManager, Ownable {
         return _whitelistedCurrencies.contains(currency);
     }
 
+    /**
+     * @notice Get whitelist currencies
+     * @param cursor ...
+     * @param size ...
+     * @return (array of currencies, end cursor)
+     */
     function viewWhitelistedCurrencies(uint256 cursor, uint256 size)
         external
         view
@@ -57,6 +82,10 @@ contract CurrencyManager is ICurrencyManager, Ownable {
         return (whitelistedCurrencies, cursor + length);
     }
 
+    /**
+     * @notice Get length of currency array
+     * @return Length of currencies
+     */
     function viewCountWhitelistedCurrencies()
         external
         view

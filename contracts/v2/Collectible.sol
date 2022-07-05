@@ -7,9 +7,6 @@ import "./interfaces/ICollectible.sol";
 /// @author Dat Nguyen (datndt@inspirelab.io)
 
 contract Collectible is ICollectible {
-    // State variables
-    address private factory;
-
     /**
      * @notice Initialize for Collectible contract
      * @param _admin NFT Contract owner

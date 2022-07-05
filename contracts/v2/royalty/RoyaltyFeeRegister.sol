@@ -2,8 +2,10 @@
 pragma solidity ^0.8.15;
 
 import {Ownable} from "node_modules/@openzeppelin/contracts/access/Ownable.sol";
-
 import "../interfaces/IRoyaltyFeeRegisty.sol";
+
+/// @title Royalty fee Register
+/// @author Dat Nguyen (datndt@inspirelab.io)
 
 contract RoyaltyFeeRegister is IRoyaltyFeeRegister, Ownable {
     struct RoyaltyFee {
@@ -13,13 +15,27 @@ contract RoyaltyFeeRegister is IRoyaltyFeeRegister, Ownable {
     }
     uint256 public royaltyFeeLimit;
 
-    mapping(address => RoyaltyFee) _royaltyFeeInfoCollection;
+    mapping(address => RoyaltyFee) private _royaltyFeeInfoCollection;
 
+    /**
+     * @notice Constructor
+     * @param _royaltyFeeLimit Register fee limit
+     */
     constructor(uint256 _royaltyFeeLimit) {
-        require(_royaltyFeeLimit <= 9500, "RoyaltyFeeRegister: Royalty fee limit too high!");
+        require(
+            _royaltyFeeLimit <= 9500,
+            "RoyaltyFeeRegister: Royalty fee limit too high!"
+        );
         royaltyFeeLimit = _royaltyFeeLimit;
     }
 
+    /**
+     * @notice Update Royalty Info
+     * @param nftAddress Address of NFT
+     * @param setter Address of setter
+     * @param receiver Address of royalty fee receiver
+     * @param feePercent Percentage of royalty fee
+     */
     function updateRoyaltyInfo(
         address nftAddress,
         address setter,
@@ -38,6 +54,9 @@ contract RoyaltyFeeRegister is IRoyaltyFeeRegister, Ownable {
         });
     }
 
+    /**
+     * @notice Update Royalty fee
+     * @param _royaltyFeeLimit New fee limit */
     function updateRoyaltyFeeLimit(uint256 _royaltyFeeLimit)
         external
         override
@@ -50,7 +69,13 @@ contract RoyaltyFeeRegister is IRoyaltyFeeRegister, Ownable {
         royaltyFeeLimit = _royaltyFeeLimit;
     }
 
-    function royaltyInfo(address collection, uint256 amount)
+    /**
+     * @notice Get royalty info
+     * @param nftAddress Address of NFT
+     * @param amount Amount of token
+     * @return (address of receiver, amount in percentage)
+     */
+    function royaltyInfo(address nftAddress, uint256 amount)
         external
         view
         override
@@ -62,6 +87,11 @@ contract RoyaltyFeeRegister is IRoyaltyFeeRegister, Ownable {
         );
     }
 
+    /**
+     * @notice Get royalty fee info
+     * @param nftAddress Address of NFT
+     * @return (address of setter, receiver, fee percent)
+     */
     function royaltyFeeInfoCollection(address nftAddress)
         external
         view

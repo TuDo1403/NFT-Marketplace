@@ -7,7 +7,6 @@ interface ITritonFactory {
         string name;
         string symbol;
     }
-
     event NftContractDeployed (
         address nftAddress,
         address owner,
@@ -15,7 +14,7 @@ interface ITritonFactory {
         string symbol,
         uint256 timestamp
     );
-
+    
     function deployContract(
         address _deployer,
         string memory _name,

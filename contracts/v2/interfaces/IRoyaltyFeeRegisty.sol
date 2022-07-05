@@ -8,14 +8,11 @@ interface IRoyaltyFeeRegister {
         address receiver,
         uint256 feePercent
     ) external;
-
     function updateRoyaltyFeeLimit(uint256 _royaltyFeeLimit) external;
-
     function royaltyInfo(address collection, uint256 amount)
         external
         view
         returns (address, uint256);
-
     function royaltyFeeInfoCollection(address collection)
         external
         view

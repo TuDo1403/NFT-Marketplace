@@ -14,7 +14,6 @@ interface IStrategy {
             uint256,
             uint256
         );
-
     function canExecuteTakerBid(
         OrderTypes.TakerOrder calldata takerBid,
         OrderTypes.MakerOrder calldata makerAsk
@@ -25,6 +24,5 @@ interface IStrategy {
             uint256,
             uint256
         );
-
     function viewProtocolFee() external view returns (uint256);
 }

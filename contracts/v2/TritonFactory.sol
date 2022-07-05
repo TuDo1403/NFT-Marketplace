@@ -2,40 +2,44 @@
 pragma solidity ^0.8.15;
 
 import "./interfaces/ITritonFactory.sol";
-
 import "./interfaces/ICollectible.sol";
 
 import "node_modules/@openzeppelin/contracts/utils/Counters.sol";
 import "node_modules/@openzeppelin/contracts/proxy/Clones.sol";
 import "node_modules/@openzeppelin/contracts/utils/Context.sol";
 
-contract TritonFactory is ITritonFactory, Context {
-    // State variables
-    mapping(uint256 => address) nftContract;
+/// @title Triton Factory
+/// @author Dat Nguyen (datndt@inspirelab.io)
 
+contract TritonFactory is ITritonFactory, Context {
+    mapping(uint256 => address) nftContract;
     using Counters for Counters.Counter;
     Counters.Counter private nftCounter;
 
-    // Modifier
-
-    constructor() {
-
-    }
-
-    // Functions
+    /**
+     * @notice Deploy nft contract based on implementation contract
+     * @param implementation_ Base NFT Contract
+     * @param name_ Name of NFT Contract
+     * @param symbol_ Symbol of NFT Contract
+     * @param uri_ URI of NFT Contract
+     */
     function deployContract(
-        address _implementation,
-        string memory _name,
-        string memory _symbol,
-        string memory _uri
+        address implementation_,
+        string memory name_,
+        string memory symbol_,
+        string memory uri_
     ) external override returns (address deployedAddress) {
         Settings memory settings = Settings({
-            name: _name,
-            symbol: _symbol,
-            uri: _uri
+            name: name_,
+            symbol: symbol_,
+            uri: uri_
         });
 
-        deployedAddress = _deployContract(_msgSender(), _implementation, settings);
+        deployedAddress = _deployContract(
+            _msgSender(),
+            implementation_,
+            settings
+        );
 
         nftContract[nftCounter.current()] = deployedAddress;
         nftCounter.increment();
@@ -49,26 +53,33 @@ contract TritonFactory is ITritonFactory, Context {
         );
     }
 
+    /**
+     * @notice Deploy nft contract based on implementation contract
+     * @param from_ Address of nft contract owner
+     * @param implementation_ Base NFT Contract
+     * @param settings_ Symbol of NFT Contract
+     * @return deployedAddress Address of created NFT Contract
+     */
     function _deployContract(
-        address _from, 
-        address _implementation, 
-        Settings memory _settings
+        address from_,
+        address implementation_,
+        Settings memory settings_
     ) private returns (address deployedAddress) {
         // Create salt
         bytes32 salt = keccak256(
-            abi.encodePacked(_settings.name, _settings.symbol, _settings.uri)
+            abi.encodePacked(settings_.name, settings_.symbol, settings_.uri)
         );
 
         // Deployed address
-        deployedAddress = Clones.cloneDeterministic(_implementation, salt);
+        deployedAddress = Clones.cloneDeterministic(implementation_, salt);
 
         // Create instance of collectible
         ICollectible instance = ICollectible(deployedAddress);
         instance.initialize({
-            _admin: _from,
-            _name: _settings.name,
-            _symbol: _settings.symbol,
-            _uri: _settings.uri
+            _admin: from_,
+            _name: settings_.name,
+            _symbol: settings_.symbol,
+            _uri: settings_.uri
         });
     }
 }
