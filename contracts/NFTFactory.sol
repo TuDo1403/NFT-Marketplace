@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Unlicense
-pragma solidity 0.8.15;
+pragma solidity >=0.8.13;
 
 import "@openzeppelin/contracts-upgradeable/proxy/ClonesUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
@@ -18,11 +18,6 @@ contract NFTFactory is INFTFactory, OwnableUpgradeable {
 
     mapping(uint256 => address) public deployedContracts;
 
-    modifier validAddress(address addr_) {
-        require(addr_ != address(0), "NFTFactory: INVALID_ADDRESS");
-        _;
-    }
-
     function initialize() external initializer {
         __Ownable_init();
     }
@@ -35,9 +30,14 @@ contract NFTFactory is INFTFactory, OwnableUpgradeable {
     )
         external
         override
-        validAddress(implement_)
-        returns (address deployedAddr)
+        returns (
+            //validAddress(implement_)
+            address deployedAddr
+        )
     {
+        if (implement_ == address(0)) {
+            revert InvalidAddress();
+        }
         Settings memory settings = Settings(uri_, name_, symbol_);
         deployedAddr = __deployCollectible(_msgSender(), implement_, settings);
     }
@@ -63,6 +63,7 @@ contract NFTFactory is INFTFactory, OwnableUpgradeable {
             symbol_: settings_.symbol,
             baseURI_: settings_.uri
         });
+
         deployedContracts[contractCounter.current()] = deployedAddr;
         contractCounter.increment();
         emit TokenDeployed({
@@ -77,6 +78,7 @@ contract NFTFactory is INFTFactory, OwnableUpgradeable {
 
     function multiDelegatecall(bytes[] calldata data)
         external
+        onlyOwner
         returns (bytes[] memory results)
     {
         results = new bytes[](data.length);
@@ -84,7 +86,9 @@ contract NFTFactory is INFTFactory, OwnableUpgradeable {
             (bool ok, bytes memory result) = address(this).delegatecall(
                 data[i]
             );
-            require(ok, "NFTFactory: DELEGATECALL_FAILED");
+            if (!ok) {
+                revert DelegatecallFailed();
+            }
             results[i] = result;
             unchecked {
                 ++i;

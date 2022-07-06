@@ -1,19 +1,14 @@
 // SPDX-License-Identifier: Unlisened
-pragma solidity 0.8.15;
+pragma solidity >=0.8.13;
 
-import "./IMarketplace.sol";
+import "./IPausable.sol";
+import "../libraries/TokenIdGenerator.sol";
 
-interface ICollectible is IMarketplace {
-    event ItemSold(
-        uint256 price,
-        uint256 payout,
-        address from,
-        address to,
-        uint256 indexed id
-    );
-    event PriceChanged(uint256 newPrice, uint256 indexed id);
-
-    event TokenMinted(uint256 id, address owner);
+interface ICollectible is IPausable {
+    error Overflow();
+    error FrozenToken();
+    error Unauthorized();
+    error InvalidInput();
 
     function initialize(
         address owner_,
@@ -22,6 +17,8 @@ interface ICollectible is IMarketplace {
         string calldata baseURI_
     ) external;
 
+    function freezeToken(uint256 tokenId_) external;
+
     function setBaseURI(string calldata baseURI_) external;
 
     function setTokenURI(uint256 tokenId_, string calldata tokenURI_) external;
@@ -29,13 +26,30 @@ interface ICollectible is IMarketplace {
     function mint(uint256 tokenId_, uint256 amount_) external;
 
     function mint(
-        uint256 type_,
-        uint256 creatorFee_,
-        uint256 index_,
-        uint256 supply_,
+        uint256 amount_,
+        TokenIdGenerator.Token calldata token_,
+        string calldata tokenURI_
+    ) external;
+
+    function lazyMintSingle(
+        address creator_,
+        uint256 tokenId_,
         uint256 amount_,
         string calldata tokenURI_
     ) external;
+
+    function transferSingle(
+        address from_,
+        address to_,
+        uint256 amount_,
+        uint256 tokenId_
+    ) external;
+
+    function isMintedBefore(
+        address seller_,
+        uint256 tokenId_,
+        uint256 amount_
+    ) external view returns (bool);
 
     function getTokenURI(uint256 tokenId_)
         external

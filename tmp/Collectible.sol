@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: Unlisened
 pragma solidity ^0.8.15;
 
+//0x5B5852a788797882C41295Cba4fAFeC9A3e1d04C factory
+//0x693eDcEc35d9ce627979400C9Ed452a734d104B1 base
+//0xaA58A19Ad06486fb2A91e9097a9DdD7edaC48DeB clone
+
 import "./interfaces/ICollectible.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";

@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: Unlicense
-pragma solidity 0.8.15;
+pragma solidity >=0.8.13;
 
 interface INFTFactory {
+    error Unauthorized();
+    error InvalidAddress();
+    error DelegatecallFailed();
     struct Settings {
         string uri;
         string name;

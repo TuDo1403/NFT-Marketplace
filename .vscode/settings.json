@@ -1,3 +1,5 @@
 {
-    "solidity.compileUsingRemoteVersion": "latest"
+    "solidity.compileUsingRemoteVersion": "latest",
+    "slither.solcPath": "",
+    "slither.hiddenDetectors": []
 }
