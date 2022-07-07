@@ -66,7 +66,7 @@ contract NFTFactory is INFTFactory {
         string calldata name_,
         string calldata symbol_,
         string calldata baseURI_
-    ) external returns (address deployedAddr) {
+    ) external returns (address clone) {
         address owner = msg.sender;
         bytes32 salt = keccak256(
             abi.encodePacked(VERSION, name_, symbol_, baseURI_)
@@ -78,8 +78,8 @@ contract NFTFactory is INFTFactory {
         // );
         //deployedAddr = Create2Upgradeable.deploy(0, salt, bytecode);
 
-        address clone = implement_.cloneDeterministic(salt);
-        deployedContracts[uint256(salt)] = deployedAddr;
+        clone = implement_.cloneDeterministic(salt);
+        deployedContracts[uint256(salt)] = clone;
 
         ICollectible instance = ICollectible(clone);
         instance.initialize(marketplace, owner, name_, symbol_, baseURI_);
@@ -90,7 +90,7 @@ contract NFTFactory is INFTFactory {
             baseURI_,
             string(abi.encodePacked(instance.TYPE())),
             owner,
-            deployedAddr
+            clone
         );
     }
 
