@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: Unlisened
 pragma solidity >=0.8.13;
 
-import "./IPausable.sol";
+//import "./IPausable.sol";
 import "../libraries/TokenIdGenerator.sol";
 
-interface ICollectible is IPausable {
+interface ICollectible {
     error Overflow();
     error FrozenToken();
     error Unauthorized();
@@ -56,5 +56,5 @@ interface ICollectible is IPausable {
         view
         returns (string memory);
 
-    function getType() external pure returns (string memory);
+    function TYPE() external view returns (bytes32);
 }

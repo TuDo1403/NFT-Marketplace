@@ -27,8 +27,8 @@ const config: HardhatUserConfig = {
     version: "0.8.15",
     settings: {
       optimizer: {
-        enabled: false,
-        runs: 200,
+        enabled: true,
+        runs: 50,
       },
     },
   },
@@ -46,10 +46,8 @@ const config: HardhatUserConfig = {
   },
   contractSizer: {
     alphaSort: true,
-    disambiguatePaths: false,
     runOnCompile: true,
-    strict: true,
-    only: [":ERC20$"],
+    disambiguatePaths: false,
   },
   etherscan: {
     apiKey: process.env.ETHERSCAN_API_KEY,

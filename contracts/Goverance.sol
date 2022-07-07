@@ -1,53 +1,53 @@
 // SPDX-License-Identifier: Unlicense
 pragma solidity >=0.8.13;
 
-import "./interfaces/IGovernance.sol";
+contract Governance {
+    error Unauthorized();
+    error InvalidAddress();
+    error UnregisteredToken();
 
-contract Governance is IGovernance {
-    function hasRole(bytes32 role, address account)
-        external
-        view
-        override
-        returns (bool)
-    {}
+    address public treasury;
+    address public verifier;
+    address public manager;
 
-    function getRoleAdmin(bytes32 role)
-        external
-        view
-        override
-        returns (bytes32)
-    {}
+    mapping(address => bool) public acceptedPayments;
 
-    function grantRole(bytes32 role, address account) external override {}
+    event TreasuryUpdated(address indexed from_, address indexed to_);
+    event PaymentUpdated(address indexed token_, bool registed);
 
-    function revokeRole(bytes32 role, address account) external override {}
+    modifier onlyOwner {
+        if (msg.sender != manager) {
+            revert Unauthorized();
+        }
+        _;
+    }
 
-    function renounceRole(bytes32 role, address account) external override {}
+    function updateTreasury(address treasury_) external onlyOwner {
+        if (treasury_ == address(0)) {
+            revert InvalidAddress();
+        }
+        emit TreasuryUpdated(treasury, treasury_);
+        treasury = treasury_;
+    }
 
-    function getRoleMember(bytes32 role, uint256 index)
-        external
-        view
-        override
-        returns (address)
-    {}
+    function updateVerifier(address verifier_) external onlyOwner {
+        verifier = verifier_;
+    }
 
-    function getRoleMemberCount(bytes32 role)
-        external
-        view
-        override
-        returns (uint256)
-    {}
+    function updateManager(address manager_) external onlyOwner {
+        manager = manager_;
+    }
 
-    function treasury() external view override returns (address) {}
+    function registerToken(address token_) external onlyOwner {
+        acceptedPayments[token_] = true;
+        emit PaymentUpdated(token_, true);
+    }
 
-    function verifier() external view override returns (address) {}
-
-    function manager() external view override returns (address) {}
-
-    function acceptPayment(address token_)
-        external
-        view
-        override
-        returns (bool)
-    {}
+    function unregisterToken(address token_) external onlyOwner {
+        if (!acceptedPayments[token_]) {
+            revert UnregisteredToken();
+        }
+        delete acceptedPayments[token_];
+        emit PaymentUpdated(token_, false);
+    }
 }

@@ -9,7 +9,7 @@ interface IMarketplace is IPausable {
     error InvalidInput();
     error Unauthorized();
     error LengthMismatch();
-    error MulticallFailed();
+    error ExecutionFailed();
     error PaymentFailed();
     error PaymentUnsuported();
     error InvalidSignature();

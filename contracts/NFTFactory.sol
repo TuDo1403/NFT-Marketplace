@@ -3,6 +3,7 @@ pragma solidity >=0.8.13;
 
 import "@openzeppelin/contracts-upgradeable/proxy/ClonesUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/Create2Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
 
 import "./interfaces/INFTFactory.sol";
@@ -69,7 +70,7 @@ contract NFTFactory is INFTFactory, OwnableUpgradeable {
         emit TokenDeployed({
             deployedAddress: deployedAddr,
             deployer: deployer_,
-            standard: instance.getType(),
+            standard: string(abi.encodePacked(instance.TYPE())),
             uri: settings_.uri,
             name: settings_.name,
             symbol: settings_.symbol

@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: Unlisened
 pragma solidity >=0.8.13;
 
-import "@openzeppelin/contracts/utils/Counters.sol";
-import "@openzeppelin/contracts/utils/Address.sol";
-import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
-import "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol";
-import "@openzeppelin/contracts/security/Pausable.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
+import "@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/cryptography/ECDSAUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/cryptography/draft-EIP712Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC721/IERC721ReceiverUpgradeable.sol";
 
 import "./interfaces/IGovernance.sol";
 import "./interfaces/IMarketplace.sol";
@@ -18,14 +18,14 @@ import "./interfaces/ICollectible1155.sol";
 
 contract MarketplaceBase is
     IMarketplace,
-    EIP712,
+    EIP712Upgradeable,
     //Ownable,
-    Pausable,
-    ReentrancyGuard
+    PausableUpgradeable,
+    ReentrancyGuardUpgradeable
 {
-    using SafeERC20 for IERC20;
-    using Address for address;
-    using Counters for Counters.Counter;
+    using AddressUpgradeable for address;
+    using SafeERC20Upgradeable for IERC20Upgradeable;
+    using CountersUpgradeable for CountersUpgradeable.Counter;
     using ReceiptUtil for ReceiptUtil.Receipt;
     using ReceiptUtil for ReceiptUtil.BulkReceipt;
 
@@ -37,7 +37,7 @@ contract MarketplaceBase is
     bytes32 public constant VERSION = keccak256("v1");
     bytes32 public constant NAME = keccak256("Marketplace");
 
-    Counters.Counter public nonce;
+    CountersUpgradeable.Counter public nonce;
 
     modifier onlyManager() {
         if (_msgSender() != IGovernance(admin).manager()) {
@@ -51,12 +51,12 @@ contract MarketplaceBase is
         uint256 serviceFee_,
         uint256 creatorFeeUB_
     )
-        Pausable()
-        ReentrancyGuard()
-        EIP712(
-            string(abi.encodePacked(NAME)),
-            string(abi.encodePacked(VERSION))
-        )
+        // Pausable()
+        // ReentrancyGuard()
+        // EIP712(
+            // string(abi.encodePacked(NAME)),
+            // string(abi.encodePacked(VERSION))
+        // )
     {
         if (!admin_.isContract()) {
             revert InvalidInput();
@@ -64,15 +64,19 @@ contract MarketplaceBase is
         admin = admin_;
         serviceFee = serviceFee_ % (2**16 - 1);
         creatorFeeUB = creatorFeeUB_ % (2**16 - 1);
+
+        __Pausable_init();
+        __ReentrancyGuard_init();
+        __EIP712_init(string(abi.encodePacked(NAME)), string(abi.encodePacked(VERSION)));
     }
 
     // receive() external payable {
     //     emit Received(_msgSender(), msg.value, "Received Token");
     // }
 
-    // fallback() external payable {}
+    //fallback() external payable {}
 
-    // function kill() external onlyFactory {
+    // function kill() external onlyManager {
     //     selfdestruct(payable(IGovernance(admin).treasury()));
     // }
 
@@ -81,6 +85,7 @@ contract MarketplaceBase is
         payable
         override
         onlyManager
+        whenNotPaused
         returns (bytes[] memory results)
     {
         for (uint256 i; i < data.length; ) {
@@ -88,7 +93,7 @@ contract MarketplaceBase is
                 data[i]
             );
             if (!ok) {
-                revert MulticallFailed();
+                revert ExecutionFailed();
             }
             results[i] = result;
             unchecked {
@@ -107,7 +112,7 @@ contract MarketplaceBase is
         bytes calldata signature_
     ) external payable override whenNotPaused nonReentrant {
         address _admin = admin;
-        __checkIntegrity(deadline_, _admin, paymentToken_);
+        __verifyIntegrity(deadline_, _admin, paymentToken_);
 
         ReceiptUtil.Payment memory payment;
         address buyer = _msgSender();
@@ -148,26 +153,14 @@ contract MarketplaceBase is
             payment.servicePayout
         );
 
-        // get rid of stack too deep
-        {
-            ICollectible nft = ICollectible(item_.nftContract);
-            bool minted = nft.isMintedBefore(
-                seller_,
-                item_.tokenId,
-                item_.amount
-            );
+        ICollectible nft = ICollectible(item_.nftContract);
+        bool minted = nft.isMintedBefore(seller_, item_.tokenId, item_.amount);
 
-            if (!minted) {
-                nft.lazyMintSingle(
-                    seller_,
-                    item_.tokenId,
-                    item_.amount,
-                    tokenURI_
-                );
-            }
-
-            nft.transferSingle(seller_, buyer, item_.amount, item_.tokenId);
+        if (!minted) {
+            nft.lazyMintSingle(seller_, item_.tokenId, item_.amount, tokenURI_);
         }
+
+        nft.transferSingle(seller_, buyer, item_.amount, item_.tokenId);
     }
 
     function redeemBulk(
@@ -187,7 +180,7 @@ contract MarketplaceBase is
             revert LengthMismatch();
         }
         address _admin = admin;
-        __checkIntegrity(deadline_, _admin, paymentToken_);
+        __verifyIntegrity(deadline_, _admin, paymentToken_);
 
         address buyer = _msgSender();
         ReceiptUtil.Payment memory payment;
@@ -215,7 +208,6 @@ contract MarketplaceBase is
         nonce.increment();
         // get rid of stack too deep
         {
-            address treasury = IGovernance(_admin).treasury();
             __transact(paymentToken_, buyer, seller_, payment.subTotal);
             __transact(
                 paymentToken_,
@@ -223,24 +215,25 @@ contract MarketplaceBase is
                 creatorPayoutAddr_,
                 payment.creatorPayout
             );
+            address treasury = IGovernance(_admin).treasury();
             __transact(paymentToken_, buyer, treasury, payment.servicePayout);
         }
 
         ICollectible1155 nft;
         nft = ICollectible1155(bulk_.nftContract);
-        __mintSelection(seller_, nft, bulk_, tokenURIs_);
+        __mintUnexist(seller_, nft, bulk_, tokenURIs_);
         nft.transferBatch(seller_, buyer, bulk_.tokenIds, bulk_.amounts);
     }
 
-    function pause() external override onlyManager {
+    function pause() external override whenNotPaused onlyManager {
         _pause();
     }
 
-    function unpause() external override onlyManager {
+    function unpause() external override whenPaused onlyManager {
         _unpause();
     }
 
-    function setAdmin(address admin_) external override onlyManager {
+    function setAdmin(address admin_) external override whenPaused onlyManager {
         admin = admin_;
     }
 
@@ -256,11 +249,11 @@ contract MarketplaceBase is
                 revert PaymentFailed();
             }
         } else {
-            IERC20(paymentToken_).safeTransferFrom(from_, to_, amount_);
+            IERC20Upgradeable(paymentToken_).safeTransferFrom(from_, to_, amount_);
         }
     }
 
-    function __mintSelection(
+    function __mintUnexist(
         address seller_,
         ICollectible1155 nft_,
         ReceiptUtil.Bulk calldata bulk_,
@@ -296,7 +289,7 @@ contract MarketplaceBase is
         return IGovernance(admin_).acceptPayment(paymentToken_);
     }
 
-    function __checkIntegrity(
+    function __verifyIntegrity(
         uint256 deadline_,
         address admin_,
         address paymentToken_
@@ -314,7 +307,7 @@ contract MarketplaceBase is
         bytes32 data_,
         bytes calldata signature_
     ) private pure {
-        address signer = ECDSA.recover(data_, signature_);
+        address signer = ECDSAUpgradeable.recover(data_, signature_);
         if (signer != verifier_) {
             revert InvalidSignature();
         }
