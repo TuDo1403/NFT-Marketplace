@@ -10,5 +10,5 @@ interface IGovernance is IAccessControlEnumerable {
 
     function manager() external view returns (address);
 
-    function acceptPayment(address token_) external view returns (bool);
+    function acceptedPayments(address token_) external view returns (bool);
 }

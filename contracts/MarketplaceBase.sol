@@ -286,7 +286,7 @@ contract MarketplaceBase is
         view
         returns (bool)
     {
-        return IGovernance(admin_).acceptPayment(paymentToken_);
+        return IGovernance(admin_).acceptedPayments(paymentToken_);
     }
 
     function __verifyIntegrity(
