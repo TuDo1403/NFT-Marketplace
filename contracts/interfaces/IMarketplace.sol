@@ -14,6 +14,24 @@ interface IMarketplace is IPausable {
     error PaymentUnsuported();
     error InvalidSignature();
 
+    event ItemRedeemed(
+        address indexed nftContract,
+        address indexed buyer,
+        uint256 indexed tokenId,
+        address paymentToken,
+        uint256 unitPrice,
+        uint256 total
+    );
+
+    event BulkRedeemed(
+        address indexed nftContract,
+        address indexed buyer,
+        uint256[] tokenIds,
+        address paymentToken,
+        uint256[] unitPrices,
+        uint256 total
+    );
+
     function multiDelegatecall(bytes[] calldata data)
         external
         payable

@@ -3,9 +3,16 @@ pragma solidity >=0.8.13;
 
 import "./ICollectible.sol";
 
-
 interface ICollectible1155 is ICollectible {
+    error FrozenBase();
+    error FrozenToken();
     error LengthMismatch();
+
+    event PermanentURI(uint256 indexed tokenId_, string tokenURI_);
+
+    function freezeBase() external;
+
+    function freezeToken(uint256 tokenId_) external;
 
     function mintBatch(
         uint256[] calldata tokenIds_,

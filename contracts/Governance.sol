@@ -15,11 +15,17 @@ contract Governance {
     event TreasuryUpdated(address indexed from_, address indexed to_);
     event PaymentUpdated(address indexed token_, bool registed);
 
-    modifier onlyOwner {
+    modifier onlyOwner() {
         if (msg.sender != manager) {
             revert Unauthorized();
         }
         _;
+    }
+    // 363880
+    constructor(address treasury_, address verifier_, address manager_) {
+        treasury = treasury_;
+        verifier = verifier_;
+        manager = manager_;
     }
 
     function updateTreasury(address treasury_) external onlyOwner {

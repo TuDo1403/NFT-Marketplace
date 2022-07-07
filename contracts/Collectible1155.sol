@@ -11,8 +11,8 @@ import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155URIStorage.sol";
 
 import "./interfaces/ICollectible1155.sol";
 
+//Pausable,
 contract Collectible1155 is
-    //Pausable,
     Initializable,
     AccessControl,
     ERC1155Supply,
@@ -33,7 +33,7 @@ contract Collectible1155 is
     bytes32 public constant TYPE = keccak256("ERC1155");
     //bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
-    bytes32 public constant FACTORY_ROLE = keccak256("FACTORY_ROLE");
+    //bytes32 public constant FACTORY_ROLE = keccak256("FACTORY_ROLE");
     bytes32 public constant URI_SETTER_ROLE = keccak256("URI_SETTER_ROLE");
 
     mapping(uint256 => bool) public frozenTokens;
@@ -43,9 +43,10 @@ contract Collectible1155 is
         _;
     }
 
+    // 3543517 
     constructor(
         address admin_,
-        address factory_,
+        address owner_,
         string memory name_,
         string memory symbol_,
         string memory baseURI_
@@ -53,20 +54,21 @@ contract Collectible1155 is
         if (!admin_.isContract()) {
             revert InvalidInput();
         }
-        _grantRole(FACTORY_ROLE, factory_);
-        _grantRole(DEFAULT_ADMIN_ROLE, admin_);
-        __initialize(admin_, name_, symbol_);
+        //_grantRole(FACTORY_ROLE, factory_);
+        
+        __initialize(admin_, owner_, name_, symbol_);
         _disableInitializers();
     }
-
+    //283198
     function initialize(
+        address admin_,
         address owner_,
         string calldata name_,
         string calldata symbol_,
         string calldata baseURI_
-    ) external override initializer onlyRole(FACTORY_ROLE) {
+    ) external override initializer {
         _setBaseURI(baseURI_);
-        __initialize(owner_, name_, symbol_);
+        __initialize(admin_, owner_, name_, symbol_);
     }
 
     // function pause() external override onlyRole(PAUSER_ROLE) {
@@ -90,7 +92,18 @@ contract Collectible1155 is
         override
         onlyRole(URI_SETTER_ROLE)
     {
+        if (isFrozenBase) {
+            revert FrozenBase();
+        }
         _setBaseURI(baseURI_);
+    }
+
+    function freezeBase() external override onlyRole(URI_SETTER_ROLE) {
+        if (isFrozenBase) {
+            revert FrozenBase();
+        }
+        isFrozenBase = true;
+        emit PermanentURI(0, uri(0));
     }
 
     function setTokenURI(uint256 tokenId_, string calldata tokenURI_)
@@ -215,7 +228,11 @@ contract Collectible1155 is
         if (seller_ != tokenId_.getTokenCreator()) {
             // token must be minted before or seller must have token
             uint256 sellerBalance = balanceOf(seller_, tokenId_);
-            if (sellerBalance == 0 || amount_ > sellerBalance || !exists(tokenId_)) {
+            if (
+                sellerBalance == 0 ||
+                amount_ > sellerBalance ||
+                !exists(tokenId_)
+            ) {
                 revert Unauthorized();
             }
             minted = true;
@@ -269,6 +286,7 @@ contract Collectible1155 is
     }
 
     function __initialize(
+        address admin_,
         address owner_,
         string memory name_,
         string memory symbol_
@@ -276,12 +294,14 @@ contract Collectible1155 is
         name = bytes32(bytes(name_));
         symbol = bytes32(bytes(symbol_));
         //_grantRole(PAUSER_ROLE, owner_);
+        _grantRole(DEFAULT_ADMIN_ROLE, admin_);
         _grantRole(MINTER_ROLE, owner_);
         _grantRole(URI_SETTER_ROLE, owner_);
     }
 
     function __freezeToken(uint256 tokenId_) private {
         frozenTokens[tokenId_] = true;
+        emit PermanentURI(tokenId_, uri(tokenId_));
     }
 
     function __mint(

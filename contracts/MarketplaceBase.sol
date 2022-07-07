@@ -23,11 +23,11 @@ contract MarketplaceBase is
     PausableUpgradeable,
     ReentrancyGuardUpgradeable
 {
+    using ReceiptUtil for ReceiptUtil.Receipt;
+    using ReceiptUtil for ReceiptUtil.BulkReceipt;
     using AddressUpgradeable for address;
     using SafeERC20Upgradeable for IERC20Upgradeable;
     using CountersUpgradeable for CountersUpgradeable.Counter;
-    using ReceiptUtil for ReceiptUtil.Receipt;
-    using ReceiptUtil for ReceiptUtil.BulkReceipt;
 
     address public admin;
 
@@ -44,19 +44,14 @@ contract MarketplaceBase is
             revert Unauthorized();
         }
         _;
-    }
+    }   
 
+    // 2521470
     constructor(
         address admin_,
         uint256 serviceFee_,
-        uint256 creatorFeeUB_
-    )
-        // Pausable()
-        // ReentrancyGuard()
-        // EIP712(
-            // string(abi.encodePacked(NAME)),
-            // string(abi.encodePacked(VERSION))
-        // )
+        uint256 creatorFeeUB_ // Pausable() // ReentrancyGuard()
+    ) initializer
     {
         if (!admin_.isContract()) {
             revert InvalidInput();
@@ -67,7 +62,10 @@ contract MarketplaceBase is
 
         __Pausable_init();
         __ReentrancyGuard_init();
-        __EIP712_init(string(abi.encodePacked(NAME)), string(abi.encodePacked(VERSION)));
+        __EIP712_init(
+            string(abi.encodePacked(NAME)),
+            string(abi.encodePacked(VERSION))
+        );
     }
 
     // receive() external payable {
@@ -153,14 +151,25 @@ contract MarketplaceBase is
             payment.servicePayout
         );
 
-        ICollectible nft = ICollectible(item_.nftContract);
-        bool minted = nft.isMintedBefore(seller_, item_.tokenId, item_.amount);
+        {
+            ICollectible nft = ICollectible(item_.nftContract);
+            bool minted = nft.isMintedBefore(seller_, item_.tokenId, item_.amount);
 
-        if (!minted) {
-            nft.lazyMintSingle(seller_, item_.tokenId, item_.amount, tokenURI_);
+            if (!minted) {
+                nft.lazyMintSingle(seller_, item_.tokenId, item_.amount, tokenURI_);
+            }
+
+            nft.transferSingle(seller_, buyer, item_.amount, item_.tokenId);
         }
 
-        nft.transferSingle(seller_, buyer, item_.amount, item_.tokenId);
+        emit ItemRedeemed(
+            item_.nftContract,
+            buyer,
+            item_.tokenId,
+            paymentToken_,
+            item_.unitPrice,
+            payment.total
+        );
     }
 
     function redeemBulk(
@@ -223,6 +232,15 @@ contract MarketplaceBase is
         nft = ICollectible1155(bulk_.nftContract);
         __mintUnexist(seller_, nft, bulk_, tokenURIs_);
         nft.transferBatch(seller_, buyer, bulk_.tokenIds, bulk_.amounts);
+
+        emit BulkRedeemed(
+            bulk_.nftContract,
+            buyer,
+            bulk_.tokenIds,
+            paymentToken_,
+            bulk_.unitPrices,
+            payment.total
+        );
     }
 
     function pause() external override whenNotPaused onlyManager {
@@ -249,7 +267,11 @@ contract MarketplaceBase is
                 revert PaymentFailed();
             }
         } else {
-            IERC20Upgradeable(paymentToken_).safeTransferFrom(from_, to_, amount_);
+            IERC20Upgradeable(paymentToken_).safeTransferFrom(
+                from_,
+                to_,
+                amount_
+            );
         }
     }
 

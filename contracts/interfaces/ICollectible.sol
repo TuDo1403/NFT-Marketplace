@@ -6,18 +6,16 @@ import "../libraries/TokenIdGenerator.sol";
 
 interface ICollectible {
     error Overflow();
-    error FrozenToken();
     error Unauthorized();
     error InvalidInput();
 
     function initialize(
+        address admin_,
         address owner_,
         string calldata name_,
         string calldata symbol_,
         string calldata baseURI_
     ) external;
-
-    function freezeToken(uint256 tokenId_) external;
 
     function setBaseURI(string calldata baseURI_) external;
 
