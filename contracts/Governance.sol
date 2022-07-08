@@ -21,8 +21,13 @@ contract Governance {
         }
         _;
     }
+
     // 363880
-    constructor(address treasury_, address verifier_, address manager_) {
+    constructor(
+        address treasury_,
+        address verifier_,
+        address manager_
+    ) {
         treasury = treasury_;
         verifier = verifier_;
         manager = manager_;

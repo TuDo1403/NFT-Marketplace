@@ -136,7 +136,8 @@ library ReceiptUtil {
                 abi.encode(
                     BULK_TYPE_HASH,
                     bulk_.nftContract,
-                    keccak256(abi.encodePacked(bulk_.amounts)),
+                    //keccak256(abi.encodePacked(bulk_.amounts)),
+                    bulk_.amounts,
                     keccak256(abi.encodePacked(bulk_.tokenIds)),
                     keccak256(abi.encodePacked(bulk_.unitPrices))
                 )

@@ -9,6 +9,7 @@ import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155URIStorage.sol";
 
+import "./interfaces/IGovernance.sol";
 import "./interfaces/ICollectible1155.sol";
 
 //Pausable,
@@ -43,32 +44,42 @@ contract Collectible1155 is
         _;
     }
 
-    // 3543517 
-    constructor(
-        address admin_,
-        address owner_,
-        string memory name_,
-        string memory symbol_,
-        string memory baseURI_
-    ) ERC1155(baseURI_) {
-        if (!admin_.isContract()) {
-            revert InvalidInput();
-        }
-        //_grantRole(FACTORY_ROLE, factory_);
-        
-        __initialize(admin_, owner_, name_, symbol_);
-        _disableInitializers();
-    }
+    // 3543517
+    // constructor(
+    //     address marketplace_,
+    //     address owner_,
+    //     string memory name_,
+    //     string memory symbol_,
+    //     string memory baseURI_
+    // ) ERC1155(baseURI_) {
+    //     if (!marketplace_.isContract()) {
+    //         revert InvalidInput();
+    //     }
+    //     //_grantRole(FACTORY_ROLE, factory_);
+
+    //     __initialize(marketplace_, owner_, name_, symbol_);
+    //     _disableInitializers();
+    // }
+
+    constructor() ERC1155("") {}
+
     //283198
     function initialize(
-        address admin_,
+        address marketplace_,
         address owner_,
         string calldata name_,
         string calldata symbol_,
         string calldata baseURI_
     ) external override initializer {
         _setBaseURI(baseURI_);
-        __initialize(admin_, owner_, name_, symbol_);
+        //__initialize(marketplace_, owner_, name_, symbol_);
+
+        name = bytes32(bytes(name_));
+        symbol = bytes32(bytes(symbol_));
+        //_grantRole(PAUSER_ROLE, owner_);
+        _grantRole(DEFAULT_ADMIN_ROLE, marketplace_);
+        _grantRole(MINTER_ROLE, owner_);
+        _grantRole(URI_SETTER_ROLE, owner_);
     }
 
     // function pause() external override onlyRole(PAUSER_ROLE) {
@@ -137,7 +148,7 @@ contract Collectible1155 is
         uint256 tokenId_,
         uint256 amount_,
         string calldata tokenURI_
-    ) external override onlyRole(DEFAULT_ADMIN_ROLE) {
+    ) external override onlyRole(MINTER_ROLE) {
         __mint(to_, tokenId_, amount_, tokenURI_);
     }
 
@@ -190,7 +201,7 @@ contract Collectible1155 is
         uint256[] calldata tokenIds_,
         uint256[] calldata amounts_,
         string[] calldata tokenURIs_
-    ) external override onlyRole(DEFAULT_ADMIN_ROLE) {
+    ) external override onlyRole(MINTER_ROLE) {
         _mintBatch(to_, tokenIds_, amounts_, "");
         for (uint256 i; i < tokenURIs_.length; ) {
             if (bytes(tokenURIs_[i]).length != 0) {
@@ -285,19 +296,19 @@ contract Collectible1155 is
         super._beforeTokenTransfer(operator, from, to, ids, amounts, data);
     }
 
-    function __initialize(
-        address admin_,
-        address owner_,
-        string memory name_,
-        string memory symbol_
-    ) private {
-        name = bytes32(bytes(name_));
-        symbol = bytes32(bytes(symbol_));
-        //_grantRole(PAUSER_ROLE, owner_);
-        _grantRole(DEFAULT_ADMIN_ROLE, admin_);
-        _grantRole(MINTER_ROLE, owner_);
-        _grantRole(URI_SETTER_ROLE, owner_);
-    }
+    // function __initialize(
+    //     address marketplace_,
+    //     address owner_,
+    //     string memory name_,
+    //     string memory symbol_
+    // ) private {
+    //     name = bytes32(bytes(name_));
+    //     symbol = bytes32(bytes(symbol_));
+    //     //_grantRole(PAUSER_ROLE, owner_);
+    //     _grantRole(DEFAULT_ADMIN_ROLE, marketplace_);
+    //     _grantRole(MINTER_ROLE, owner_);
+    //     _grantRole(URI_SETTER_ROLE, owner_);
+    // }
 
     function __freezeToken(uint256 tokenId_) private {
         frozenTokens[tokenId_] = true;
