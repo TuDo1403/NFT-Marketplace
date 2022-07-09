@@ -19,7 +19,6 @@ import "./interfaces/ICollectible1155.sol";
 contract MarketplaceBase is
     IMarketplace,
     EIP712Upgradeable,
-    //Ownable,
     PausableUpgradeable,
     ReentrancyGuardUpgradeable
 {
@@ -46,25 +45,21 @@ contract MarketplaceBase is
         _;
     }
 
+    constructor(
+        address admin_,
+        uint256 serviceFee_,
+        uint256 creatorFeeUB_
+    ) initializer {
+        __initialize(admin_, serviceFee_, creatorFeeUB_);
+    }
+
     // 2521470
     function initialize(
         address admin_,
         uint256 serviceFee_,
         uint256 creatorFeeUB_ // Pausable() // ReentrancyGuard()
     ) external initializer {
-        if (!admin_.isContract()) {
-            revert InvalidInput();
-        }
-        admin = admin_;
-        serviceFee = serviceFee_ % (2**16 - 1);
-        creatorFeeUB = creatorFeeUB_ % (2**16 - 1);
-
-        __Pausable_init();
-        __ReentrancyGuard_init();
-        __EIP712_init(
-            string(abi.encodePacked(NAME)),
-            string(abi.encodePacked(VERSION))
-        );
+        __initialize(admin_, serviceFee_, creatorFeeUB_);
     }
 
     // receive() external payable {
@@ -157,12 +152,6 @@ contract MarketplaceBase is
         );
 
         if (!minted) {
-            // {
-            //     IAccessControl authority = IAccessControl(item_.nftContract);
-            //     if (!authority.hasRole(keccak256("MINTER_ROLE"), buyer)) {
-            //         authority.grantRole(keccak256("MINTER_ROLE"), buyer);
-            //     }
-            // }
             __grantMinterRole(item_.nftContract, buyer);
 
             (bool ok, ) = item_.nftContract.delegatecall(
@@ -253,13 +242,6 @@ contract MarketplaceBase is
             address treasury = IGovernance(_admin).treasury();
             __transact(paymentToken_, buyer, treasury, payment.servicePayout);
         }
-
-        // {
-        //     IAccessControl governor = IAccessControl(bulk_.nftContract);
-        //     if (!governor.hasRole(keccak256("MINTER_ROLE"), buyer)) {
-        //         governor.grantRole(keccak256("MINTER_ROLE"), buyer);
-        //     }
-        // }
         __grantMinterRole(bulk_.nftContract, buyer);
         ICollectible1155 nft = ICollectible1155(bulk_.nftContract);
 
@@ -324,7 +306,7 @@ contract MarketplaceBase is
         uint256[] memory tokensToMint;
         uint256[] memory amountsToMint;
         for (uint256 i; i < bulk_.tokenIds.length; ) {
-            bool minted = (ICollectible(bulk_.nftContract)).isMintedBefore(
+            bool minted = ICollectible(bulk_.nftContract).isMintedBefore(
                 seller_,
                 bulk_.tokenIds[i],
                 bulk_.amounts[i]
@@ -339,7 +321,6 @@ contract MarketplaceBase is
                 ++i;
             }
         }
-        //nft_.lazyMintBatch(seller_, tokensToMint, amountsToMint, tokenURIs_);
         (bool ok, ) = bulk_.nftContract.delegatecall(
             abi.encodeWithSelector(
                 __getFnSelector(
@@ -354,6 +335,26 @@ contract MarketplaceBase is
         if (!ok) {
             revert ExecutionFailed();
         }
+    }
+
+    function __initialize(
+        address admin_,
+        uint256 serviceFee_,
+        uint256 creatorFeeUB_
+    ) private {
+        if (!admin_.isContract()) {
+            revert InvalidInput();
+        }
+        admin = admin_;
+        serviceFee = serviceFee_ % (2**16 - 1);
+        creatorFeeUB = creatorFeeUB_ % (2**16 - 1);
+
+        __Pausable_init();
+        __ReentrancyGuard_init();
+        __EIP712_init(
+            string(abi.encodePacked(NAME)),
+            string(abi.encodePacked(VERSION))
+        );
     }
 
     function __getFnSelector(string memory fnSignature_)

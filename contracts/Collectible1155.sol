@@ -44,22 +44,6 @@ contract Collectible1155 is
         _;
     }
 
-    // 3543517
-    // constructor(
-    //     address marketplace_,
-    //     address owner_,
-    //     string memory name_,
-    //     string memory symbol_,
-    //     string memory baseURI_
-    // ) ERC1155(baseURI_) {
-    //     if (!marketplace_.isContract()) {
-    //         revert InvalidInput();
-    //     }
-    //     //_grantRole(FACTORY_ROLE, factory_);
-
-    //     __initialize(marketplace_, owner_, name_, symbol_);
-    //     _disableInitializers();
-    // }
 
     constructor() ERC1155("") {}
 
@@ -72,23 +56,13 @@ contract Collectible1155 is
         string calldata baseURI_
     ) external override initializer {
         _setBaseURI(baseURI_);
-        //__initialize(marketplace_, owner_, name_, symbol_);
 
         name = bytes32(bytes(name_));
         symbol = bytes32(bytes(symbol_));
-        //_grantRole(PAUSER_ROLE, owner_);
         _grantRole(DEFAULT_ADMIN_ROLE, marketplace_);
         _grantRole(MINTER_ROLE, owner_);
         _grantRole(URI_SETTER_ROLE, owner_);
     }
-
-    // function pause() external override onlyRole(PAUSER_ROLE) {
-    //     //_pause();
-    // }
-
-    // function unpause() external override onlyRole(PAUSER_ROLE) {
-    //     //_unpause();
-    // }
 
     function freezeToken(uint256 tokenId_)
         external
@@ -295,20 +269,6 @@ contract Collectible1155 is
     ) internal override(ERC1155, ERC1155Supply) {
         super._beforeTokenTransfer(operator, from, to, ids, amounts, data);
     }
-
-    // function __initialize(
-    //     address marketplace_,
-    //     address owner_,
-    //     string memory name_,
-    //     string memory symbol_
-    // ) private {
-    //     name = bytes32(bytes(name_));
-    //     symbol = bytes32(bytes(symbol_));
-    //     //_grantRole(PAUSER_ROLE, owner_);
-    //     _grantRole(DEFAULT_ADMIN_ROLE, marketplace_);
-    //     _grantRole(MINTER_ROLE, owner_);
-    //     _grantRole(URI_SETTER_ROLE, owner_);
-    // }
 
     function __freezeToken(uint256 tokenId_) private {
         frozenTokens[tokenId_] = true;

@@ -2,11 +2,6 @@
 pragma solidity >=0.8.13;
 
 import "@openzeppelin/contracts-upgradeable/proxy/ClonesUpgradeable.sol";
-//import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-//import "@openzeppelin/contracts-upgradeable/utils/Create2Upgradeable.sol";
-//import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
-
-//import "./Collectible1155.sol";
 
 import "./interfaces/ICollectible.sol";
 import "./interfaces/INFTFactory.sol";
@@ -14,14 +9,11 @@ import "./interfaces/IGovernance.sol";
 
 contract NFTFactory is INFTFactory {
     using ClonesUpgradeable for address;
-    //using CountersUpgradeable for CountersUpgradeable.Counter;
 
     address public governance;
     address public marketplace;
 
     bytes32 public constant VERSION = keccak256("NFTFactoryv1");
-
-    //CountersUpgradeable.Counter public contractCounter;
 
     mapping(uint256 => address) public deployedContracts;
 
@@ -71,19 +63,12 @@ contract NFTFactory is INFTFactory {
         bytes32 salt = keccak256(
             abi.encodePacked(VERSION, name_, symbol_, baseURI_)
         );
-        // bytes memory bytecode = type(Collectible1155).creationCode;
-        // bytes memory bytecode = abi.encodePacked(
-        //     type(Collectible1155).creationCode,
-        //     abi.encode(marketplace, owner, name_, symbol_, baseURI_)
-        // );
-        //deployedAddr = Create2Upgradeable.deploy(0, salt, bytecode);
 
         clone = implement_.cloneDeterministic(salt);
         deployedContracts[uint256(salt)] = clone;
 
         ICollectible instance = ICollectible(clone);
         instance.initialize(marketplace, owner, name_, symbol_, baseURI_);
-        //contractCounter.increment();
         emit TokenDeployed(
             name_,
             symbol_,
