@@ -96,39 +96,6 @@ contract MarketplaceBase is
         ReceiptUtil.Receipt calldata receipt_,
         bytes calldata signature_
     ) external payable override whenNotPaused nonReentrant {
-        // IGovernance _admin = admin;
-        // __verifyIntegrity(
-        //     receipt_.payment.total,
-        //     receipt_.nonce,
-        //     deadline_,
-        //     receipt_.ticketExpiration,
-        //     _admin,
-        //     receipt_.buyer,
-        //     receipt_.paymentToken
-        // );
-        // bytes32 hashedReceipt = _hashTypedDataV4(receipt_.hash());
-        // __verifySignature(_admin.verifier(), hashedReceipt, signature_);
-        // nonce.increment();
-
-        // __transact(
-        //     receipt_.paymentToken,
-        //     receipt_.buyer,
-        //     receipt_.seller,
-        //     receipt_.payment.subTotal
-        // );
-        // __transact(
-        //     receipt_.paymentToken,
-        //     receipt_.buyer,
-        //     receipt_.creatorPayoutAddr,
-        //     receipt_.payment.creatorPayout
-        // );
-        // __transact(
-        //     receipt_.paymentToken,
-        //     receipt_.buyer,
-        //     _admin.treasury(),
-        //     receipt_.payment.servicePayout
-        // );
-        // bytes32 hashedReceipt = _hashTypedDataV4(receipt_.hash());
         __processReceipt(
             deadline_,
             _hashTypedDataV4(receipt_.hash()),
@@ -183,136 +150,11 @@ contract MarketplaceBase is
         );
     }
 
-    // function redeem(
-    //     address seller_,
-    //     address paymentToken_,
-    //     address creatorPayoutAddr_,
-    //     uint256 deadline_,
-    //     ReceiptUtil.Item calldata item_,
-    //     string calldata tokenURI_,
-    //     bytes calldata signature_
-    // ) external payable override whenNotPaused nonReentrant {
-    //     IGovernance _admin = admin;
-    //     __verifyIntegrity(deadline_, _admin, paymentToken_);
-
-    //     ReceiptUtil.Payment memory payment;
-    //     address buyer = _msgSender();
-    //     // get rid of stack to deep
-    //     {
-    //         ReceiptUtil.Receipt memory receipt = ReceiptUtil.createReceipt(
-    //             buyer,
-    //             seller_,
-    //             paymentToken_,
-    //             creatorPayoutAddr_,
-    //             nonce.current(),
-    //             serviceFee,
-    //             item_
-    //         );
-    //         payment = receipt.payment;
-
-    //         bytes32 hashedReceipt = _hashTypedDataV4(receipt.hash());
-    //         __verifySignature(
-    //             IGovernance(_admin).verifier(),
-    //             hashedReceipt,
-    //             signature_
-    //         );
-    //     }
-
-    //     nonce.increment();
-
-    //     __transact(paymentToken_, buyer, seller_, payment.subTotal);
-    //     __transact(
-    //         paymentToken_,
-    //         buyer,
-    //         creatorPayoutAddr_,
-    //         payment.creatorPayout
-    //     );
-    //     __transact(
-    //         paymentToken_,
-    //         buyer,
-    //         IGovernance(_admin).treasury(),
-    //         payment.servicePayout
-    //     );
-
-    // bool minted = ICollectible(item_.nftContract).isMintedBefore(
-    //     seller_,
-    //     item_.tokenId,
-    //     item_.amount
-    // );
-
-    // if (!minted) {
-    //     __grantMinterRole(item_.nftContract, buyer);
-
-    //     (bool ok, ) = item_.nftContract.delegatecall(
-    //         abi.encodeWithSelector(
-    //             __getFnSelector(
-    //                 "lazyMintSingle(address,uint256,uint256,string)"
-    //             ),
-    //             seller_,
-    //             item_.tokenId,
-    //             item_.amount,
-    //             tokenURI_
-    //         )
-    //     );
-    //     if (!ok) {
-    //         revert MP__ExecutionFailed();
-    //     }
-    // }
-
-    // ICollectible(item_.nftContract).transferSingle(
-    //     seller_,
-    //     buyer,
-    //     item_.amount,
-    //     item_.tokenId
-    // );
-
-    // emit ItemRedeemed(
-    //     item_.nftContract,
-    //     buyer,
-    //     item_.tokenId,
-    //     paymentToken_,
-    //     item_.unitPrice,
-    //     payment.total
-    // );
-    // }
-
     function redeemBulk(
         uint256 deadline_,
         ReceiptUtil.BulkReceipt calldata receipt_,
         bytes calldata signature_
     ) external payable override whenNotPaused nonReentrant {
-        // IGovernance _admin = admin;
-        // __verifyIntegrity(
-        //     receipt_.payment.total,
-        //     receipt_.nonce,
-        //     deadline_,
-        //     receipt_.ticketExpiration,
-        //     _admin,
-        //     receipt_.buyer,
-        //     receipt_.paymentToken
-        // );
-        // bytes32 hashedReceipt = _hashTypedDataV4(receipt_.hash());
-        // __verifySignature(_admin.verifier(), hashedReceipt, signature_);
-        // nonce.increment();
-        // __transact(
-        //     receipt_.paymentToken,
-        //     receipt_.buyer,
-        //     receipt_.seller,
-        //     receipt_.payment.subTotal
-        // );
-        // __transact(
-        //     receipt_.paymentToken,
-        //     receipt_.buyer,
-        //     receipt_.creatorPayoutAddr,
-        //     receipt_.payment.creatorPayout
-        // );
-        // __transact(
-        //     receipt_.paymentToken,
-        //     receipt_.buyer,
-        //     _admin.treasury(),
-        //     receipt_.payment.servicePayout
-        // );
-        //bytes32 hashedReceipt = _hashTypedDataV4(receipt_.hash());
         __processReceipt(
             deadline_,
             _hashTypedDataV4(receipt_.hash()),
@@ -326,7 +168,6 @@ contract MarketplaceBase is
         address nftContract = receipt_.bulk.nftContract;
         __grantMinterRole(nftContract, buyer);
         __mintUnexist(seller, receipt_.bulk, receipt_.bulk.tokenURIs);
-        //ICollectible1155 nft = ICollectible1155(nftContract);
 
         ICollectible1155(nftContract).transferBatch(
             seller,
@@ -364,9 +205,6 @@ contract MarketplaceBase is
             buyer,
             paymentToken
         );
-        //bytes32 hashedReceipt = _hashTypedDataV4(receipt_.hash());
-        //__verifySignature(_admin.verifier(), hashedReceipt_, signature_);
-        //address signer = ECDSAUpgradeable.recover(hashedReceipt_, signature_);
         if (
             ECDSAUpgradeable.recover(hashedReceipt_, signature_) !=
             _admin.verifier()
@@ -389,77 +227,6 @@ contract MarketplaceBase is
             payment_.servicePayout
         );
     }
-
-    // function redeemBulk(
-    //     uint256 deadline_,
-    //     address seller_,
-    //     address paymentToken_,
-    //     address creatorPayoutAddr_,
-    //     bytes calldata signature_,
-    //     ReceiptUtil.Bulk calldata bulk_,
-    //     string[] calldata tokenURIs_
-    // ) external payable override whenNotPaused nonReentrant {
-    //     if (
-    //         tokenURIs_.length != bulk_.tokenIds.length ||
-    //         bulk_.tokenIds.length != bulk_.amounts.length ||
-    //         bulk_.amounts.length != bulk_.unitPrices.length
-    //     ) {
-    //         revert MP__LengthMismatch();
-    //     }
-    //     IGovernance _admin = admin;
-    //     __verifyIntegrity(deadline_, _admin, paymentToken_);
-
-    //     address buyer = _msgSender();
-    //     ReceiptUtil.Payment memory payment;
-    //     // get rid of stack too deep
-    //     {
-    //         ReceiptUtil.BulkReceipt memory receipt = ReceiptUtil
-    //             .createBulkReceipt(
-    //                 nonce.current(),
-    //                 serviceFee,
-    //                 buyer,
-    //                 seller_,
-    //                 paymentToken_,
-    //                 creatorPayoutAddr_,
-    //                 bulk_
-    //             );
-    //         payment = receipt.payment;
-    //         bytes32 hashedReceipt = _hashTypedDataV4(receipt.hash());
-    //         __verifySignature(
-    //             IGovernance(_admin).verifier(),
-    //             hashedReceipt,
-    //             signature_
-    //         );
-    //     }
-
-    //     nonce.increment();
-    //     // get rid of stack too deep
-    //     {
-    //         __transact(paymentToken_, buyer, seller_, payment.subTotal);
-    //         __transact(
-    //             paymentToken_,
-    //             buyer,
-    //             creatorPayoutAddr_,
-    //             payment.creatorPayout
-    //         );
-    //         address treasury = IGovernance(_admin).treasury();
-    //         __transact(paymentToken_, buyer, treasury, payment.servicePayout);
-    //     }
-    //     __grantMinterRole(bulk_.nftContract, buyer);
-    //     ICollectible1155 nft = ICollectible1155(bulk_.nftContract);
-
-    //     __mintUnexist(seller_, bulk_, tokenURIs_);
-    //     nft.transferBatch(seller_, buyer, bulk_.tokenIds, bulk_.amounts);
-
-    // emit BulkRedeemed(
-    //     bulk_.nftContract,
-    //     buyer,
-    //     bulk_.tokenIds,
-    //     paymentToken_,
-    //     bulk_.unitPrices,
-    //     payment.total
-    // );
-    // }
 
     function __grantMinterRole(address nftContract_, address buyer_) private {
         IAccessControl governor = IAccessControl(nftContract_);
@@ -561,14 +328,6 @@ contract MarketplaceBase is
         return bytes4(keccak256(bytes(fnSignature_)));
     }
 
-    // function __isPaymentSupported(IGovernance admin_, address paymentToken_)
-    //     private
-    //     view
-    //     returns (bool)
-    // {
-    //     return admin_.acceptedPayments(paymentToken_);
-    // }
-
     function __verifyIntegrity(
         uint256 total_,
         uint256 nonce_,
@@ -595,28 +354,4 @@ contract MarketplaceBase is
             revert MP__Expired();
         }
     }
-
-    // function __verifyIntegrity(
-    //     uint256 deadline_,
-    //     IGovernance admin_,
-    //     address paymentToken_
-    // ) private view {
-    //     if (!__isPaymentSupported(admin_, paymentToken_)) {
-    //         revert MP__PaymentUnsuported();
-    //     }
-    //     if (block.timestamp > deadline_) {
-    //         revert MP__Expired();
-    //     }
-    // }
-
-    // function __verifySignature(
-    //     address verifier_,
-    //     bytes32 data_,
-    //     bytes calldata signature_
-    // ) private pure {
-    //     address signer = ECDSAUpgradeable.recover(data_, signature_);
-    //     if (signer != verifier_) {
-    //         revert MP__InvalidSignature();
-    //     }
-    // }
 }

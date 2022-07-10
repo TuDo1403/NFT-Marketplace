@@ -39,31 +39,12 @@ interface IMarketplace is IPausable {
         payable
         returns (bytes[] memory results);
 
-    // function redeem(
-    //     address seller_,
-    //     address paymentToken_,
-    //     address creatorPayoutAddr_,
-    //     uint256 deadline_,
-    //     ReceiptUtil.Item calldata item_,
-    //     string calldata tokenURI_,
-    //     bytes calldata signature_
-    // ) external payable;
-
     function redeem(
         uint256 deadline_,
         ReceiptUtil.Receipt calldata receipt_,
         bytes calldata signature_
     ) external payable;
 
-    // function redeemBulk(
-    //     uint256 deadline_,
-    //     address seller_,
-    //     address paymentToken_,
-    //     address creatorPayoutAddr_,
-    //     bytes calldata signature_,
-    //     ReceiptUtil.Bulk calldata bulk_,
-    //     string[] calldata tokenURIs_
-    // ) external payable;
     function redeemBulk(
         uint256 deadline_,
         ReceiptUtil.BulkReceipt calldata receipt_,

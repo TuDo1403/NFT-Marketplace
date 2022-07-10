@@ -22,7 +22,6 @@ contract Collectible1155 is
     ICollectible1155
 {
     using Strings for uint256;
-    //using Address for address;
     using TokenIdGenerator for uint256;
     using TokenIdGenerator for TokenIdGenerator.Token;
 
@@ -92,10 +91,12 @@ contract Collectible1155 is
         _setBaseURI(baseURI_);
     }
 
-    function freezeBase() external override onlyRole(URI_SETTER_ROLE) notFrozenBase {
-        // if (isFrozenBase) {
-        //     revert ERC1155__FrozenBase();
-        // }
+    function freezeBase()
+        external
+        override
+        onlyRole(URI_SETTER_ROLE)
+        notFrozenBase
+    {
         isFrozenBase = true;
         emit PermanentURI(0, uri(0));
     }

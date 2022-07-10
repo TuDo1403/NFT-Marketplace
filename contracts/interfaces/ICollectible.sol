@@ -2,7 +2,6 @@
 pragma solidity >=0.8.13;
 
 import "@openzeppelin/contracts/access/IAccessControl.sol";
-//import "./IPausable.sol";
 import "../libraries/TokenIdGenerator.sol";
 
 interface ICollectible is IAccessControl {

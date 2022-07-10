@@ -5,8 +5,6 @@ import "../interfaces/IGovernance.sol";
 import "./TokenIdGenerator.sol";
 
 library ReceiptUtil {
-    //error InsufficientPayment();
-
     using TokenIdGenerator for uint256;
 
     struct Header {
@@ -42,24 +40,12 @@ library ReceiptUtil {
     }
 
     struct Receipt {
-        // uint256 nonce;
-        // uint256 ticketExpiration;
-        // address buyer;
-        // address seller;
-        // address paymentToken;
-        // address creatorPayoutAddr;
         Header header;
         Payment payment;
         Item item;
     }
 
     struct BulkReceipt {
-        // uint256 nonce;
-        // uint256 ticketExpiration;
-        // address buyer;
-        // address seller;
-        // address paymentToken;
-        // address creatorPayoutAddr;
         Header header;
         Payment payment;
         Bulk bulk;
@@ -88,48 +74,29 @@ library ReceiptUtil {
     bytes32 private constant BULK_RECEIPT_TYPE_HASH =
         keccak256("BulkReceipt(Header header, Payment payment, Bulk bulk");
 
-    // function __getPayment(
-    //     uint256 amount_,
-    //     uint256 creatorFee_,
-    //     uint256 serviceFee_,
-    //     uint256 unitPrice_
-    // ) private pure returns (Payment memory payment) {
-    //     payment.subTotal = amount_ * unitPrice_;
-    //     payment.servicePayout = (payment.subTotal * serviceFee_) / 1e4;
-    //     payment.creatorPayout = (payment.subTotal * creatorFee_) / 1e4;
-    //     payment.total =
-    //         payment.subTotal +
-    //         payment.servicePayout +
-    //         payment.creatorPayout;
-    // }
-
     function hash(Receipt calldata receipt_) internal pure returns (bytes32) {
         return
             keccak256(
                 abi.encodePacked(
                     RECEIPT_TYPE_HASH,
-                    // receipt_.nonce,
-                    // receipt_.buyer,
-                    // receipt_.seller,
                     __hashHeader(receipt_.header),
                     __hashPayment(receipt_.payment),
-                    //receipt_.creatorPayoutAddr,
                     __hashItem(receipt_.item)
                 )
             );
     }
 
-    function hash(BulkReceipt calldata receipt_) internal pure returns (bytes32) {
+    function hash(BulkReceipt calldata receipt_)
+        internal
+        pure
+        returns (bytes32)
+    {
         return
             keccak256(
                 abi.encodePacked(
                     RECEIPT_TYPE_HASH,
-                    // receipt_.nonce,
-                    // receipt_.buyer,
-                    // receipt_.seller,
                     __hashHeader(receipt_.header),
                     __hashPayment(receipt_.payment),
-                    //receipt_.creatorPayoutAddr,
                     __hashBulk(receipt_.bulk)
                 )
             );
@@ -173,12 +140,9 @@ library ReceiptUtil {
                 abi.encode(
                     BULK_TYPE_HASH,
                     bulk_.nftContract,
-                    //keccak256(abi.encodePacked(bulk_.amounts)),
                     bulk_.amounts,
                     bulk_.tokenIds,
                     bulk_.unitPrices
-                    //keccak256(abi.encodePacked(bulk_.tokenIds)),
-                    //keccak256(abi.encodePacked(bulk_.unitPrices))
                 )
             );
     }
@@ -199,72 +163,4 @@ library ReceiptUtil {
                 )
             );
     }
-
-    // function createReceipt(
-    //     address buyer_,
-    //     address seller_,
-    //     address paymentToken_,
-    //     address creatorPayoutAddr_,
-    //     uint256 nonce_,
-    //     uint256 serviceFee_,
-    //     Item calldata item_
-    // ) internal view returns (Receipt memory receipt) {
-    //     receipt.payment = __getPayment(
-    //         item_.amount,
-    //         item_.tokenId.getCreatorFee(),
-    //         serviceFee_,
-    //         item_.unitPrice
-    //     );
-
-    //     __isSufficientPayment(receipt.payment.total);
-
-    //     receipt.item = item_;
-    //     receipt.nonce = nonce_;
-    //     receipt.buyer = buyer_;
-    //     receipt.seller = seller_;
-    //     receipt.paymentToken = paymentToken_;
-    //     receipt.creatorPayoutAddr = creatorPayoutAddr_;
-    // }
-
-    // function createBulkReceipt(
-    //     uint256 nonce_,
-    //     uint256 serviceFee_,
-    //     address buyer_,
-    //     address seller_,
-    //     address paymentToken_,
-    //     address creatorPayoutAddr_,
-    //     Bulk calldata bulk_
-    // ) internal view returns (BulkReceipt memory receipt) {
-    //     for (uint256 i; i < bulk_.tokenIds.length; ) {
-    //         Payment memory _payment = __getPayment(
-    //             bulk_.amounts[i],
-    //             bulk_.tokenIds[i].getCreatorFee(),
-    //             serviceFee_,
-    //             bulk_.unitPrices[i]
-    //         );
-    //         receipt.payment.subTotal += _payment.subTotal;
-    //         receipt.payment.creatorPayout += _payment.creatorPayout;
-    //         receipt.payment.servicePayout += _payment.servicePayout;
-    //         receipt.payment.total += _payment.total;
-
-    //         unchecked {
-    //             ++i;
-    //         }
-    //     }
-
-    //     __isSufficientPayment(receipt.payment.total);
-
-    //     receipt.bulk = bulk_;
-    //     receipt.nonce = nonce_;
-    //     receipt.buyer = buyer_;
-    //     receipt.seller = seller_;
-    //     receipt.paymentToken = paymentToken_;
-    //     receipt.creatorPayoutAddr = creatorPayoutAddr_;
-    // }
-
-    // function __isSufficientPayment(uint256 total_) private view {
-    //     if (msg.value < total_) {
-    //         revert InsufficientPayment();
-    //     }
-    // }
 }
