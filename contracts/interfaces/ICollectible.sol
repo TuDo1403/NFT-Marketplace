@@ -6,12 +6,12 @@ import "@openzeppelin/contracts/access/IAccessControl.sol";
 import "../libraries/TokenIdGenerator.sol";
 
 interface ICollectible is IAccessControl {
-    error Overflow();
-    error Unauthorized();
-    error InvalidInput();
+    error NFT__Overflow();
+    error NFT__Unauthorized();
+    error NFT__InvalidInput();
+    error NFT__StringTooLong();
 
     function initialize(
-        address admin_,
         address owner_,
         string calldata name_,
         string calldata symbol_,

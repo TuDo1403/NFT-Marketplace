@@ -11,7 +11,6 @@ contract NFTFactory is INFTFactory {
     using ClonesUpgradeable for address;
 
     address public governance;
-    address public marketplace;
 
     bytes32 public constant VERSION = keccak256("NFTFactoryv1");
 
@@ -19,30 +18,21 @@ contract NFTFactory is INFTFactory {
 
     modifier onlyOwner() {
         if (msg.sender != IGovernance(governance).manager()) {
-            revert Unauthorized();
+            revert Factory__Unauthorized();
         }
         _;
     }
 
     modifier validAddress(address addr_) {
         if (addr_ == address(0)) {
-            revert InvalidAddress();
+            revert Factory__InvalidAddress();
         }
         _;
     }
 
     //796772
-    constructor(address governance_, address marketplace_) {
+    constructor(address governance_) validAddress(governance_) {
         governance = governance_;
-        marketplace = marketplace_;
-    }
-
-    function setMarketplace(address marketplace_)
-        external
-        validAddress(marketplace_)
-        onlyOwner
-    {
-        marketplace = marketplace_;
     }
 
     function setGovernance(address governance_)
@@ -68,7 +58,7 @@ contract NFTFactory is INFTFactory {
         deployedContracts[uint256(salt)] = clone;
 
         ICollectible instance = ICollectible(clone);
-        instance.initialize(marketplace, owner, name_, symbol_, baseURI_);
+        instance.initialize(owner, name_, symbol_, baseURI_);
         emit TokenDeployed(
             name_,
             symbol_,
@@ -82,20 +72,21 @@ contract NFTFactory is INFTFactory {
     function multiDelegatecall(bytes[] calldata data)
         external
         onlyOwner
-        returns (bytes[] memory results)
+        returns (bytes[] memory)
     {
-        results = new bytes[](data.length);
+        bytes[] memory results = new bytes[](data.length);
         for (uint256 i; i < data.length; ) {
             (bool ok, bytes memory result) = address(this).delegatecall(
                 data[i]
             );
             if (!ok) {
-                revert ExecutionFailed();
+                revert Factory__ExecutionFailed();
             }
             results[i] = result;
             unchecked {
                 ++i;
             }
         }
+        return results;
     }
 }

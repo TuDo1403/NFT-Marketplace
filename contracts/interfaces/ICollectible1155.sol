@@ -4,9 +4,9 @@ pragma solidity >=0.8.13;
 import "./ICollectible.sol";
 
 interface ICollectible1155 is ICollectible {
-    error FrozenBase();
-    error FrozenToken();
-    error LengthMismatch();
+    error ERC1155__FrozenBase();
+    error ERC1155__FrozenToken();
+    error ERC1155__LengthMismatch();
 
     event PermanentURI(uint256 indexed tokenId_, string tokenURI_);
 

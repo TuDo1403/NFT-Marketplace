@@ -11,11 +11,11 @@ library TokenIdGenerator {
         address _creator;
     }
 
-    uint256 private constant FEE_BIT = 16; // creator fee
-    uint256 private constant TYPE_BIT = 16;
-    uint256 private constant INDEX_BIT = 32;
-    uint256 private constant SUPPLY_BIT = 32; // max supply
-    uint256 private constant ADDRESS_BIT = 160;
+    uint256 public constant FEE_BIT = 16; // creator fee
+    uint256 public constant TYPE_BIT = 16;
+    uint256 public constant INDEX_BIT = 32;
+    uint256 public constant SUPPLY_BIT = 32; // max supply
+    uint256 public constant ADDRESS_BIT = 160;
 
     uint256 private constant INDEX_MASK = (1 << INDEX_BIT) - 1;
     uint256 private constant FEE_MASK =

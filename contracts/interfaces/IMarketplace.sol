@@ -1,18 +1,20 @@
 // SPDX-License-Identifier: Unlisened
 pragma solidity >=0.8.13;
-
 import "./IPausable.sol";
+import "./IGovernance.sol";
+
 import "../libraries/ReceiptUtil.sol";
 
 interface IMarketplace is IPausable {
-    error Expired();
-    error InvalidInput();
-    error Unauthorized();
-    error LengthMismatch();
-    error ExecutionFailed();
-    error PaymentFailed();
-    error PaymentUnsuported();
-    error InvalidSignature();
+    error MP__Expired();
+    error MP__InvalidInput();
+    error MP__Unauthorized();
+    error MP__PaymentFailed();
+    error MP__LengthMismatch();
+    error MP__ExecutionFailed();
+    error MP__InvalidSignature();
+    error MP__PaymentUnsuported();
+    error MP__InsufficientPayment();
 
     event ItemRedeemed(
         address indexed nftContract,
@@ -37,25 +39,34 @@ interface IMarketplace is IPausable {
         payable
         returns (bytes[] memory results);
 
+    // function redeem(
+    //     address seller_,
+    //     address paymentToken_,
+    //     address creatorPayoutAddr_,
+    //     uint256 deadline_,
+    //     ReceiptUtil.Item calldata item_,
+    //     string calldata tokenURI_,
+    //     bytes calldata signature_
+    // ) external payable;
+
     function redeem(
-        address seller_,
-        address paymentToken_,
-        address creatorPayoutAddr_,
         uint256 deadline_,
-        ReceiptUtil.Item calldata item_,
-        string calldata tokenURI_,
+        ReceiptUtil.Receipt calldata receipt_,
         bytes calldata signature_
     ) external payable;
 
+    // function redeemBulk(
+    //     uint256 deadline_,
+    //     address seller_,
+    //     address paymentToken_,
+    //     address creatorPayoutAddr_,
+    //     bytes calldata signature_,
+    //     ReceiptUtil.Bulk calldata bulk_,
+    //     string[] calldata tokenURIs_
+    // ) external payable;
     function redeemBulk(
         uint256 deadline_,
-        address seller_,
-        address paymentToken_,
-        address creatorPayoutAddr_,
-        bytes calldata signature_,
-        ReceiptUtil.Bulk calldata bulk_,
-        string[] calldata tokenURIs_
+        ReceiptUtil.BulkReceipt calldata receipt_,
+        bytes calldata signature_
     ) external payable;
-
-    function setAdmin(address admin_) external;
 }

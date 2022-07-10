@@ -2,9 +2,9 @@
 pragma solidity >=0.8.13;
 
 interface INFTFactory {
-    error Unauthorized();
-    error InvalidAddress();
-    error ExecutionFailed();
+    error Factory__Unauthorized();
+    error Factory__InvalidAddress();
+    error Factory__ExecutionFailed();
 
     event TokenDeployed(
         string name_,
@@ -14,8 +14,6 @@ interface INFTFactory {
         address indexed deployer_,
         address indexed deployedAddr_
     );
-
-    function setMarketplace(address marketplace_) external;
 
     function setGovernance(address governance_) external;
 
