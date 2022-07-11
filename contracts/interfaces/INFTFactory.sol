@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: Unlicense
+// SPDX-License-Identifier: Unlicensed
 pragma solidity >=0.8.13;
 
 interface INFTFactory {
@@ -16,13 +16,6 @@ interface INFTFactory {
     );
 
     function setGovernance(address governance_) external;
-
-    function deployCollectible(
-        address implement_,
-        string calldata name_,
-        string calldata symbol_,
-        string calldata baseURI_
-    ) external returns (address deployedAddress);
 
     function multiDelegatecall(bytes[] calldata data)
         external

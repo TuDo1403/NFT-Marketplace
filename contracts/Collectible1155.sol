@@ -1,13 +1,12 @@
-// SPDX-License-Identifier: Unlisened
+// SPDX-License-Identifier: Unlicensed
 pragma solidity >=0.8.13;
 
-import "@openzeppelin/contracts/utils/Strings.sol";
-//import "@openzeppelin/contracts/security/Pausable.sol";
-import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155URIStorage.sol";
+
+import "./CollectibleBase.sol";
 
 import "./interfaces/IGovernance.sol";
 import "./interfaces/ICollectible1155.sol";
@@ -15,8 +14,8 @@ import "./interfaces/ICollectible1155.sol";
 //Pausable,
 contract Collectible1155 is
     Initializable,
-    AccessControl,
     ERC1155Supply,
+    CollectibleBase,
     ERC1155Burnable,
     ERC1155URIStorage,
     ICollectible1155
@@ -25,34 +24,12 @@ contract Collectible1155 is
     using TokenIdGenerator for uint256;
     using TokenIdGenerator for TokenIdGenerator.Token;
 
-    bool public isFrozenBase;
-
-    IGovernance public immutable admin;
-
-    bytes32 public constant TYPE = keccak256("ERC1155");
-    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
-    bytes32 public constant URI_SETTER_ROLE = keccak256("URI_SETTER_ROLE");
+    bytes32 public constant TYPE = keccak256("ERC1155v1");
 
     string public name;
     string public symbol;
 
-    mapping(uint256 => bool) public frozenTokens;
-
-    modifier onlyCreatorAndNotFrozen(uint256 tokenId_) {
-        __onlyCreatorAndNotFrozen(_msgSender(), tokenId_);
-        _;
-    }
-
-    modifier notFrozenBase() {
-        if (isFrozenBase) {
-            revert ERC1155__FrozenBase();
-        }
-        _;
-    }
-
-    constructor(address admin_) ERC1155("") {
-        admin = IGovernance(admin_);
-    }
+    constructor(address admin_) ERC1155("") CollectibleBase(admin_) {}
 
     //283198
     function initialize(
@@ -72,31 +49,15 @@ contract Collectible1155 is
         _grantRole(URI_SETTER_ROLE, owner_);
     }
 
-    function freezeToken(uint256 tokenId_)
-        external
-        override
-        onlyCreatorAndNotFrozen(tokenId_)
-    {
-        __freezeToken(tokenId_);
-    }
-
     function setBaseURI(string calldata baseURI_)
         external
-        override
+        override(CollectibleBase, ICollectible)
         onlyRole(URI_SETTER_ROLE)
     {
-        // if (isFrozenBase) {
-        //     revert ERC1155__FrozenBase();
-        // }
         _setBaseURI(baseURI_);
     }
 
-    function freezeBase()
-        external
-        override
-        onlyRole(URI_SETTER_ROLE)
-        notFrozenBase
-    {
+    function _freezeBase() internal override {
         isFrozenBase = true;
         emit PermanentURI(0, uri(0));
     }
@@ -107,33 +68,31 @@ contract Collectible1155 is
         onlyCreatorAndNotFrozen(tokenId_)
     {
         _setURI(tokenId_, tokenURI_);
-        __freezeToken(tokenId_);
+        _freezeToken(tokenId_);
     }
 
     function mint(uint256 tokenId_, uint256 amount_) external override {
         address sender = _msgSender();
-        __onlyCreatorAndNotFrozen(sender, tokenId_);
+        _onlyCreatorAndNotFrozen(sender, tokenId_);
         __supplyCheck(tokenId_, amount_);
         _mint(sender, tokenId_, amount_, "");
     }
 
     function mint(
-        uint256 amount_,
-        TokenIdGenerator.Token calldata token_,
-        string calldata tokenURI_
-    ) external override onlyRole(MINTER_ROLE) {
-        uint256 tokenId = token_.createTokenId();
-        __supplyCheck(tokenId, amount_);
-        __mint(_msgSender(), tokenId, amount_, tokenURI_);
-    }
-
-    function lazyMintSingle(
         address to_,
         uint256 tokenId_,
         uint256 amount_,
         string calldata tokenURI_
     ) external override onlyRole(MINTER_ROLE) {
-        __mint(to_, tokenId_, amount_, tokenURI_);
+        _setTokenRoyalty(
+            tokenId_,
+            tokenId_.getTokenCreator(),
+            uint96(tokenId_.getCreatorFee())
+        );
+        _mint(to_, tokenId_, amount_, "");
+        if (bytes(tokenURI_).length != 0) {
+            _setURI(tokenId_, tokenURI_);
+        }
     }
 
     function mintBatch(
@@ -142,8 +101,9 @@ contract Collectible1155 is
     ) external override {
         address sender = _msgSender();
         for (uint256 i; i < amounts_.length; ) {
-            __onlyCreatorAndNotFrozen(sender, tokenIds_[i]);
-            __supplyCheck(tokenIds_[i], amounts_[i]);
+            uint256 tokenId = tokenIds_[i];
+            _onlyCreatorAndNotFrozen(sender, tokenId);
+            __supplyCheck(tokenId, amounts_[i]);
             unchecked {
                 ++i;
             }
@@ -152,35 +112,6 @@ contract Collectible1155 is
     }
 
     function mintBatch(
-        uint256[] calldata amounts_,
-        string[] calldata tokenURIs_,
-        TokenIdGenerator.Token[] calldata tokens_
-    ) external override onlyRole(MINTER_ROLE) {
-        if (tokenURIs_.length != tokens_.length) {
-            revert ERC1155__LengthMismatch();
-        }
-        address _owner = _msgSender();
-        uint256[] memory tokenIds;
-
-        for (uint256 i; i < tokens_.length; ) {
-            if (tokens_[i]._creator != _owner) {
-                revert NFT__Unauthorized();
-            }
-            tokenIds[i] = tokens_[i].createTokenId();
-            __supplyCheck(tokenIds[i], amounts_[i]);
-
-            if (bytes(tokenURIs_[i]).length != 0) {
-                _setURI(tokenIds[i], tokenURIs_[i]);
-            }
-            unchecked {
-                ++i;
-            }
-        }
-
-        _mintBatch(_owner, tokenIds, amounts_, "");
-    }
-
-    function lazyMintBatch(
         address to_,
         uint256[] calldata tokenIds_,
         uint256[] calldata amounts_,
@@ -188,8 +119,15 @@ contract Collectible1155 is
     ) external override onlyRole(MINTER_ROLE) {
         _mintBatch(to_, tokenIds_, amounts_, "");
         for (uint256 i; i < tokenURIs_.length; ) {
-            if (bytes(tokenURIs_[i]).length != 0) {
-                _setURI(tokenIds_[i], tokenURIs_[i]);
+            uint256 tokenId = tokenIds_[i];
+            _setTokenRoyalty(
+                tokenId,
+                tokenId.getTokenCreator(),
+                uint96(tokenId.getCreatorFee())
+            );
+            string memory _tokenURI = tokenURIs_[i];
+            if (bytes(_tokenURI).length != 0) {
+                _setURI(tokenId, _tokenURI);
             }
             unchecked {
                 ++i;
@@ -203,9 +141,7 @@ contract Collectible1155 is
         uint256 amount_,
         uint256 tokenId_
     ) external override {
-        if (_msgSender() != admin.marketplace()) {
-            revert NFT__Unauthorized();
-        }
+        _onlyMarketplace();
         _safeTransferFrom(from_, to_, tokenId_, amount_, "");
     }
 
@@ -215,9 +151,7 @@ contract Collectible1155 is
         uint256[] memory amounts_,
         uint256[] memory tokenIds_
     ) external override {
-        if (_msgSender() != admin.marketplace()) {
-            revert NFT__Unauthorized();
-        }
+        _onlyMarketplace();
         _safeBatchTransferFrom(from_, to_, tokenIds_, amounts_, "");
     }
 
@@ -242,7 +176,7 @@ contract Collectible1155 is
         }
     }
 
-    function getTokenURI(uint256 tokenId_)
+    function tokenURI(uint256 tokenId_)
         external
         view
         override
@@ -269,7 +203,7 @@ contract Collectible1155 is
     function supportsInterface(bytes4 interfaceId)
         public
         view
-        override(ERC1155, AccessControl)
+        override(ERC1155, CollectibleBase)
         returns (bool)
     {
         return super.supportsInterface(interfaceId);
@@ -286,21 +220,9 @@ contract Collectible1155 is
         super._beforeTokenTransfer(operator, from, to, ids, amounts, data);
     }
 
-    function __freezeToken(uint256 tokenId_) private {
-        frozenTokens[tokenId_] = true;
+    function _freezeToken(uint256 tokenId_) internal override {
+        super._freezeToken(tokenId_);
         emit PermanentURI(tokenId_, uri(tokenId_));
-    }
-
-    function __mint(
-        address to_,
-        uint256 tokenId_,
-        uint256 amount_,
-        string calldata tokenURI_
-    ) private {
-        _mint(to_, tokenId_, amount_, "");
-        if (bytes(tokenURI_).length != 0) {
-            _setURI(tokenId_, tokenURI_);
-        }
     }
 
     function __supplyCheck(uint256 tokenId_, uint256 amount_) private view {
@@ -314,18 +236,6 @@ contract Collectible1155 is
                     revert NFT__Overflow();
                 }
             }
-        }
-    }
-
-    function __onlyCreatorAndNotFrozen(address sender_, uint256 tokenId_)
-        private
-        view
-    {
-        if (sender_ != tokenId_.getTokenCreator()) {
-            revert NFT__Unauthorized();
-        }
-        if (frozenTokens[tokenId_]) {
-            revert ERC1155__FrozenToken();
         }
     }
 }
