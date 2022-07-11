@@ -1,18 +1,18 @@
-// SPDX-License-Identifier: Unlicense
+// SPDX-License-Identifier: Unlicensed
 pragma solidity >=0.8.13;
 
 import "@openzeppelin/contracts-upgradeable/proxy/ClonesUpgradeable.sol";
 
-import "./interfaces/ICollectible.sol";
+import "./interfaces/ICollectible1155.sol";
 import "./interfaces/INFTFactory.sol";
 import "./interfaces/IGovernance.sol";
 
-contract NFTFactory is INFTFactory {
+contract NFTFactory1155 is INFTFactory {
     using ClonesUpgradeable for address;
 
     address public governance;
 
-    bytes32 public constant VERSION = keccak256("NFTFactoryv1");
+    bytes32 public constant VERSION = keccak256("NFTFactory1155v1");
 
     mapping(uint256 => address) public deployedContracts;
 
@@ -43,7 +43,7 @@ contract NFTFactory is INFTFactory {
         governance = governance_;
     }
 
-    function deployCollectible(
+    function deployCollectible1155(
         address implement_,
         string calldata name_,
         string calldata symbol_,
@@ -57,7 +57,7 @@ contract NFTFactory is INFTFactory {
         clone = implement_.cloneDeterministic(salt);
         deployedContracts[uint256(salt)] = clone;
 
-        ICollectible instance = ICollectible(clone);
+        ICollectible1155 instance = ICollectible1155(clone);
         instance.initialize(owner, name_, symbol_, baseURI_);
         emit TokenDeployed(
             name_,
