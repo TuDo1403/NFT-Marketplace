@@ -1,77 +1,92 @@
 // SPDX-License-Identifier: Unlicense
-pragma solidity ^0.8.15;
+pragma solidity >=0.8.13;
 
-import "./Interfaces/ICollectible.sol";
-import "./Interfaces/INFTFactory.sol";
-import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/ClonesUpgradeable.sol";
 
-error invalidAddress();
+import "./interfaces/ICollectible.sol";
+import "./interfaces/INFTFactory.sol";
+import "./interfaces/IGovernance.sol";
 
-contract NFTFactory is INFTFactory, OwnableUpgradeable {
+contract NFTFactory is INFTFactory {
     using ClonesUpgradeable for address;
-    using CountersUpgradeable for CountersUpgradeable.Counter;
-    //State Variables
-    CountersUpgradeable.Counter public s_contractId;
-    mapping(uint256 => address) public s_idToContractAddress;
 
-    //modifier
-    modifier nonZeroAddress(address _addr) {
-        if (_addr == address(0)) {
-            revert invalidAddress();
+    address public governance;
+
+    bytes32 public constant VERSION = keccak256("NFTFactoryv1");
+
+    mapping(uint256 => address) public deployedContracts;
+
+    modifier onlyOwner() {
+        if (msg.sender != IGovernance(governance).manager()) {
+            revert Factory__Unauthorized();
         }
         _;
     }
 
-    //methods
-    function initialize() external {
-        __Ownable_init();
+    modifier validAddress(address addr_) {
+        if (addr_ == address(0)) {
+            revert Factory__InvalidAddress();
+        }
+        _;
     }
 
-    //deploy ERC721 contract
-    function createNft(
-        address _implement,
-        string calldata _uri,
-        string calldata _name,
-        string calldata _symbol
-    ) external override returns (address deployedAddress) {
-        nftData memory data = nftData({
-            uri: _uri,
-            name: _name,
-            symbol: _symbol
-        });
-        deployedAddress = _createNft(_implement, _msgSender(), data);
+    //796772
+    constructor(address governance_) validAddress(governance_) {
+        governance = governance_;
     }
 
-    function _createNft(
-        address _implement,
-        address _nftCreator,
-        nftData memory _data
-    ) internal returns (address deployedAddress) {
+    function setGovernance(address governance_)
+        external
+        validAddress(governance_)
+        onlyOwner
+    {
+        governance = governance_;
+    }
+
+    function deployCollectible(
+        address implement_,
+        string calldata name_,
+        string calldata symbol_,
+        string calldata baseURI_
+    ) external returns (address clone) {
+        address owner = msg.sender;
         bytes32 salt = keccak256(
-            abi.encodePacked(_data.uri, _data.name, _data.symbol)
+            abi.encodePacked(VERSION, name_, symbol_, baseURI_)
         );
-        deployedAddress = _implement.cloneDeterministic(salt);
-        ICollectible newCollectible = ICollectible(deployedAddress);
-        newCollectible.initialize(
-            _nftCreator,
-            _data.uri,
-            _data.name,
-            _data.symbol
+
+        clone = implement_.cloneDeterministic(salt);
+        deployedContracts[uint256(salt)] = clone;
+
+        ICollectible instance = ICollectible(clone);
+        instance.initialize(owner, name_, symbol_, baseURI_);
+        emit TokenDeployed(
+            name_,
+            symbol_,
+            baseURI_,
+            string(abi.encodePacked(instance.TYPE())),
+            owner,
+            clone
         );
-        emit nftCreated(
-            deployedAddress,
-            _nftCreator,
-            _data.uri,
-            _data.name,
-            _data.symbol,
-            block.timestamp
-        );
-        s_idToContractAddress[s_contractId.current()] = deployedAddress;
-        s_contractId.increment();
     }
 
-    // deploy ERC1155 contract
-    //pure, view method
+    function multiDelegatecall(bytes[] calldata data)
+        external
+        onlyOwner
+        returns (bytes[] memory)
+    {
+        bytes[] memory results = new bytes[](data.length);
+        for (uint256 i; i < data.length; ) {
+            (bool ok, bytes memory result) = address(this).delegatecall(
+                data[i]
+            );
+            if (!ok) {
+                revert Factory__ExecutionFailed();
+            }
+            results[i] = result;
+            unchecked {
+                ++i;
+            }
+        }
+        return results;
+    }
 }
