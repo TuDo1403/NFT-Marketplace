@@ -26,6 +26,23 @@ abstract contract CollectibleBase is AccessControl, ICollectible, ERC2981 {
         _;
     }
 
+    modifier onlyMarketplace() {
+        if (_msgSender() != admin.marketplace()) {
+            revert NFT__Unauthorized();
+        }
+        _;
+    }
+
+    // modifier onlyCreatorAndNotFrozen(uint256 tokenId_) {
+    //     if (_msgSender() != tokenId_.getTokenCreator()) {
+    //         revert NFT__Unauthorized();
+    //     }
+    //     if (frozenTokens[tokenId_]) {
+    //         revert NFT__FrozenToken();
+    //     }
+    //     _;
+    // }
+
     modifier onlyCreatorAndNotFrozen(uint256 tokenId_) {
         _onlyCreatorAndNotFrozen(_msgSender(), tokenId_);
         _;
@@ -82,9 +99,9 @@ abstract contract CollectibleBase is AccessControl, ICollectible, ERC2981 {
         }
     }
 
-    function _onlyMarketplace() internal view {
-        if (_msgSender() != admin.marketplace()) {
-            revert NFT__Unauthorized();
-        }
-    }
+    // function _onlyMarketplace() internal view {
+    //     if (_msgSender() != admin.marketplace()) {
+    //         revert NFT__Unauthorized();
+    //     }
+    // }
 }

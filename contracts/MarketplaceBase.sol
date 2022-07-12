@@ -115,22 +115,13 @@ contract MarketplaceBase is
             tokenId,
             amount
         );
-
         if (!minted) {
-            __grantMinterRole(nftContract, buyer);
-
-            (bool ok, ) = nftContract.delegatecall(
-                abi.encodeWithSelector(
-                    __getFnSelector("mint(address,uint256,uint256,string)"),
-                    seller,
-                    tokenId,
-                    amount,
-                    receipt_.item.tokenURI
-                )
+            __delegateLazyMint(
+                buyer,
+                nftContract,
+                "mint(address,uint256,uint256,string)",
+                abi.encode(seller, tokenId, amount, receipt_.item.tokenURI)
             );
-            if (!ok) {
-                revert MP__ExecutionFailed();
-            }
         }
 
         ICollectible(nftContract).transferSingle(
@@ -167,12 +158,12 @@ contract MarketplaceBase is
 
         address seller = receipt_.header.seller;
         address nftContract = receipt_.bulk.nftContract;
+        uint256[] memory tokensToMint;
+        uint256[] memory amountsToMint;
         // get rid of stack too deep
         {
-            bool roleNeeded;
             uint256 counter;
-            uint256[] memory tokensToMint;
-            uint256[] memory amountsToMint;
+
             for (uint256 i; i < receipt_.bulk.tokenIds.length; ) {
                 uint256 tokenId = receipt_.bulk.tokenIds[i];
                 uint256 amount = receipt_.bulk.amounts[i];
@@ -184,7 +175,6 @@ contract MarketplaceBase is
 
                 unchecked {
                     if (!minted) {
-                        roleNeeded = true;
                         tokensToMint[counter] = tokenId;
                         amountsToMint[counter] = amount;
                         ++counter;
@@ -192,24 +182,19 @@ contract MarketplaceBase is
                     ++i;
                 }
             }
-            if (roleNeeded) {
-                __grantMinterRole(nftContract, buyer);
-            }
-            (bool ok, ) = nftContract.delegatecall(
-                abi.encodeWithSelector(
-                    __getFnSelector(
-                        "mintBatch(address,uint256[],uint256[],string[])"
-                    ),
-                    seller,
-                    tokensToMint,
-                    amountsToMint,
-                    receipt_.bulk.tokenURIs
-                )
-            );
-            if (!ok) {
-                revert MP__ExecutionFailed();
-            }
         }
+
+        __delegateLazyMint(
+            buyer,
+            nftContract,
+            "mintBatch(address,uint256[],uint256[],string[])",
+            abi.encode(
+                seller,
+                tokensToMint,
+                amountsToMint,
+                receipt_.bulk.tokenURIs
+            )
+        );
 
         ICollectible1155(nftContract).transferBatch(
             seller,
@@ -244,7 +229,6 @@ contract MarketplaceBase is
             deadline_,
             header_.ticketExpiration,
             _admin,
-            buyer_,
             paymentToken
         );
         if (
@@ -270,12 +254,13 @@ contract MarketplaceBase is
         );
     }
 
-    function __grantMinterRole(address nftContract_, address buyer_) private {
-        IAccessControl governor = IAccessControl(nftContract_);
-        bytes32 minterRole = ICollectible(nftContract_).MINTER_ROLE();
-        if (!governor.hasRole(minterRole, buyer_)) {
-            governor.grantRole(minterRole, buyer_);
-        }
+    function __grantMinterRole(address nftContract_, address buyer_)
+        private
+        returns (IAccessControl governance, bytes32 minterRole)
+    {
+        minterRole = ICollectible(nftContract_).MINTER_ROLE();
+        governance = IAccessControl(nftContract_);
+        governance.grantRole(minterRole, buyer_);
     }
 
     function pause() external override whenNotPaused onlyManager {
@@ -307,12 +292,11 @@ contract MarketplaceBase is
     }
 
     function __initialize(uint256 serviceFee_, uint256 creatorFeeUB_) private {
-        uint256 upperBound = 2**TokenIdGenerator.FEE_BIT - 1;
         if (serviceFee_ != 0) {
-            serviceFee = serviceFee_ % upperBound;
+            serviceFee = serviceFee_ % 1e4;
         }
         if (creatorFeeUB_ != 0) {
-            creatorFeeUB = creatorFeeUB_ % upperBound;
+            creatorFeeUB = creatorFeeUB_ % 1e4;
         }
 
         __Pausable_init();
@@ -323,12 +307,23 @@ contract MarketplaceBase is
         );
     }
 
-    function __getFnSelector(string memory fnSignature_)
-        private
-        pure
-        returns (bytes4)
-    {
-        return bytes4(keccak256(bytes(fnSignature_)));
+    function __delegateLazyMint(
+        address buyer_,
+        address nftContract_,
+        string memory fnName_,
+        bytes memory data_
+    ) private {
+        (IAccessControl governance, bytes32 minterRole) = __grantMinterRole(
+            nftContract_,
+            buyer_
+        );
+        (bool ok, ) = nftContract_.delegatecall(
+            abi.encodePacked(bytes4(keccak256(bytes(fnName_))), data_)
+        );
+        if (!ok) {
+            revert MP__ExecutionFailed();
+        }
+        governance.revokeRole(minterRole, buyer_);
     }
 
     function __verifyIntegrity(
@@ -337,12 +332,8 @@ contract MarketplaceBase is
         uint256 deadline_,
         uint256 ticketExpiration_,
         IGovernance admin_,
-        address buyer_,
         address paymentToken_
     ) private view {
-        if (buyer_ != _msgSender()) {
-            revert MP__Unauthorized();
-        }
         if (total_ > msg.value) {
             revert MP__InsufficientPayment();
         }

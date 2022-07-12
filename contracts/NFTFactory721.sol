@@ -12,7 +12,7 @@ import "./interfaces/IGovernance.sol";
 contract NFTFactory721 is INFTFactory {
     address public governance;
 
-    bytes32 public constant VERSION = keccak256("NFTFactory721v1");
+    bytes32 public constant VERSION = keccak256("NFTFactory721_v1");
 
     mapping(uint256 => address) public deployedContracts;
 
@@ -64,7 +64,7 @@ contract NFTFactory721 is INFTFactory {
             name_,
             symbol_,
             baseURI_,
-            string(abi.encodePacked(ICollectible(clone).TYPE())),
+            ICollectible(clone).TYPE(),
             owner,
             clone
         );
