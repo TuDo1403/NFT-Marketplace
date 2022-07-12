@@ -11,7 +11,6 @@ import "./CollectibleBase.sol";
 import "./interfaces/IGovernance.sol";
 import "./interfaces/ICollectible1155.sol";
 
-//Pausable,
 contract Collectible1155 is
     Initializable,
     ERC1155Supply,
@@ -24,14 +23,18 @@ contract Collectible1155 is
     using TokenIdGenerator for uint256;
     using TokenIdGenerator for TokenIdGenerator.Token;
 
-    bytes32 public constant TYPE = keccak256("ERC1155v1");
+    uint256 public constant TYPE = 1155;
 
     string public name;
     string public symbol;
 
+    modifier onlyUnexists(uint256 tokenId_) {
+        __onlyUnexists(tokenId_);
+        _;
+    }
+
     constructor(address admin_) ERC1155("") CollectibleBase(admin_) {}
 
-    //283198
     function initialize(
         address owner_,
         string calldata name_,
@@ -53,11 +56,13 @@ contract Collectible1155 is
         external
         override(CollectibleBase, ICollectible)
         onlyRole(URI_SETTER_ROLE)
+        notFrozenBase
     {
         _setBaseURI(baseURI_);
+        _freezeBase();
     }
 
-    function _freezeBase() internal override {
+    function _freezeBase() internal override notFrozenBase {
         isFrozenBase = true;
         emit PermanentURI(0, uri(0));
     }
@@ -71,9 +76,12 @@ contract Collectible1155 is
         _freezeToken(tokenId_);
     }
 
-    function mint(uint256 tokenId_, uint256 amount_) external override {
+    function mint(uint256 tokenId_, uint256 amount_)
+        external
+        override
+        onlyCreatorAndNotFrozen(tokenId_)
+    {
         address sender = _msgSender();
-        _onlyCreatorAndNotFrozen(sender, tokenId_);
         __supplyCheck(tokenId_, amount_);
         _mint(sender, tokenId_, amount_, "");
     }
@@ -83,7 +91,7 @@ contract Collectible1155 is
         uint256 tokenId_,
         uint256 amount_,
         string calldata tokenURI_
-    ) external override onlyRole(MINTER_ROLE) {
+    ) external override onlyUnexists(tokenId_) onlyRole(MINTER_ROLE) {
         _setTokenRoyalty(
             tokenId_,
             tokenId_.getTokenCreator(),
@@ -98,7 +106,7 @@ contract Collectible1155 is
     function mintBatch(
         uint256[] calldata tokenIds_,
         uint256[] calldata amounts_
-    ) external override {
+    ) external override onlyRole(MINTER_ROLE) {
         address sender = _msgSender();
         for (uint256 i; i < amounts_.length; ) {
             uint256 tokenId = tokenIds_[i];
@@ -117,9 +125,9 @@ contract Collectible1155 is
         uint256[] calldata amounts_,
         string[] calldata tokenURIs_
     ) external override onlyRole(MINTER_ROLE) {
-        _mintBatch(to_, tokenIds_, amounts_, "");
         for (uint256 i; i < tokenURIs_.length; ) {
             uint256 tokenId = tokenIds_[i];
+            __onlyUnexists(tokenId);
             _setTokenRoyalty(
                 tokenId,
                 tokenId.getTokenCreator(),
@@ -133,6 +141,7 @@ contract Collectible1155 is
                 ++i;
             }
         }
+        _mintBatch(to_, tokenIds_, amounts_, "");
     }
 
     function transferSingle(
@@ -140,8 +149,7 @@ contract Collectible1155 is
         address to_,
         uint256 amount_,
         uint256 tokenId_
-    ) external override {
-        _onlyMarketplace();
+    ) external override onlyMarketplace {
         _safeTransferFrom(from_, to_, tokenId_, amount_, "");
     }
 
@@ -150,8 +158,7 @@ contract Collectible1155 is
         address to_,
         uint256[] memory amounts_,
         uint256[] memory tokenIds_
-    ) external override {
-        _onlyMarketplace();
+    ) external override onlyMarketplace {
         _safeBatchTransferFrom(from_, to_, tokenIds_, amounts_, "");
     }
 
@@ -171,8 +178,6 @@ contract Collectible1155 is
                 revert NFT__Unauthorized();
             }
             minted = true;
-        } else {
-            minted = false;
         }
     }
 
@@ -227,15 +232,21 @@ contract Collectible1155 is
 
     function __supplyCheck(uint256 tokenId_, uint256 amount_) private view {
         if (amount_ > 2**TokenIdGenerator.SUPPLY_BIT - 1) {
-            revert NFT__Overflow();
+            revert ERC1155__AllocationExceeds();
         }
         uint256 maxSupply = tokenId_.getTokenMaxSupply();
         if (maxSupply != 0) {
             unchecked {
                 if (amount_ + totalSupply(tokenId_) > maxSupply) {
-                    revert NFT__Overflow();
+                    revert ERC1155__AllocationExceeds();
                 }
             }
+        }
+    }
+
+    function __onlyUnexists(uint256 tokenId_) private view {
+        if (exists(tokenId_)) {
+            revert NFT__TokenExisted();
         }
     }
 }

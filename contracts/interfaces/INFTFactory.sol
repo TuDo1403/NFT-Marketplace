@@ -10,7 +10,7 @@ interface INFTFactory {
         string name_,
         string symbol_,
         string baseURI_,
-        string indexed standard_,
+        uint256 indexed standard_,
         address indexed deployer_,
         address indexed deployedAddr_
     );

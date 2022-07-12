@@ -5,6 +5,7 @@ import "./ICollectible.sol";
 
 interface ICollectible1155 is ICollectible {
     error ERC1155__LengthMismatch();
+    error ERC1155__AllocationExceeds();
 
     function initialize(
         address owner_,

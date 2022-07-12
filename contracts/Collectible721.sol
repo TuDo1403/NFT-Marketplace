@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: Unlicensed
 pragma solidity >=0.8.13;
 
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Royalty.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
@@ -19,7 +18,7 @@ contract Collectible721 is
     using Strings for uint256;
     using TokenIdGenerator for uint256;
 
-    bytes32 public constant TYPE = keccak256("ERC721v1");
+    uint256 public constant TYPE = 721;
 
     string public baseURI;
 
@@ -40,7 +39,7 @@ contract Collectible721 is
         if (bytes(name_).length > 32 || bytes(symbol_).length > 32) {
             revert NFT__StringTooLong();
         }
-        baseURI = baseURI_;
+        _setBaseURI(baseURI_);
         _grantRole(MINTER_ROLE, owner_);
         _grantRole(URI_SETTER_ROLE, owner_);
     }
@@ -50,8 +49,7 @@ contract Collectible721 is
         address to_,
         uint256 amount_,
         uint256 tokenId_
-    ) external override onlyUnique(amount_) {
-        _onlyMarketplace();
+    ) external override onlyUnique(amount_) onlyMarketplace {
         _safeTransfer(from_, to_, tokenId_, "");
     }
 
@@ -59,8 +57,10 @@ contract Collectible721 is
         external
         override(CollectibleBase, ICollectible)
         onlyRole(URI_SETTER_ROLE)
+        notFrozenBase
     {
-        baseURI = baseURI_;
+        _setBaseURI(baseURI_);
+        _freezeBase();
     }
 
     function setTokenURI(uint256 tokenId_, string calldata tokenURI_)
@@ -69,6 +69,7 @@ contract Collectible721 is
         onlyCreatorAndNotFrozen(tokenId_)
     {
         _setTokenURI(tokenId_, tokenURI_);
+        _freezeToken(tokenId_);
     }
 
     function isMintedBefore(
@@ -82,8 +83,6 @@ contract Collectible721 is
             }
             minted = true;
         }
-
-        minted = false;
     }
 
     function mint(
@@ -92,6 +91,9 @@ contract Collectible721 is
         uint256 amount_,
         string memory tokenURI_
     ) public onlyUnique(amount_) onlyRole(MINTER_ROLE) {
+        if (_exists(tokenId_)) {
+            revert NFT__TokenExisted();
+        }
         _setTokenRoyalty(
             tokenId_,
             tokenId_.getTokenCreator(),
@@ -131,12 +133,16 @@ contract Collectible721 is
         super._burn(tokenId);
     }
 
-    function _freezeBase() internal virtual override {
+    function _freezeBase() internal virtual override notFrozenBase {
         isFrozenBase = true;
         emit PermanentURI(0, baseURI);
     }
 
     function _baseURI() internal view override returns (string memory) {
         return baseURI;
+    }
+
+    function _setBaseURI(string memory baseURI_) internal {
+        baseURI = baseURI_;
     }
 }

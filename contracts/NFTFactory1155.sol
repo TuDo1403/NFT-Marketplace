@@ -12,7 +12,7 @@ contract NFTFactory1155 is INFTFactory {
 
     address public governance;
 
-    bytes32 public constant VERSION = keccak256("NFTFactory1155v1");
+    bytes32 public constant VERSION = keccak256("NFTFactory1155_v1");
 
     mapping(uint256 => address) public deployedContracts;
 
@@ -63,7 +63,7 @@ contract NFTFactory1155 is INFTFactory {
             name_,
             symbol_,
             baseURI_,
-            string(abi.encodePacked(instance.TYPE())),
+            instance.TYPE(),
             owner,
             clone
         );

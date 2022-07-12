@@ -6,9 +6,9 @@ import "@openzeppelin/contracts/access/IAccessControl.sol";
 import "../libraries/TokenIdGenerator.sol";
 
 interface ICollectible is IAccessControl {
-    error NFT__Overflow();
     error NFT__FrozenBase();
     error NFT__FrozenToken();
+    error NFT__TokenExisted();
     error NFT__Unauthorized();
     error NFT__InvalidInput();
     error NFT__StringTooLong();
@@ -38,7 +38,7 @@ interface ICollectible is IAccessControl {
 
     function tokenURI(uint256 tokenId_) external view returns (string memory);
 
-    function TYPE() external view returns (bytes32);
+    function TYPE() external view returns (uint256);
 
     function MINTER_ROLE() external view returns (bytes32);
 }
