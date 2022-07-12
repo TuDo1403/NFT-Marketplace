@@ -18,7 +18,7 @@ describe("NFTFactory1155", () => {
     let tokenIdGenerator: TokenId;
 
     before(async () => {
-        [manager, treasury, verifier, marketplace,...users] = await ethers.getSigners();
+        [manager, treasury, verifier, marketplace, ...users] = await ethers.getSigners();
 
         const GovernanceContract = await ethers.getContractFactory("Governance", manager);
         governance = await GovernanceContract.deploy(
@@ -125,16 +125,23 @@ describe("NFTFactory1155", () => {
             _creator: users[0].address
         };
         let tokenId = await tokenIdGenerator.createTokenId(tokenInfo);
-        console.log("Token Id: ",tokenId);
-        let creator = await tokenIdGenerator.getTokenCreator(tokenId);
-        console.log("Creator: ", creator);
-        expect(creator).to.equal(users[0].address);
+        console.log("Token Id: ", tokenId);
 
         await myCollectible1155.connect(manager)["mint(address,uint256,uint256,string)"](users[0].address, tokenId, BigNumber.from(10), "");
-        
+
         await myCollectible1155.connect(users[0])["mint(uint256,uint256)"](tokenId, BigNumber.from(9990));
 
         expect(await myCollectible1155.balanceOf(users[0].address, tokenId)).to.equal(BigNumber.from(10000));
 
+        let amountSend = BigNumber.from(500);
+        await myCollectible1155.connect(users[0]).safeTransferFrom(
+            users[0].address,
+            users[1].address,
+            tokenId,
+            amountSend,
+            ethers.utils.toUtf8Bytes("")
+        );
+        // console.log(await myCollectible1155.balanceOf(users[0].address, tokenId))
+        // expect(await myCollectible1155.balanceOf(users[1].address, tokenId)).to.equal(amountSend);
     });
 });
