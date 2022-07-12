@@ -4,7 +4,7 @@ import { BigNumber } from "ethers";
 import { ethers } from "hardhat";
 import { Collectible1155, Governance, NFTFactory1155, TokenId } from "../typechain";
 
-describe("NFTFactory1155", () => {
+describe("NFTFactory721", () => {
     let manager: SignerWithAddress;
     let treasury: SignerWithAddress;
     let verifier: SignerWithAddress;
