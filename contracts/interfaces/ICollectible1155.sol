@@ -1,18 +1,27 @@
-// SPDX-License-Identifier: Unlisened
+// SPDX-License-Identifier: Unlicensed
 pragma solidity >=0.8.13;
 
 import "./ICollectible.sol";
 
 interface ICollectible1155 is ICollectible {
-    error ERC1155__FrozenBase();
-    error ERC1155__FrozenToken();
     error ERC1155__LengthMismatch();
+    error ERC1155__AllocationExceeds();
 
-    event PermanentURI(uint256 indexed tokenId_, string tokenURI_);
+    function initialize(
+        address owner_,
+        string calldata name_,
+        string calldata symbol_,
+        string calldata baseURI_
+    ) external;
 
-    function freezeBase() external;
+    function mint(uint256 tokenId_, uint256 amount_) external;
 
-    function freezeToken(uint256 tokenId_) external;
+    function mint(
+        address to_,
+        uint256 tokenId_,
+        uint256 amount_,
+        string calldata tokenURI_
+    ) external;
 
     function mintBatch(
         uint256[] calldata tokenIds_,
@@ -20,12 +29,6 @@ interface ICollectible1155 is ICollectible {
     ) external;
 
     function mintBatch(
-        uint256[] calldata amounts_,
-        string[] calldata tokenURIs_,
-        TokenIdGenerator.Token[] calldata tokens_
-    ) external;
-
-    function lazyMintBatch(
         address to_,
         uint256[] calldata tokenIds_,
         uint256[] calldata amounts_,

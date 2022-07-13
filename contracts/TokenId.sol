@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Unlicensed
 pragma solidity >=0.8.13;
 
-library TokenIdGenerator {
+contract TokenId {
     // TOKEN ID = ADDRESS + SUPPLY + TYPE + FEE + ID
     struct Token {
         uint256 _fee;
@@ -27,7 +27,7 @@ library TokenIdGenerator {
             (INDEX_MASK | FEE_MASK | TYPE_MASK);
 
     function createTokenId(Token memory token_)
-        internal
+        external
         pure
         returns (uint256)
     {
@@ -43,7 +43,7 @@ library TokenIdGenerator {
     }
 
     function getTokenMaxSupply(uint256 id_)
-        internal
+        external
         pure
         returns (uint256 supply)
     {
@@ -55,7 +55,7 @@ library TokenIdGenerator {
     }
 
     function getTokenType(uint256 id_)
-        internal
+        external
         pure
         returns (uint256 tokenType)
     {
@@ -66,13 +66,13 @@ library TokenIdGenerator {
         }
     }
 
-    function getTokenIndex(uint256 id) internal pure returns (uint256 index) {
+    function getTokenIndex(uint256 id) external pure returns (uint256 index) {
         unchecked {
             index = (id & INDEX_MASK) % (2**INDEX_BIT - 1);
         }
     }
 
-    function getTokenCreator(uint256 id_) internal pure returns (address addr) {
+    function getTokenCreator(uint256 id_) external pure returns (address addr) {
         unchecked {
             addr = address(
                 uint160(id_ >> (TYPE_BIT + SUPPLY_BIT + INDEX_BIT + FEE_BIT))

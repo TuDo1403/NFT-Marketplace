@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: Unlicense
+// SPDX-License-Identifier: Unlicensed
 pragma solidity >=0.8.13;
 
 contract Governance {
@@ -34,18 +34,11 @@ contract Governance {
     constructor(
         address manager_,
         address treasury_,
-        address verifier_,
-        address marketplace_
-    )
-        validAddress(manager_)
-        validAddress(treasury_)
-        validAddress(verifier_)
-        validAddress(marketplace_)
-    {
+        address verifier_
+    ) validAddress(manager_) validAddress(treasury_) validAddress(verifier_) {
         manager = manager_;
         treasury = treasury_;
         verifier = verifier_;
-        marketplace = marketplace_;
     }
 
     function updateTreasury(address treasury_)

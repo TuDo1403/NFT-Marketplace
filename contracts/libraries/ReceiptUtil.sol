@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: Unlisened
+// SPDX-License-Identifier: Unlicensed
 pragma solidity >=0.8.13;
 
 import "../interfaces/IGovernance.sol";
@@ -10,7 +10,6 @@ library ReceiptUtil {
     struct Header {
         uint256 nonce;
         uint256 ticketExpiration;
-        address buyer;
         address seller;
         address paymentToken;
         address creatorPayoutAddr;
@@ -53,7 +52,7 @@ library ReceiptUtil {
 
     bytes32 private constant HEADER_TYPE_HASH =
         keccak256(
-            "Header(uint256 nonce, uint256 ticketExpiration, address buyer, address seller, address paymentToken, address creatorPayoutAddr)"
+            "Header(uint256 nonce, uint256 ticketExpiration, address seller, address paymentToken, address creatorPayoutAddr)"
         );
 
     bytes32 private constant ITEM_TYPE_HASH =
@@ -102,7 +101,7 @@ library ReceiptUtil {
             );
     }
 
-    function __hashHeader(Header calldata header_)
+    function __hashHeader(Header memory header_)
         private
         pure
         returns (bytes32)
@@ -113,7 +112,6 @@ library ReceiptUtil {
                     HEADER_TYPE_HASH,
                     header_.nonce,
                     header_.ticketExpiration,
-                    header_.buyer,
                     header_.seller,
                     header_.paymentToken,
                     header_.creatorPayoutAddr
@@ -134,7 +132,7 @@ library ReceiptUtil {
             );
     }
 
-    function __hashBulk(Bulk calldata bulk_) private pure returns (bytes32) {
+    function __hashBulk(Bulk memory bulk_) private pure returns (bytes32) {
         return
             keccak256(
                 abi.encode(
@@ -147,7 +145,7 @@ library ReceiptUtil {
             );
     }
 
-    function __hashPayment(Payment calldata payment_)
+    function __hashPayment(Payment memory payment_)
         private
         pure
         returns (bytes32)
