@@ -8,15 +8,15 @@ import "./IGovernance.sol";
 import "../libraries/ReceiptUtil.sol";
 
 interface IMarketplace is IPausable {
-    //error MP__Expired();
+    error MP__Expired();
     error MP__InvalidInput();
     error MP__Unauthorized();
     error MP__PaymentFailed();
     error MP__LengthMismatch();
     error MP__ExecutionFailed();
-    //error MP__InvalidSignature();
-    //error MP__PaymentUnsuported();
-    //error MP__InsufficientPayment();
+    error MP__InvalidSignature();
+    error MP__PaymentUnsuported();
+    error MP__InsufficientPayment();
 
     event ItemRedeemed(
         address indexed nftContract,

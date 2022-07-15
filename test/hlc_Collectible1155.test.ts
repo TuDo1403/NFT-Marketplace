@@ -38,7 +38,7 @@ describe("Collectible1155", () => {
     })
 
     describe("constructor, initialize", () => {
-        it.only("should deploy a clone of Collectible1155 contract and initialzie", async () => {
+        it("should deploy a clone of Collectible1155 contract and initialzie", async () => {
             const name = "HoangCoin"
             const symbol = "HLC"
             const URI = ""
