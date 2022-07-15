@@ -33,16 +33,6 @@ abstract contract CollectibleBase is AccessControl, ICollectible, ERC2981 {
         _;
     }
 
-    // modifier onlyCreatorAndNotFrozen(uint256 tokenId_) {
-    //     if (_msgSender() != tokenId_.getTokenCreator()) {
-    //         revert NFT__Unauthorized();
-    //     }
-    //     if (frozenTokens[tokenId_]) {
-    //         revert NFT__FrozenToken();
-    //     }
-    //     _;
-    // }
-
     modifier onlyCreatorAndNotFrozen(uint256 tokenId_) {
         _onlyCreatorAndNotFrozen(_msgSender(), tokenId_);
         _;
@@ -80,7 +70,9 @@ abstract contract CollectibleBase is AccessControl, ICollectible, ERC2981 {
         override(ERC2981, AccessControl)
         returns (bool)
     {
-        return super.supportsInterface(interfaceId);
+        return
+            ERC2981.supportsInterface(interfaceId) ||
+            AccessControl.supportsInterface(interfaceId);
     }
 
     function _freezeToken(uint256 tokenId_) internal virtual {

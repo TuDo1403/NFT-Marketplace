@@ -16,13 +16,6 @@ interface ICollectible1155 is ICollectible {
 
     function mint(uint256 tokenId_, uint256 amount_) external;
 
-    function mint(
-        address to_,
-        uint256 tokenId_,
-        uint256 amount_,
-        string calldata tokenURI_
-    ) external;
-
     function mintBatch(
         uint256[] calldata tokenIds_,
         uint256[] calldata amounts_
