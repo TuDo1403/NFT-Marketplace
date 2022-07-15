@@ -3,9 +3,7 @@ import {ethers} from "hardhat";
 import {BigNumber} from "ethers";
 import {TypedDataUtils} from "ethers-eip712";
 import {SignerWithAddress} from "@nomiclabs/hardhat-ethers/signers";
-import {NFTFactory1155} from "../typechain/NFTFactory1155";
 import {
-    IGovernance,
     Governance,
     MarketplaceBase,
     ERC20Test,
@@ -40,6 +38,14 @@ const typedData = {
             {name: "unitPrice", type: "uint256"},
             {name: "nftContract", type: "address"},
             {name: "tokenURI", type: "string"},
+        ],
+
+        Bulk: [
+            {name: "nftContract", type: "address"},
+            {name: "amounts", type: "uint256[]"},
+            {name: "tokenIds", type: "uint256[]"},
+            {name: "unitPrices", type: "uint256[]"},
+            {name: "tokenURIs", type: "string[]"},
         ],
 
         Receipt: [
@@ -90,22 +96,22 @@ async function decreaseTime(duration: number): Promise<void> {
 }
 
 async function signReceipt(
-    verifier: SignerWithAddress,
-    verifyingContract: string,
-    nonce: BigNumber,
-    ticketExpiration: BigNumber,
     seller: string,
-    paymentToken: string,
-    creatorPayoutAddr: string,
+    total: BigNumber,
+    nonce: BigNumber,
+    tokenURI: string,
     amount: BigNumber,
     tokenId: BigNumber,
-    unitPrice: BigNumber,
-    nftContract: string,
-    tokenURI: string,
     subTotal: BigNumber,
+    nftContract: string,
+    unitPrice: BigNumber,
+    paymentToken: string,
     creatorPayout: BigNumber,
     servicePayout: BigNumber,
-    total: BigNumber
+    creatorPayoutAddr: string,
+    verifyingContract: string,
+    ticketExpiration: BigNumber,
+    verifier: SignerWithAddress
 ): Promise<[any, string]> {
     let message = Object.assign({}, typedData.message);
     message.header = {
@@ -145,9 +151,7 @@ describe("MarketplaceBase", () => {
 
     let governance: Governance;
     let paymentToken: ERC20Test;
-    let collectible1155Base: Collectible1155;
     let collectible1155: Collectible1155;
-    let nftFactory1155: NFTFactory1155;
     let marketplace: MarketplaceBase;
     let tokenCreator: TokenCreator;
 
@@ -210,9 +214,7 @@ describe("MarketplaceBase", () => {
         const now = (await ethers.provider.getBlock("latest")).timestamp;
         let buyer: SignerWithAddress;
         let creator: SignerWithAddress;
-        [buyer, creator, ] = users;
-        // buyer = users[0];
-        // creator = users[1];
+        [buyer, creator] = users;
         const nonce = await marketplace.nonce();
         const creatorFee = 250;
         const tokenId = await tokenCreator.createTokenId(
@@ -224,31 +226,31 @@ describe("MarketplaceBase", () => {
         );
         let amount = 12;
         let unitPrice = 500;
-        const subTotal = amount * unitPrice;
-        const creatorPayout = (subTotal * creatorFee) / 1e4;
-        const servicePayout = (subTotal * serviceFee) / 1e4;
-        const total = subTotal + creatorPayout + servicePayout;
+        const total = amount * unitPrice;
+        const creatorPayout = (total * creatorFee) / 1e4;
+        const servicePayout = (total * serviceFee) / 1e4;
+        const subTotal = total - creatorPayout - servicePayout;
         const deadline = now + 60 * 1000;
         const ticketExpiration = now + 5 * 60 * 1000;
         let receipt: any;
         let signature: string;
         [receipt, signature] = await signReceipt(
-            verifier,
-            marketplace.address,
+            creator.address,
+            BigNumber.from(total),
             nonce,
-            BigNumber.from(ticketExpiration),
-            creator.address,
-            paymentToken.address,
-            creator.address,
+            tokenURI,
             BigNumber.from(amount),
             tokenId,
-            BigNumber.from(unitPrice),
-            collectible1155.address,
-            tokenURI,
             BigNumber.from(subTotal),
+            collectible1155.address,
+            BigNumber.from(unitPrice),
+            paymentToken.address,
             BigNumber.from(creatorPayout),
             BigNumber.from(servicePayout),
-            BigNumber.from(total)
+            creator.address,
+            marketplace.address,
+            BigNumber.from(ticketExpiration),
+            verifier
         );
         await paymentToken.connect(buyer).approve(marketplace.address, total);
         await paymentToken
