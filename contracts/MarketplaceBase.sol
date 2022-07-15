@@ -20,6 +20,7 @@ contract MarketplaceBase is
     PausableUpgradeable,
     ReentrancyGuardUpgradeable
 {
+    using Strings for uint256;
     using TokenIdGenerator for uint256;
     using ReceiptUtil for ReceiptUtil.Receipt;
     using ReceiptUtil for ReceiptUtil.BulkReceipt;
@@ -31,8 +32,8 @@ contract MarketplaceBase is
     uint256 public serviceFee;
     uint256 public creatorFeeUB; // creator fee upper bound
 
-    bytes32 public constant VERSION = keccak256("v1");
-    bytes32 public constant NAME = keccak256("Marketplace");
+    uint256 public constant VERSION = 1;
+    string public constant NAME = "Marketplace";
 
     CountersUpgradeable.Counter public nonce;
 
@@ -97,33 +98,47 @@ contract MarketplaceBase is
         ReceiptUtil.Receipt calldata receipt_,
         bytes calldata signature_
     ) external payable override whenNotPaused nonReentrant {
-        address buyer = _msgSender();
-        __verifyReceipt(
-            buyer,
+        ReceiptUtil.Payment memory payment = receipt_.payment;
+        ReceiptUtil.verifyReceipt(
             deadline_,
             _hashTypedDataV4(receipt_.hash()),
+            admin,
             receipt_.header,
-            receipt_.payment,
+            payment,
             signature_
         );
-        address seller = receipt_.header.seller;
-        uint256 tokenId = receipt_.item.tokenId;
-        uint256 amount = receipt_.item.amount;
-        address nftContract = receipt_.item.nftContract;
-        bool minted = ICollectible(nftContract).isMintedBefore(
-            seller,
-            tokenId,
-            amount
-        );
-        if (!minted) {
-            __delegateLazyMint(
-                buyer,
-                nftContract,
-                "mint(address,uint256,uint256,string)",
-                abi.encode(seller, tokenId, amount, receipt_.item.tokenURI)
-            );
-        }
 
+        uint256 tokenId = receipt_.item.tokenId;
+        address nftContract = receipt_.item.nftContract;
+
+        address seller = receipt_.header.seller;
+        uint256 amount = receipt_.item.amount;
+        address buyer = _msgSender();
+        address paymentToken = receipt_.header.paymentToken;
+        {
+            bool minted = ICollectible(nftContract).isMintedBefore(
+                seller,
+                tokenId,
+                amount
+            );
+            _makePayment(
+                minted,
+                buyer,
+                seller,
+                paymentToken,
+                receipt_.header.creatorPayoutAddr,
+                payment
+            );
+
+            if (!minted) {
+                ICollectible(nftContract).mint(
+                    seller,
+                    tokenId,
+                    amount,
+                    receipt_.item.tokenURI
+                );
+            }
+        }
         ICollectible(nftContract).transferSingle(
             seller,
             buyer,
@@ -135,9 +150,9 @@ contract MarketplaceBase is
             nftContract,
             buyer,
             tokenId,
-            receipt_.header.paymentToken,
+            paymentToken,
             receipt_.item.unitPrice,
-            receipt_.payment.total
+            payment.total
         );
     }
 
@@ -146,121 +161,84 @@ contract MarketplaceBase is
         ReceiptUtil.BulkReceipt calldata receipt_,
         bytes calldata signature_
     ) external payable override whenNotPaused nonReentrant {
-        address buyer = _msgSender();
-        __verifyReceipt(
-            buyer,
+        ReceiptUtil.Payment memory payment = receipt_.payment;
+        ReceiptUtil.verifyReceipt(
             deadline_,
             _hashTypedDataV4(receipt_.hash()),
+            admin,
             receipt_.header,
-            receipt_.payment,
+            payment,
             signature_
         );
 
         address seller = receipt_.header.seller;
         address nftContract = receipt_.bulk.nftContract;
-        uint256[] memory tokensToMint;
-        uint256[] memory amountsToMint;
-        // get rid of stack too deep
         {
-            uint256 counter;
+            uint256[] memory tokensToMint;
+            uint256[] memory amountsToMint;
+            // get rid of stack too deep
+            {
+                uint256 counter;
 
-            for (uint256 i; i < receipt_.bulk.tokenIds.length; ) {
-                uint256 tokenId = receipt_.bulk.tokenIds[i];
-                uint256 amount = receipt_.bulk.amounts[i];
-                bool minted = ICollectible(nftContract).isMintedBefore(
-                    seller,
-                    tokenId,
-                    amount
-                );
+                for (uint256 i; i < receipt_.bulk.tokenIds.length; ) {
+                    uint256 tokenId = receipt_.bulk.tokenIds[i];
+                    uint256 amount = receipt_.bulk.amounts[i];
+                    bool minted = ICollectible(nftContract).isMintedBefore(
+                        seller,
+                        tokenId,
+                        amount
+                    );
 
-                unchecked {
-                    if (!minted) {
-                        tokensToMint[counter] = tokenId;
-                        amountsToMint[counter] = amount;
-                        ++counter;
+                    unchecked {
+                        if (!minted) {
+                            tokensToMint[counter] = tokenId;
+                            amountsToMint[counter] = amount;
+                            ++counter;
+                        }
+                        ++i;
                     }
-                    ++i;
                 }
             }
-        }
 
-        __delegateLazyMint(
-            buyer,
-            nftContract,
-            "mintBatch(address,uint256[],uint256[],string[])",
-            abi.encode(
+            ICollectible1155(nftContract).mintBatch(
                 seller,
                 tokensToMint,
                 amountsToMint,
                 receipt_.bulk.tokenURIs
-            )
-        );
-
-        ICollectible1155(nftContract).transferBatch(
-            seller,
-            buyer,
-            receipt_.bulk.tokenIds,
-            receipt_.bulk.amounts
-        );
-
-        emit BulkRedeemed(
-            nftContract,
-            buyer,
-            receipt_.bulk.tokenIds,
-            receipt_.header.paymentToken,
-            receipt_.bulk.unitPrices,
-            receipt_.payment.total
-        );
-    }
-
-    function __verifyReceipt(
-        address buyer_,
-        uint256 deadline_,
-        bytes32 hashedReceipt_,
-        ReceiptUtil.Header calldata header_,
-        ReceiptUtil.Payment calldata payment_,
-        bytes calldata signature_
-    ) private {
-        IGovernance _admin = admin;
-        address paymentToken = header_.paymentToken;
-        __verifyIntegrity(
-            payment_.total,
-            header_.nonce,
-            deadline_,
-            header_.ticketExpiration,
-            _admin,
-            paymentToken
-        );
-        if (
-            ECDSAUpgradeable.recover(hashedReceipt_, signature_) !=
-            _admin.verifier()
-        ) {
-            revert MP__InvalidSignature();
+            );
         }
-        nonce.increment();
 
-        __transact(paymentToken, buyer_, header_.seller, payment_.subTotal);
-        __transact(
-            paymentToken,
-            buyer_,
-            header_.creatorPayoutAddr,
-            payment_.creatorPayout
-        );
-        __transact(
-            paymentToken,
-            buyer_,
-            _admin.treasury(),
-            payment_.servicePayout
-        );
-    }
+        {
+            address buyer = _msgSender();
+            address paymentToken = receipt_.header.paymentToken;
+            _makePayment(
+                false,
+                buyer,
+                seller,
+                paymentToken,
+                receipt_.header.creatorPayoutAddr,
+                payment
+                // receipt_.payment.subTotal,
+                // receipt_.payment.creatorPayout,
+                // receipt_.payment.servicePayout
+            );
 
-    function __grantMinterRole(address nftContract_, address buyer_)
-        private
-        returns (IAccessControl governance, bytes32 minterRole)
-    {
-        minterRole = ICollectible(nftContract_).MINTER_ROLE();
-        governance = IAccessControl(nftContract_);
-        governance.grantRole(minterRole, buyer_);
+            ICollectible1155(nftContract).transferBatch(
+                seller,
+                buyer,
+                receipt_.bulk.tokenIds,
+                receipt_.bulk.amounts
+            );
+
+            emit BulkRedeemed(
+                nftContract,
+                buyer,
+                receipt_.bulk.tokenIds,
+                paymentToken,
+                receipt_.bulk.unitPrices,
+                receipt_.payment.total
+            );
+        }
     }
 
     function pause() external override whenNotPaused onlyManager {
@@ -271,12 +249,39 @@ contract MarketplaceBase is
         _unpause();
     }
 
-    function __transact(
+    function _makePayment(
+        bool minted_,
+        address buyer_,
+        address seller_,
+        address paymentToken_,
+        address creatorPayoutAddr_,
+        ReceiptUtil.Payment memory payment_ // uint256 subTotal_,
+    ) internal virtual // uint256 creatorPayout_,
+    // uint256 servicePayout_
+    {
+        _transact(paymentToken_, buyer_, seller_, payment_.subTotal);
+        _transact(
+            paymentToken_,
+            buyer_,
+            admin.treasury(),
+            payment_.servicePayout
+        );
+        if (minted_) {
+            _transact(
+                paymentToken_,
+                buyer_,
+                creatorPayoutAddr_,
+                payment_.creatorPayout
+            );
+        }
+    }
+
+    function _transact(
         address paymentToken_,
         address from_,
         address to_,
         uint256 amount_
-    ) private {
+    ) internal virtual {
         if (paymentToken_ == address(0)) {
             (bool ok, ) = payable(to_).call{value: amount_}("");
             if (!ok) {
@@ -301,51 +306,6 @@ contract MarketplaceBase is
 
         __Pausable_init();
         __ReentrancyGuard_init();
-        __EIP712_init(
-            string(abi.encodePacked(NAME)),
-            string(abi.encodePacked(VERSION))
-        );
-    }
-
-    function __delegateLazyMint(
-        address buyer_,
-        address nftContract_,
-        string memory fnName_,
-        bytes memory data_
-    ) private {
-        (IAccessControl governance, bytes32 minterRole) = __grantMinterRole(
-            nftContract_,
-            buyer_
-        );
-        (bool ok, ) = nftContract_.delegatecall(
-            abi.encodePacked(bytes4(keccak256(bytes(fnName_))), data_)
-        );
-        if (!ok) {
-            revert MP__ExecutionFailed();
-        }
-        governance.revokeRole(minterRole, buyer_);
-    }
-
-    function __verifyIntegrity(
-        uint256 total_,
-        uint256 nonce_,
-        uint256 deadline_,
-        uint256 ticketExpiration_,
-        IGovernance admin_,
-        address paymentToken_
-    ) private view {
-        if (total_ > msg.value) {
-            revert MP__InsufficientPayment();
-        }
-        if (nonce_ != nonce.current()) {
-            revert MP__InvalidInput();
-        }
-        if (!admin_.acceptedPayments(paymentToken_)) {
-            revert MP__PaymentUnsuported();
-        }
-        uint256 _now = block.timestamp;
-        if (_now > deadline_ || _now > ticketExpiration_) {
-            revert MP__Expired();
-        }
+        __EIP712_init(NAME, VERSION.toString());
     }
 }

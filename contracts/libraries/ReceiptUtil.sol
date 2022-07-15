@@ -117,7 +117,7 @@ library ReceiptUtil {
         bytes32 hashedReceipt_,
         IGovernance admin_,
         ReceiptUtil.Header calldata header_,
-        ReceiptUtil.Payment calldata payment_,
+        ReceiptUtil.Payment memory payment_,
         bytes calldata signature_
     ) internal view {
         address paymentToken = header_.paymentToken;
