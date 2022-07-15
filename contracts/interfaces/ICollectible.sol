@@ -15,6 +15,13 @@ interface ICollectible is IAccessControl {
 
     event PermanentURI(uint256 indexed tokenId_, string tokenURI_);
 
+    function mint(
+        address to_,
+        uint256 tokenId_,
+        uint256 amount_,
+        string calldata tokenURI_
+    ) external;
+
     function freezeBase() external;
 
     function freezeToken(uint256 tokenId_) external;

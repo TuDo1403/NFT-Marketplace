@@ -90,7 +90,7 @@ contract Collectible721 is
         uint256 tokenId_,
         uint256 amount_,
         string memory tokenURI_
-    ) public onlyUnique(amount_) onlyRole(MINTER_ROLE) {
+    ) public override onlyUnique(amount_) onlyRole(MINTER_ROLE) {
         if (_exists(tokenId_)) {
             revert NFT__TokenExisted();
         }

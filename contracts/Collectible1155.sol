@@ -91,7 +91,10 @@ contract Collectible1155 is
         uint256 tokenId_,
         uint256 amount_,
         string calldata tokenURI_
-    ) external override onlyUnexists(tokenId_) onlyRole(MINTER_ROLE) {
+    ) external override onlyUnexists(tokenId_) {
+        if (_msgSender() != admin.marketplace()) {
+            _checkRole(MINTER_ROLE);
+        }
         _setTokenRoyalty(
             tokenId_,
             tokenId_.getTokenCreator(),

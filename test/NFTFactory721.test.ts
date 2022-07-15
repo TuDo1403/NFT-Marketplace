@@ -1,8 +1,8 @@
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { expect, use } from "chai";
-import { BigNumber } from "ethers";
-import { ethers } from "hardhat";
-import { Collectible721, Governance, NFTFactory721, TokenId } from "../typechain";
+import {SignerWithAddress} from "@nomiclabs/hardhat-ethers/signers";
+import {expect, use} from "chai";
+import {BigNumber} from "ethers";
+import {ethers} from "hardhat";
+import {Collectible721, Governance, NFTFactory721, TokenId} from "../typechain";
 
 describe("Collectible721", () => {
     let governance: Governance;
@@ -20,8 +20,10 @@ describe("Collectible721", () => {
     before(async () => {
         [manager, treasury, verifier, ...users] = await ethers.getSigners();
 
-
-        const GovernanceContract = await ethers.getContractFactory("Governance", manager);
+        const GovernanceContract = await ethers.getContractFactory(
+            "Governance",
+            manager
+        );
         governance = await GovernanceContract.deploy(
             manager.address,
             treasury.address,
@@ -29,13 +31,17 @@ describe("Collectible721", () => {
         );
         await governance.deployed();
 
-        const NFTFactory721Contract = await ethers.getContractFactory("NFTFactory721", manager);
-        nftFactory721 = await NFTFactory721Contract.deploy(
-            governance.address
+        const NFTFactory721Contract = await ethers.getContractFactory(
+            "NFTFactory721",
+            manager
         );
+        nftFactory721 = await NFTFactory721Contract.deploy(governance.address);
         await nftFactory721.deployed();
 
-        const TokenIdGeneratorContract = await ethers.getContractFactory("TokenId", manager);
+        const TokenIdGeneratorContract = await ethers.getContractFactory(
+            "TokenId",
+            manager
+        );
         tokenIdGenerator = await TokenIdGeneratorContract.deploy();
         await tokenIdGenerator.deployed();
     });
@@ -51,14 +57,23 @@ describe("Collectible721", () => {
             newBaseUri
         );
 
-        const version = ethers.utils.keccak256(ethers.utils.toUtf8Bytes("NFTFactory721_v1"));
-        let salt = ethers.utils.keccak256(ethers.utils.solidityPack(
-            ["bytes", "string", "string", "string"],
-            [version, newTokenName, newSymbol, newBaseUri]
-        ));
+        const version = ethers.utils.keccak256(
+            ethers.utils.toUtf8Bytes("NFTFactory721_v1")
+        );
+        let salt = ethers.utils.keccak256(
+            ethers.utils.solidityPack(
+                ["bytes", "string", "string", "string"],
+                [version, newTokenName, newSymbol, newBaseUri]
+            )
+        );
 
-        let deployedAddr = await nftFactory721.connect(manager).deployedContracts(BigNumber.from(salt));
-        myCollectible721 = await ethers.getContractAt("Collectible721", deployedAddr);
+        let deployedAddr = await nftFactory721
+            .connect(manager)
+            .deployedContracts(BigNumber.from(salt));
+        myCollectible721 = await ethers.getContractAt(
+            "Collectible721",
+            deployedAddr
+        );
 
         expect(await myCollectible721.name()).to.equal(newTokenName);
     });
@@ -74,36 +89,51 @@ describe("Collectible721", () => {
             newBaseUri
         );
 
-        const version = ethers.utils.keccak256(ethers.utils.toUtf8Bytes("NFTFactory721_v1"));
-        let salt = ethers.utils.keccak256(ethers.utils.solidityPack(
-            ["bytes", "string", "string", "string"],
-            [version, newTokenName, newSymbol, newBaseUri]
-        ));
+        const version = ethers.utils.keccak256(
+            ethers.utils.toUtf8Bytes("NFTFactory721_v1")
+        );
+        let salt = ethers.utils.keccak256(
+            ethers.utils.solidityPack(
+                ["bytes", "string", "string", "string"],
+                [version, newTokenName, newSymbol, newBaseUri]
+            )
+        );
 
-        let deployedAddr = await nftFactory721.connect(manager).deployedContracts(BigNumber.from(salt));
-        myCollectible721 = await ethers.getContractAt("Collectible721", deployedAddr);
+        let deployedAddr = await nftFactory721
+            .connect(manager)
+            .deployedContracts(BigNumber.from(salt));
+        myCollectible721 = await ethers.getContractAt(
+            "Collectible721",
+            deployedAddr
+        );
 
         let tokenInfo = {
             _fee: 1,
             _type: 721,
             _supply: 1,
             _index: 1,
-            _creator: users[0].address
+            _creator: users[0].address,
         };
         let tokenId1 = await tokenIdGenerator.createTokenId(tokenInfo);
-        await myCollectible721.connect(manager).mint(users[0].address, tokenId1, 1, "");
+        await myCollectible721
+            .connect(manager)
+            .mint(users[0].address, tokenId1, 1, "");
 
         tokenInfo = {
             _fee: 1,
             _type: 721,
             _supply: 1,
             _index: 2,
-            _creator: users[1].address
+            _creator: users[1].address,
         };
         let tokenId2 = await tokenIdGenerator.createTokenId(tokenInfo);
-        await myCollectible721.connect(manager).mint(users[1].address, tokenId2, 1, "");
+        await myCollectible721
+            .connect(manager)
+            .mint(users[1].address, tokenId2, 1, "");
 
-        await myCollectible721.connect(users[0]).transferFrom(users[0].address, users[1].address, tokenId1);
+        await myCollectible721
+            .connect(users[0])
+            .transferFrom(users[0].address, users[1].address, tokenId1);
 
         expect(await myCollectible721.balanceOf(users[1].address)).to.equal(2);
     });

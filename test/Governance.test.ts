@@ -1,7 +1,7 @@
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { expect } from "chai";
-import { ethers } from "hardhat";
-import { Governance } from "../typechain";
+import {SignerWithAddress} from "@nomiclabs/hardhat-ethers/signers";
+import {expect} from "chai";
+import {ethers} from "hardhat";
+import {Governance} from "../typechain";
 
 describe("Governance", () => {
     let manager: SignerWithAddress;
@@ -15,7 +15,8 @@ describe("Governance", () => {
 
     it("Deploy governance contract", async () => {
         // 1. Assign signers
-        [manager, newManager, treasury, verifier, marketplace, ...users] = await ethers.getSigners();
+        [manager, newManager, treasury, verifier, marketplace, ...users] =
+            await ethers.getSigners();
 
         // 2. Setup, just call the name of your contract (contract name), not the file name.
         const FactoryContract = await ethers.getContractFactory("Governance");
@@ -31,7 +32,7 @@ describe("Governance", () => {
     });
 
     it("Update treasury address by owner", async () => {
-        // 4. Call our functions to test, signer is owner  
+        // 4. Call our functions to test, signer is owner
         // 2. Setup, just call the name of your contract (contract name), not the file name.
         const OurContract = await ethers.getContractFactory("Governance");
 
@@ -69,4 +70,4 @@ describe("Governance", () => {
         await governance.connect(newManager).unregisterToken(USDTAddress);
         expect(await governance.acceptedPayments(USDTAddress)).to.equal(false);
     });
-})
+});

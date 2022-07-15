@@ -3,29 +3,31 @@
 //
 // When running the script with `npx hardhat run <script>` you'll find the Hardhat
 // Runtime Environment's members available in the global scope.
-import { ethers } from "hardhat";
-import { TokenIdGenerator } from "../typechain";
+import {ethers} from "hardhat";
+import {TokenIdGenerator} from "../typechain";
 
 async function main() {
-  // Hardhat always runs the compile task when running scripts with its command
-  // line interface.
-  //
-  // If this script is run directly using `node` you may want to call compile
-  // manually to make sure everything is compiled
-  // await hre.run('compile');
+    // Hardhat always runs the compile task when running scripts with its command
+    // line interface.
+    //
+    // If this script is run directly using `node` you may want to call compile
+    // manually to make sure everything is compiled
+    // await hre.run('compile');
 
-  // We get the contract to deploy
-  const TokenIdGeneratorFactory = await ethers.getContractFactory("TokenIdGenerator");
-  const tokenIdGenerator = await TokenIdGeneratorFactory.deploy();
+    // We get the contract to deploy
+    const TokenIdGeneratorFactory = await ethers.getContractFactory(
+        "TokenIdGenerator"
+    );
+    const tokenIdGenerator = await TokenIdGeneratorFactory.deploy();
 
-  await tokenIdGenerator.deployed();
+    await tokenIdGenerator.deployed();
 
-  console.log("Contract deployed to:", tokenIdGenerator.address);
+    console.log("Contract deployed to:", tokenIdGenerator.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.
 main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
+    console.error(error);
+    process.exitCode = 1;
 });

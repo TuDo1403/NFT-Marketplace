@@ -28,7 +28,7 @@ const config: HardhatUserConfig = {
     settings: {
       optimizer: {
         enabled: true,
-        runs: 50,
+        runs: 200,
       },
     },
   },
@@ -42,8 +42,8 @@ const config: HardhatUserConfig = {
   },
   gasReporter: {
     enabled: (process.env.REPORT_GAS) ? true : false,
-    currency: "VND",
-    token: 'BNB',
+    currency: "USD",
+    token: 'ETH',
     gasPrice: 20,
     coinmarketcap: process.env.CMC_API_KEY,
     gasPriceApi: '	https://api.etherscan.io/api?module=proxy&action=eth_gasPrice'
