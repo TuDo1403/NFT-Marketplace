@@ -44,9 +44,12 @@ const config: HardhatUserConfig = {
     enabled: (process.env.REPORT_GAS) ? true : false,
     currency: "USD",
     token: 'ETH',
-    gasPrice: 20,
+    noColors: true,
+    // gasPrice: 21,
     coinmarketcap: process.env.CMC_API_KEY,
-    gasPriceApi: '	https://api.etherscan.io/api?module=proxy&action=eth_gasPrice'
+    outputFile: `./logs/gas-cost-${Date.now()}.log`,
+    gasPriceApi: `https://api.etherscan.io/api?module=proxy&action=eth_gasPrice`
+    //gasPriceApi: `https://api-moonbeam.moonscan.io/api?module=proxy&action=eth_gasPrice&apikey=${process.env.GLMR_API_KEY}`
   },
   contractSizer: {
     alphaSort: true,

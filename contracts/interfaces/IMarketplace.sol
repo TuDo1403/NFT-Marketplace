@@ -3,8 +3,6 @@ pragma solidity >=0.8.13;
 
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "./IPausable.sol";
-import "./IGovernance.sol";
-
 import "../libraries/ReceiptUtil.sol";
 
 interface IMarketplace is IPausable {
@@ -23,7 +21,6 @@ interface IMarketplace is IPausable {
         address indexed buyer,
         uint256 indexed tokenId,
         address paymentToken,
-        uint256 unitPrice,
         uint256 total
     );
 
@@ -32,7 +29,6 @@ interface IMarketplace is IPausable {
         address indexed buyer,
         uint256[] tokenIds,
         address paymentToken,
-        uint256[] unitPrices,
         uint256 total
     );
 
@@ -42,14 +38,12 @@ interface IMarketplace is IPausable {
         returns (bytes[] memory results);
 
     function redeem(
-        uint256 deadline_,
         ReceiptUtil.Receipt calldata receipt_,
         bytes calldata signature_
     ) external payable;
 
-    function redeemBulk(
-        uint256 deadline_,
-        ReceiptUtil.BulkReceipt calldata receipt_,
-        bytes calldata signature_
-    ) external payable;
+    // function redeemBulk(
+    //     ReceiptUtil.BulkReceipt calldata receipt_,
+    //     bytes calldata signature_
+    // ) external payable;
 }

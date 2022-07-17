@@ -37,17 +37,18 @@ contract NFTFactory721 is INFTFactory {
 
     function setGovernance(address governance_)
         external
+        override
         validAddress(governance_)
         onlyOwner
     {
         governance = governance_;
     }
 
-    function deployCollectible721(
+    function deployCollectible(
         string calldata name_,
         string calldata symbol_,
         string calldata baseURI_
-    ) external returns (address clone) {
+    ) external override returns (address clone) {
         address owner = msg.sender;
         bytes32 salt = keccak256(
             abi.encodePacked(VERSION, name_, symbol_, baseURI_)

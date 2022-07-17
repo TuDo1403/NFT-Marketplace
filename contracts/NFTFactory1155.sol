@@ -1,15 +1,12 @@
 // SPDX-License-Identifier: Unlicensed
 pragma solidity >=0.8.13;
 
-import "@openzeppelin/contracts-upgradeable/proxy/ClonesUpgradeable.sol";
-
-import "./interfaces/ICollectible1155.sol";
+import "@openzeppelin/contracts-upgradeable/utils/Create2Upgradeable.sol";
+import "./Collectible1155.sol";
 import "./interfaces/INFTFactory.sol";
 import "./interfaces/IGovernance.sol";
 
 contract NFTFactory1155 is INFTFactory {
-    using ClonesUpgradeable for address;
-
     address public governance;
 
     bytes32 public constant VERSION = keccak256("NFTFactory1155_v1");
@@ -37,33 +34,34 @@ contract NFTFactory1155 is INFTFactory {
 
     function setGovernance(address governance_)
         external
+        override
         validAddress(governance_)
         onlyOwner
     {
         governance = governance_;
     }
 
-    function deployCollectible1155(
-        address implement_,
+    function deployCollectible(
         string calldata name_,
         string calldata symbol_,
         string calldata baseURI_
-    ) external returns (address clone) {
+    ) external override returns (address clone) {
         address owner = msg.sender;
         bytes32 salt = keccak256(
             abi.encodePacked(VERSION, name_, symbol_, baseURI_)
         );
 
-        clone = implement_.cloneDeterministic(salt);
+        bytes memory bytecode = abi.encodePacked(
+            type(Collectible1155).creationCode,
+            abi.encode(address(governance), owner, name_, symbol_, baseURI_)
+        );
+        clone = Create2Upgradeable.deploy(0, salt, bytecode);
         deployedContracts[uint256(salt)] = clone;
-
-        ICollectible1155 instance = ICollectible1155(clone);
-        instance.initialize(owner, name_, symbol_, baseURI_);
         emit TokenDeployed(
             name_,
             symbol_,
             baseURI_,
-            instance.TYPE(),
+            ICollectible(clone).TYPE(),
             owner,
             clone
         );
