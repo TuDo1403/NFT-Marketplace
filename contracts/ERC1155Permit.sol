@@ -4,10 +4,15 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
+//import "./external/contracts/proxy/utils/Initializable.sol";
+
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
+//import "./external/contracts/token/ERC1155/ERC1155.sol";
+//import "./external/contracts/utils/cryptography/draft-EIP712.sol";
 import "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol";
 //import "@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+//import "./external/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/interfaces/IERC1271.sol";
 
 import "./interfaces/IERC1155Permit.sol";

@@ -4,6 +4,8 @@ coverage
 coverage.json
 typechain
 logs
+contracts/external
+tmp
 
 #Hardhat files
 cache
