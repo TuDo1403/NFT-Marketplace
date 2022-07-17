@@ -57,6 +57,12 @@ library ReceiptUtil {
         uint256 deadline;
     }
 
+    ///@dev value is equal to keccak256("User(address addr,uint8 v,uint256 deadline,bytes32 r,bytes32 s)")
+    bytes32 private constant USER_TYPE_HASH =
+        keccak256(
+            "User(address addr,uint8 v,uint256 deadline,bytes32 r,bytes32 s)"
+        );
+
     ///@dev Value is equal to keccak256("Header(User buyer,User seller,address nftContract,address paymentToken)User(address addr,uint8 v,uint256 deadline,bytes32 r,bytes32 s)User(address addr,uint8 v,uint256 deadline,bytes32 r,bytes32 s)")
     bytes32 private constant HEADER_TYPE_HASH =
         keccak256(
@@ -75,10 +81,10 @@ library ReceiptUtil {
             "Bulk(uint256[] amounts,uint256[] tokenIds,uint256[] unitPrices,string[] tokenURIs)"
         );
 
-    bytes32 private constant PAYMENT_TYPE_HASH =
-        keccak256(
-            "Payment(uint256 subTotal,uint256 creatorPayout,uint256 servicePayout,uint256 total)"
-        );
+    // bytes32 private constant PAYMENT_TYPE_HASH =
+    //     keccak256(
+    //         "Payment(uint256 subTotal,uint256 creatorPayout,uint256 servicePayout,uint256 total)"
+    //     );
 
     ///@dev value is equal to keccak256("Receipt(Header header,Item item,uint256 nonce,uint256 deadline)Header(User buyer,User seller,address nftContract,address paymentToken)Item(uint256 amount,uint256 tokenId,uint256 unitPrice,string tokenURI)User(address addr,uint8 v,uint256 dealdine,bytes32 r,bytes32 s)User(address addr,uint8 v,uint256 deadline,bytes32 r,bytes32 s)")
     bytes32 private constant RECEIPT_TYPE_HASH =
@@ -86,10 +92,10 @@ library ReceiptUtil {
             "Receipt(Header header,Item item,uint256 nonce,uint256 deadline)Header(User buyer,User seller,address nftContract,address paymentToken)Item(uint256 amount,uint256 tokenId,uint256 unitPrice,string tokenURI)User(address addr,uint8 v,uint256 dealdine,bytes32 r,bytes32 s)User(address addr,uint8 v,uint256 deadline,bytes32 r,bytes32 s)"
         );
 
-    ///@dev value is equal to keccak256("BulkReceipt(Header header,Bulk bulk,uint256 nonce,uint256 deadline)Header(User buyer,User seller,address nftContract,address paymentToken)IBulk(uint256[] amounts,uint256[] tokenIds,uint256[] unitPrices,string[] tokenURIs)User(address addr,uint8 v,uint256 dealdine,bytes32 r,bytes32 s)User(address addr,uint8 v,uint256 deadline,bytes32 r,bytes32 s)")
+    ///@dev value is equal to keccak256("BulkReceipt(Header header,Bulk bulk,uint256 nonce,uint256 deadline)Bulk(uint256[] amounts,uint256[] tokenIds,uint256[] unitPrices,string[] tokenURIs)Header(User buyer,User seller,address nftContract,address paymentToken)User(address addr,uint8 v,uint256 dealdine,bytes32 r,bytes32 s)User(address addr,uint8 v,uint256 deadline,bytes32 r,bytes32 s)")
     bytes32 private constant BULK_RECEIPT_TYPE_HASH =
         keccak256(
-            "BulkReceipt(Header header,Bulk bulk,uint256 nonce,uint256 deadline)Header(User buyer,User seller,address nftContract,address paymentToken)IBulk(uint256[] amounts,uint256[] tokenIds,uint256[] unitPrices,string[] tokenURIs)User(address addr,uint8 v,uint256 dealdine,bytes32 r,bytes32 s)User(address addr,uint8 v,uint256 deadline,bytes32 r,bytes32 s)"
+            "BulkReceipt(Header header,Bulk bulk,uint256 nonce,uint256 deadline)Bulk(uint256[] amounts,uint256[] tokenIds,uint256[] unitPrices,string[] tokenURIs)Header(User buyer,User seller,address nftContract,address paymentToken)User(address addr,uint8 v,uint256 dealdine,bytes32 r,bytes32 s)User(address addr,uint8 v,uint256 deadline,bytes32 r,bytes32 s)"
         );
 
     function hash(Receipt memory receipt_) internal pure returns (bytes32) {
@@ -99,7 +105,9 @@ library ReceiptUtil {
                     RECEIPT_TYPE_HASH,
                     __hashHeader(receipt_.header),
                     //__hashPayment(receipt_.payment),
-                    __hashItem(receipt_.item)
+                    __hashItem(receipt_.item),
+                    receipt_.nonce,
+                    receipt_.deadline
                 )
             );
     }
@@ -113,9 +121,11 @@ library ReceiptUtil {
             keccak256(
                 abi.encodePacked(
                     RECEIPT_TYPE_HASH,
-                    __hashHeader(receipt_.header)
+                    __hashHeader(receipt_.header),
                     //__hashPayment(receipt_.payment),
-                    //__hashBulk(receipt_.bulk)
+                    __hashBulk(receipt_.bulk),
+                    receipt_.nonce,
+                    receipt_.deadline
                 )
             );
     }
@@ -156,6 +166,22 @@ library ReceiptUtil {
         }
     }
 
+    function __hashUser(User memory user_) private pure returns (bytes32) {
+        return
+            keccak256(
+                (
+                    abi.encode(
+                        USER_TYPE_HASH,
+                        user_.addr,
+                        user_.v,
+                        user_.deadline,
+                        user_.r,
+                        user_.s
+                    )
+                )
+            );
+    }
+
     function __hashHeader(Header memory header_)
         private
         pure
@@ -168,8 +194,10 @@ library ReceiptUtil {
                     //header_.nonce,
                     //header_.deadline,
                     //header_.paymentToken,
-                    header_.buyer,
-                    header_.seller
+                    __hashUser(header_.buyer),
+                    __hashUser(header_.seller),
+                    header_.nftContract,
+                    header_.paymentToken
                 )
             );
     }
@@ -189,14 +217,22 @@ library ReceiptUtil {
     }
 
     function __hashBulk(Bulk memory bulk_) private pure returns (bytes32) {
+        bytes32[] memory _tokenURIs = new bytes32[](bulk_.tokenURIs.length);
+        for (uint256 i; i < _tokenURIs.length; ) {
+            _tokenURIs[i] = keccak256(bytes(bulk_.tokenURIs[i]));
+            unchecked {
+                ++i;
+            }
+        }
         return
             keccak256(
                 abi.encode(
                     BULK_TYPE_HASH,
                     //bulk_.nftContract,
                     bulk_.amounts,
-                    bulk_.tokenIds
-                    //bulk_.unitPrices
+                    bulk_.tokenIds,
+                    bulk_.unitPrices,
+                    keccak256(abi.encodePacked(_tokenURIs))
                 )
             );
     }
