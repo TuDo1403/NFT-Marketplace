@@ -20,4 +20,10 @@ interface INFTFactory {
     function multiDelegatecall(bytes[] calldata data)
         external
         returns (bytes[] memory);
+
+    function deployCollectible(
+        string calldata name_,
+        string calldata symbol_,
+        string calldata baseURI_
+    ) external returns (address clone);
 }

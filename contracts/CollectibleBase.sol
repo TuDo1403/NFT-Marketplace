@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Unlicensed
 pragma solidity >=0.8.13;
 
+import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/token/common/ERC2981.sol";
 
@@ -13,6 +14,8 @@ abstract contract CollectibleBase is AccessControl, ICollectible, ERC2981 {
     bool public isFrozenBase;
 
     IGovernance public immutable admin;
+
+    string public constant VERSION = "1";
 
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant URI_SETTER_ROLE = keccak256("URI_SETTER_ROLE");
@@ -40,6 +43,14 @@ abstract contract CollectibleBase is AccessControl, ICollectible, ERC2981 {
 
     constructor(address admin_) {
         admin = IGovernance(admin_);
+    }
+
+    function setTokenRoyalty(
+        uint256 tokenId_,
+        address receiver_,
+        uint256 feeNumerator_
+    ) external onlyCreatorAndNotFrozen(tokenId_) {
+        _setTokenRoyalty(tokenId_, receiver_, uint96(feeNumerator_));
     }
 
     function freezeToken(uint256 tokenId_)
@@ -71,6 +82,7 @@ abstract contract CollectibleBase is AccessControl, ICollectible, ERC2981 {
         returns (bool)
     {
         return
+            type(ICollectible).interfaceId == interfaceId ||
             ERC2981.supportsInterface(interfaceId) ||
             AccessControl.supportsInterface(interfaceId);
     }
