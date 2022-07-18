@@ -5,6 +5,7 @@ import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
 import "../interfaces/IGovernance.sol";
 import "./TokenIdGenerator.sol";
+import "hardhat/console.sol";
 
 library ReceiptUtil {
     error RU__Expired();
@@ -59,44 +60,32 @@ library ReceiptUtil {
 
     ///@dev value is equal to keccak256("User(address addr,uint8 v,uint256 deadline,bytes32 r,bytes32 s)")
     bytes32 private constant USER_TYPE_HASH =
-        keccak256(
-            "User(address addr,uint8 v,uint256 deadline,bytes32 r,bytes32 s)"
-        );
+        0x608b3f6b5846eeb165cc065962f4f67e8bc514fff7e7931191b7345873427549;
 
-    ///@dev Value is equal to keccak256("Header(User buyer,User seller,address nftContract,address paymentToken)User(address addr,uint8 v,uint256 deadline,bytes32 r,bytes32 s)User(address addr,uint8 v,uint256 deadline,bytes32 r,bytes32 s)")
+    ///@dev Value is equal to keccak256("Header(User buyer,User seller,address nftContract,address paymentToken)User(address addr,uint8 v,uint256 deadline,bytes32 r,bytes32 s)")
     bytes32 private constant HEADER_TYPE_HASH =
-        keccak256(
-            "Header(User buyer,User seller,address nftContract,address paymentToken)User(address addr,uint8 v,uint256 deadline,bytes32 r,bytes32 s)User(address addr,uint8 v,uint256 deadline,bytes32 r,bytes32 s)"
-        );
+        0x6e454651a1dcd0f7216467b9d24177e22fb1c1a0fe79e0191caaf33b1b2d22ad;
 
     ///@dev Value is equal to keccak256("Item(uint256 amount,uint256 tokenId,uint256 unitPrice,string tokenURI)")
     bytes32 private constant ITEM_TYPE_HASH =
-        keccak256(
-            "Item(uint256 amount,uint256 tokenId,uint256 unitPrice,string tokenURI)"
-        );
+        0xbb947806069955a6c604055c1ed4c84bcab0a154ff5365158c52c141bb25852d;
 
     ///@dev Value is equal to keccak256("Bulk(uint256[] amounts,uint256[] tokenIds,uint256[] unitPrices,string[] tokenURIs)")
     bytes32 private constant BULK_TYPE_HASH =
-        keccak256(
-            "Bulk(uint256[] amounts,uint256[] tokenIds,uint256[] unitPrices,string[] tokenURIs)"
-        );
+        0x97a8084b05295a1a0b029b05bda73d5917d940d10e22aa7b9d94f19a379e7bf8;
 
     // bytes32 private constant PAYMENT_TYPE_HASH =
     //     keccak256(
     //         "Payment(uint256 subTotal,uint256 creatorPayout,uint256 servicePayout,uint256 total)"
     //     );
 
-    ///@dev value is equal to keccak256("Receipt(Header header,Item item,uint256 nonce,uint256 deadline)Header(User buyer,User seller,address nftContract,address paymentToken)Item(uint256 amount,uint256 tokenId,uint256 unitPrice,string tokenURI)User(address addr,uint8 v,uint256 dealdine,bytes32 r,bytes32 s)User(address addr,uint8 v,uint256 deadline,bytes32 r,bytes32 s)")
+    ///@dev value is equal to keccak256("Receipt(Header header,Item item,uint256 nonce,uint256 deadline)Header(User buyer,User seller,address nftContract,address paymentToken)User(address addr,uint8 v,uint256 deadline,bytes32 r,bytes32 s)Item(uint256 amount,uint256 tokenId,uint256 unitPrice,string tokenURI)")
     bytes32 private constant RECEIPT_TYPE_HASH =
-        keccak256(
-            "Receipt(Header header,Item item,uint256 nonce,uint256 deadline)Header(User buyer,User seller,address nftContract,address paymentToken)Item(uint256 amount,uint256 tokenId,uint256 unitPrice,string tokenURI)User(address addr,uint8 v,uint256 dealdine,bytes32 r,bytes32 s)User(address addr,uint8 v,uint256 deadline,bytes32 r,bytes32 s)"
-        );
+        0xe12da5126137442eee6aa47b09af013f90ebdd5c92e75d9a3badef17abb89d34;
 
-    ///@dev value is equal to keccak256("BulkReceipt(Header header,Bulk bulk,uint256 nonce,uint256 deadline)Bulk(uint256[] amounts,uint256[] tokenIds,uint256[] unitPrices,string[] tokenURIs)Header(User buyer,User seller,address nftContract,address paymentToken)User(address addr,uint8 v,uint256 dealdine,bytes32 r,bytes32 s)User(address addr,uint8 v,uint256 deadline,bytes32 r,bytes32 s)")
+    ///@dev value is equal to keccak256("BulkReceipt(Header header,Bulk bulk,uint256 nonce,uint256 deadline)Bulk(uint256[] amounts,uint256[] tokenIds,uint256[] unitPrices,string[] tokenURIs)Header(User buyer,User seller,address nftContract,address paymentToken)User(address addr,uint8 v,uint256 deadline,bytes32 r,bytes32 s)")
     bytes32 private constant BULK_RECEIPT_TYPE_HASH =
-        keccak256(
-            "BulkReceipt(Header header,Bulk bulk,uint256 nonce,uint256 deadline)Bulk(uint256[] amounts,uint256[] tokenIds,uint256[] unitPrices,string[] tokenURIs)Header(User buyer,User seller,address nftContract,address paymentToken)User(address addr,uint8 v,uint256 dealdine,bytes32 r,bytes32 s)User(address addr,uint8 v,uint256 deadline,bytes32 r,bytes32 s)"
-        );
+        0xcfcb4da075a0d56b79ee3b56f70cb4cdcda5e155a086ae0a84cda374e2105f71;
 
     function hash(Receipt memory receipt_) internal pure returns (bytes32) {
         return
@@ -120,7 +109,7 @@ library ReceiptUtil {
         return
             keccak256(
                 abi.encodePacked(
-                    RECEIPT_TYPE_HASH,
+                    BULK_RECEIPT_TYPE_HASH,
                     __hashHeader(receipt_.header),
                     //__hashPayment(receipt_.payment),
                     __hashBulk(receipt_.bulk),
@@ -139,6 +128,15 @@ library ReceiptUtil {
         bytes calldata signature_
     ) internal view {
         _verifyIntegrity(admin_, paymentToken_, total_, deadline_);
+        console.logBytes32(hashedReceipt_);
+        // console.logBytes(signature_);
+        console.log(
+            ECDSA.recover(
+                ECDSA.toEthSignedMessageHash(hashedReceipt_),
+                signature_
+            )
+        );
+        console.log(admin_.verifier());
         if (
             ECDSA.recover(
                 ECDSA.toEthSignedMessageHash(hashedReceipt_),

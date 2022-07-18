@@ -17,6 +17,7 @@ import "./interfaces/ICollectible.sol";
 import "./interfaces/ICollectible1155.sol";
 import "./interfaces/IERC721Permit.sol";
 import "./interfaces/IERC1155Permit.sol";
+import "hardhat/console.sol";
 
 contract MarketplaceBase is
     IMarketplace,
@@ -105,6 +106,37 @@ contract MarketplaceBase is
         ReceiptUtil.Item memory item = receipt_.item;
         ReceiptUtil.Header memory header = receipt_.header;
         uint256 salePrice = item.amount * item.unitPrice;
+
+        // console.log("-------------Receipt--------------");
+        // console.log("------------Header-------------");
+        // console.log("------Buyer------");
+        // console.log(receipt_.header.buyer.addr);
+        // console.log(receipt_.header.buyer.v);
+        // console.log(receipt_.header.buyer.deadline);
+        // console.logBytes32(receipt_.header.buyer.r);
+        // console.logBytes32(receipt_.header.buyer.s);
+        // console.log("------Seller------");
+        // console.log(receipt_.header.seller.addr);
+        // console.log(receipt_.header.seller.v);
+        // console.log(receipt_.header.seller.deadline);
+        // console.logBytes32(receipt_.header.seller.r);
+        // console.logBytes32(receipt_.header.seller.s);
+        // console.log("---NftContract----");
+        // console.log(receipt_.header.nftContract);
+        // console.log("---PaymentToken---");
+        // console.log(receipt_.header.paymentToken);
+        // console.log("-------------Item--------------");
+        // console.log(receipt_.item.amount);
+        // console.log(receipt_.item.tokenId);
+        // console.log(receipt_.item.unitPrice);
+        // console.log(receipt_.item.tokenURI);
+        // console.log("-------------nonce-------------");
+        // console.log(receipt_.nonce);
+        // console.log("------------deadline-----------");
+        // console.log(receipt_.deadline);
+        // console.log("receipt hash: ");
+        // console.logBytes32(receipt_.hash());
+        console.logBytes(signature_);
         ReceiptUtil.verifyReceipt(
             _admin,
             header.paymentToken,
@@ -172,6 +204,7 @@ contract MarketplaceBase is
 
         IGovernance _admin = admin;
         ReceiptUtil.Header memory header = receipt_.header;
+
         ReceiptUtil.verifyReceipt(
             _admin,
             header.paymentToken,
