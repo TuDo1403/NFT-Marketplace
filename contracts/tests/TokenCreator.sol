@@ -29,8 +29,8 @@ contract TokenCreator {
     function createTokenId(
         uint256 _fee,
         uint256 _type,
-        uint256 _index,
         uint256 _supply,
+        uint256 _index,
         address _creator
     ) external pure returns (uint256) {
         unchecked {

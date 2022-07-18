@@ -19,6 +19,15 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
     }
 })
 
+const date = new Date()
+const options = {
+    weekday: "long",
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+}
 // You need to export an object to set up your config
 // Go to https://hardhat.org/config/ to learn more
 
@@ -50,7 +59,7 @@ const config: HardhatUserConfig = {
         coinmarketcap: process.env.CMC_API_KEY,
         gasPriceApi:
             "	https://api.etherscan.io/api?module=proxy&action=eth_gasPrice",
-        outputFile: "gas-reporter.txt",
+        outputFile: `log/gas-reporter-${Date().toLocaleString()}`,
         noColors: true,
     },
     contractSizer: {

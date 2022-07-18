@@ -45,7 +45,7 @@ describe("Collectible721", () => {
         )
         let name, symbol, URI
 
-        it("users[0] create nft successfully", async () => {
+        it("users[0] deploy nft successfully", async () => {
             name = "HoangCoin"
             symbol = "HLC"
             URI = ""

@@ -4,6 +4,7 @@ coverage
 coverage.json
 typechain
 gas-reporter
+log
 #Hardhat files
 cache
 artifacts

@@ -234,9 +234,9 @@ contract Collectible1155 is
     }
 
     function __supplyCheck(uint256 tokenId_, uint256 amount_) private view {
-        if (amount_ > 2**TokenIdGenerator.SUPPLY_BIT - 1) {
-            revert ERC1155__AllocationExceeds();
-        }
+        // if (amount_ > 2**TokenIdGenerator.SUPPLY_BIT - 1) {
+        //     revert ERC1155__AllocationExceeds();
+        // }
         uint256 maxSupply = tokenId_.getTokenMaxSupply();
         if (maxSupply != 0) {
             unchecked {

@@ -183,6 +183,8 @@ describe("NFTFactory721", () => {
             await myCollectible1155.balanceOf(users[0].address, tokenId)
         ).to.equal(BigNumber.from(10000))
 
+        // expect(0).to.equal(0)
+
         let amountSend = BigNumber.from(500)
         await myCollectible1155
             .connect(users[0])
