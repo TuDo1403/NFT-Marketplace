@@ -15,7 +15,6 @@ import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
  */
 interface IERC1155Permit is IERC1155 {
     error ERC1155Permit__Expired();
-    error ERC1155Permit__Unauthorized();
     error ERC1155Permit__InvalidSignature();
 
     /**

@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: Unlicensed
 pragma solidity >=0.8.13;
 
-contract Governance {
+import "@openzeppelin/contracts/utils/Context.sol";
+
+import "./interfaces/IGovernance.sol";
+
+contract Governance is IGovernance, Context {
     error Governance__Unauthorized();
     error Governance__InvalidAddress();
     error Governance__UnregisteredToken();
@@ -17,7 +21,7 @@ contract Governance {
     event TreasuryUpdated(address indexed from_, address indexed to_);
 
     modifier onlyOwner() {
-        if (msg.sender != manager) {
+        if (_msgSender() != manager) {
             revert Governance__Unauthorized();
         }
         _;
@@ -90,4 +94,38 @@ contract Governance {
         delete acceptedPayments[token_];
         emit PaymentUpdated(token_, false);
     }
+
+    function hasRole(bytes32 role, address account)
+        external
+        view
+        override
+        returns (bool)
+    {}
+
+    function getRoleAdmin(bytes32 role)
+        external
+        view
+        override
+        returns (bytes32)
+    {}
+
+    function grantRole(bytes32 role, address account) external override {}
+
+    function revokeRole(bytes32 role, address account) external override {}
+
+    function renounceRole(bytes32 role, address account) external override {}
+
+    function getRoleMember(bytes32 role, uint256 index)
+        external
+        view
+        override
+        returns (address)
+    {}
+
+    function getRoleMemberCount(bytes32 role)
+        external
+        view
+        override
+        returns (uint256)
+    {}
 }

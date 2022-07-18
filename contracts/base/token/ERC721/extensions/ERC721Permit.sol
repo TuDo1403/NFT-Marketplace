@@ -1,26 +1,28 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity >=0.8.13;
 
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/utils/Address.sol";
+import "../ERC721Lite.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
+//import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/interfaces/IERC1271.sol";
 //import "@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol";
 
-import "./interfaces/IERC721Permit.sol";
+import "./IERC721Permit.sol";
 
 /// @title ERC721 with permit
 /// @notice Nonfungible tokens that support an approve via signature, i.e. permit
-abstract contract ERC721Permit is ERC721, IERC721Permit, EIP712 {
-    /// @dev Gets the current nonce for a token ID and then increments it, returning the original value
-    function _useNonce(uint256 tokenId_) internal virtual returns (uint256);
+abstract contract ERC721Permit is ERC721Lite, IERC721Permit, EIP712 {
+    using Counters for Counters.Counter;
 
-    constructor(
-        string memory name_,
-        string memory symbol_,
-        string memory version_
-    ) EIP712(name_, version_) ERC721(name_, symbol_) {}
+    mapping(uint256 => Counters.Counter) public nonces;
+
+    /// @dev Gets the current nonce for a token ID and then increments it, returning the original value
+
+    constructor(string memory name_, string memory version_)
+        EIP712(name_, version_)
+    {}
 
     /// @inheritdoc IERC721Permit
     function DOMAIN_SEPARATOR() public view override returns (bytes32) {
@@ -41,7 +43,7 @@ abstract contract ERC721Permit is ERC721, IERC721Permit, EIP712 {
         bytes32 s_
     ) external override {
         if (block.timestamp > deadline_) {
-            revert ERC721__Expired();
+            revert ERC721Permit__Expired();
         }
 
         bytes32 digest = ECDSA.toEthSignedMessageHash(
@@ -59,7 +61,7 @@ abstract contract ERC721Permit is ERC721, IERC721Permit, EIP712 {
         );
         address owner = ownerOf(tokenId_);
         if (spender_ == owner) {
-            revert ERC721__Reapproving();
+            revert ERC721__SelfApproving();
         }
 
         if (Address.isContract(owner)) {
@@ -74,7 +76,7 @@ abstract contract ERC721Permit is ERC721, IERC721Permit, EIP712 {
         } else {
             address recoveredAddress = ECDSA.recover(digest, v_, r_, s_);
             if (recoveredAddress == address(0)) {
-                revert ERC721__InvalidSignature();
+                revert ERC721Permit__InvalidSignature();
             }
             if (recoveredAddress != owner) {
                 revert ERC721__Unauthorized();
@@ -82,5 +84,14 @@ abstract contract ERC721Permit is ERC721, IERC721Permit, EIP712 {
         }
 
         _approve(spender_, tokenId_);
+    }
+
+    function _useNonce(uint256 tokenId_)
+        internal
+        virtual
+        returns (uint256 nonce)
+    {
+        nonce = nonces[tokenId_].current();
+        nonces[tokenId_].increment();
     }
 }

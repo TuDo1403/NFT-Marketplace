@@ -3,19 +3,20 @@
 
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
+//import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 //import "./external/contracts/proxy/utils/Initializable.sol";
 
-import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
+import "../ERC1155Lite.sol";
 //import "./external/contracts/token/ERC1155/ERC1155.sol";
 //import "./external/contracts/utils/cryptography/draft-EIP712.sol";
 import "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
 //import "@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 //import "./external/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/interfaces/IERC1271.sol";
 
-import "./interfaces/IERC1155Permit.sol";
+import "./IERC1155Permit.sol";
 
 /**
  * @dev Implementation of the ERC1155 Permit extension allowing approvals to be made via signatures, as defined in
@@ -27,14 +28,10 @@ import "./interfaces/IERC1155Permit.sol";
  *
  * _Available since v3.4._
  */
-abstract contract ERC1155Permit is
-    ERC1155,
-    IERC1155Permit,
-    EIP712,
-    Initializable
-{
-    /// @dev Gets the current nonce for a token ID and then increments it, returning the original value
-    function _useNonce(address owner_) internal virtual returns (uint256);
+abstract contract ERC1155Permit is EIP712, ERC1155Lite, IERC1155Permit {
+    using Counters for Counters.Counter;
+
+    mapping(address => Counters.Counter) public nonces;
 
     // /// @dev The hash of the name used in the permit signature verification
     // bytes32 private immutable nameHash;
@@ -45,7 +42,6 @@ abstract contract ERC1155Permit is
     /// @notice Computes the nameHash and versionHash
     constructor(string memory name_, string memory version_)
         EIP712(name_, version_)
-        ERC1155("")
     {}
 
     /// @inheritdoc IERC1155Permit
@@ -53,10 +49,9 @@ abstract contract ERC1155Permit is
         return _domainSeparatorV4();
     }
 
+    //keccak256("Permit(address owner,address spender,uint256 nonce,uint256 deadline)");
     bytes32 private constant _PERMIT_TYPEHASH =
-        keccak256(
-            "Permit(address owner,address spender,uint256 nonce,uint256 deadline)"
-        );
+        0xdaab21af31ece73a508939fedd476a5ee5129a5ed4bb091f3236ffb45394df62;
 
     /// @inheritdoc IERC1155Permit
     function permit(
@@ -92,7 +87,7 @@ abstract contract ERC1155Permit is
                     abi.encodePacked(r_, s_, v_)
                 ) != 0x1626ba7e
             ) {
-                revert ERC1155Permit__Unauthorized();
+                revert ERC1155__Unauthorized();
             }
         } else {
             address recoveredAddress = ECDSA.recover(digest, v_, r_, s_);
@@ -100,10 +95,20 @@ abstract contract ERC1155Permit is
                 revert ERC1155Permit__InvalidSignature();
             }
             if (recoveredAddress != owner_) {
-                revert ERC1155Permit__Unauthorized();
+                revert ERC1155__Unauthorized();
             }
         }
 
         _setApprovalForAll(owner_, spender_, true);
+    }
+
+    /// @dev Gets the current nonce for a token ID and then increments it, returning the original value
+    function _useNonce(address owner_)
+        internal
+        virtual
+        returns (uint256 nonce)
+    {
+        nonce = nonces[owner_].current();
+        nonces[owner_].increment();
     }
 }

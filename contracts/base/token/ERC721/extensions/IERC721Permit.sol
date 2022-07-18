@@ -6,10 +6,16 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 /// @title ERC721 with permit
 /// @notice Extension to ERC721 that includes a permit function for signature based approvals
 interface IERC721Permit is IERC721 {
-    error ERC721__Expired();
-    error ERC721__Reapproving();
-    error ERC721__Unauthorized();
-    error ERC721__InvalidSignature();
+    error ERC721Permit__Expired();
+    //error ERC721__Unauthorized();
+    //error ERC721__TokenExisted();
+    //error ERC721__InvalidInput();
+    //error ERC721__SelfApproving();
+    //error ERC721__StringTooLong();
+    //error ERC721__TokenUnexisted();
+    error ERC721Permit__InvalidSignature();
+
+    //error ERC721__ERC721ReceiverNotImplemented();
 
     /// @notice The domain separator used in the permit signature
     /// @return The domain seperator used in encoding of permit signature
