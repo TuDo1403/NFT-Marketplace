@@ -129,15 +129,7 @@ library ReceiptUtil {
         bytes calldata signature_
     ) internal view {
         _verifyIntegrity(admin_, paymentToken_, total_, deadline_);
-        console.logBytes32(hashedReceipt_);
-        // console.logBytes(signature_);
-        console.log(
-            ECDSA.recover(
-                ECDSA.toEthSignedMessageHash(hashedReceipt_),
-                signature_
-            )
-        );
-        console.log(admin_.verifier());
+        
         if (
             ECDSA.recover(
                 ECDSA.toEthSignedMessageHash(hashedReceipt_),

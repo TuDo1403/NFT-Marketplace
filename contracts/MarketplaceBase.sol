@@ -129,7 +129,7 @@ contract MarketplaceBase is
         // console.log(receipt_.deadline);
         // console.log("receipt hash: ");
         // console.logBytes32(receipt_.hash());
-        console.logBytes(signature_);
+        // console.logBytes(signature_);
         ReceiptUtil.verifyReceipt(
             _admin,
             header.paymentToken,
@@ -475,6 +475,12 @@ contract MarketplaceBase is
             }
         } else {
             if (from_.v != 0) {
+                // console.log(from_.addr);
+                // console.log(spender_);
+                // console.log(amount_);
+                // console.logBytes32(from_.r);
+                // console.logBytes32(from_.s);
+                // console.log(from_.v);
                 IERC20PermitUpgradeable(paymentToken_).permit(
                     from_.addr,
                     spender_,

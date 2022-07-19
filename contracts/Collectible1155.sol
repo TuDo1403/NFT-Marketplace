@@ -211,19 +211,6 @@ contract Collectible1155 is
         emit PermanentURI(tokenId_, uri(tokenId_));
     }
 
-<<<<<<< HEAD
-    function __supplyCheck(uint256 tokenId_, uint256 amount_) private view {
-        // if (amount_ > 2**TokenIdGenerator.SUPPLY_BIT - 1) {
-        //     revert ERC1155__AllocationExceeds();
-        // }
-        uint256 maxSupply = tokenId_.getTokenMaxSupply();
-        if (maxSupply != 0) {
-            unchecked {
-                if (amount_ + totalSupply(tokenId_) > maxSupply) {
-                    revert ERC1155__AllocationExceeds();
-                }
-            }
-=======
     function _onlyCreatorOrHasRole(
         address sender_,
         uint256 tokenId_,
@@ -231,7 +218,6 @@ contract Collectible1155 is
     ) internal view virtual {
         if (!_isCreatorOf(sender_, tokenId_) && !hasRole(role_, sender_)) {
             revert ERC1155__Unauthorized();
->>>>>>> main
         }
     }
 
