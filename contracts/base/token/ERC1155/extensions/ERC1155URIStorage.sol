@@ -16,7 +16,7 @@ abstract contract ERC1155URIStorage is ERC1155Lite {
     using Strings for uint256;
 
     // Optional base URI
-    string private _baseURI = "";
+    string private _baseURI;
 
     // Optional mapping for token URIs
     mapping(uint256 => string) private _tokenURIs;

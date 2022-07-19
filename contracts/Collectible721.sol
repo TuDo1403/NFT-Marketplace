@@ -2,10 +2,10 @@
 pragma solidity >=0.8.13;
 
 import "./base/NFTBase.sol";
-import "./base/token/ERC721/extensions/ERC721BurnableLite.sol";
-import "./base/token/ERC721/extensions/ERC721URIStorageLite.sol";
 import "./base/token/ERC721/extensions/ERC721Permit.sol";
 import "./base/token/ERC721/extensions/ERC721Royalty.sol";
+import "./base/token/ERC721/extensions/ERC721BurnableLite.sol";
+import "./base/token/ERC721/extensions/ERC721URIStorageLite.sol";
 
 import "./interfaces/INFT.sol";
 
@@ -17,6 +17,9 @@ contract Collectible721 is
     ERC721BurnableLite,
     ERC721URIStorageLite
 {
+    //keccak256("Collectible721_v1");
+    bytes32 public constant VERSION =
+        0x9de63d708ee09a8f840a47cc975044d19e4c3537fe6b165971d829e6619e0ffa;
     string public baseURI;
 
     constructor(
@@ -27,12 +30,9 @@ contract Collectible721 is
         string memory baseURI_
     )
         ERC721Lite(name_, symbol_)
-        ERC721Permit(name_, VERSION)
+        ERC721Permit(name_, "Collectible721_v1")
         NFTBase(admin_, owner_, 721)
     {
-        if (bytes(name_).length > 32 || bytes(symbol_).length > 32) {
-            revert ERC721__StringTooLong();
-        }
         baseURI = baseURI_;
     }
 
@@ -44,23 +44,27 @@ contract Collectible721 is
         ERC721Royalty._beforeTokenTransfer(from, to, tokenId);
     }
 
-    function mint(address to_, ReceiptUtil.Item memory item_)
-        public
-        override
-        onlyMarketplaceOrMinter
-    {
-        uint256 tokenId = item_.tokenId;
-        if (_exists(tokenId)) {
-            revert ERC721__TokenExisted();
+    function mint(
+        address to_,
+        uint256 tokenId_,
+        uint256 amount_,
+        string memory tokenURI_
+    ) external override {
+        address sender = _msgSender();
+        if (sender != admin.marketplace()) {
+            _checkRole(MINTER_ROLE, sender);
         }
-        _safeMint(to_, tokenId);
-        _setTokenURI(tokenId, item_.tokenURI);
+        if (amount_ != 0) {
+            revert ERC721__InvalidInput();
+        }
+        _safeMint(to_, tokenId_);
+        _setTokenURI(tokenId_, tokenURI_);
     }
 
     function supportsInterface(bytes4 interfaceId)
         public
         view
-        override(ERC721, ERC721Royalty, NFTBase, IERC165)
+        override(ERC721, ERC721Royalty, IERC165, NFTBase)
         returns (bool)
     {
         return

@@ -9,6 +9,7 @@ import "../../../../libraries/TokenIdGenerator.sol";
 
 abstract contract ERC721Royalty is ERC2981, ERC721Lite {
     using TokenIdGenerator for uint256;
+
     /**
      * @dev See {IERC165-supportsInterface}.
      */

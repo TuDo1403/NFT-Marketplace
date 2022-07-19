@@ -6,11 +6,6 @@ import "@openzeppelin/contracts/token/common/ERC2981.sol";
 abstract contract NFTRoyalty is ERC2981 {
     error NFTRoyalty__Unauthorized();
 
-    modifier onlyCreator(address sender_, uint256 tokenId_) {
-        _onlyCreator(sender_, tokenId_);
-        _;
-    }
-
     function setTokenRoyalty(
         uint256 tokenId_,
         address receiver_,
@@ -36,7 +31,8 @@ abstract contract NFTRoyalty is ERC2981 {
         view
         virtual
     {
-        if (!_isCreatorOf(sender_, tokenId_)) {
+        (address owner, ) = royaltyInfo(tokenId_, 0);
+        if (owner != sender_) {
             revert NFTRoyalty__Unauthorized();
         }
     }

@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: Unlicensed
 pragma solidity >=0.8.13;
 
-interface INFTFreezable {
-    error NFTFreezable__FrozenBase();
-    error NFTFreezable__FrozenToken();
-    error NFTFreezable__Unauthorized();
+interface ITokenFreezable {
+    error TokenFreezable__FrozenBase();
+    error TokenFreezable__FrozenToken();
+    error TokenFreezable__Unauthorized();
 
     event PermanentURI(uint256 indexed tokenId_, string tokenURI_);
 

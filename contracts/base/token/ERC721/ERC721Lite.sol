@@ -23,7 +23,11 @@ abstract contract ERC721Lite is IERC721Lite, ERC721 {
 
     constructor(string memory name_, string memory symbol_)
         ERC721(name_, symbol_)
-    {}
+    {
+        if (bytes(name_).length > 32 || bytes(symbol_).length > 32) {
+            revert ERC721__StringTooLong();
+        }
+    }
 
     // function _beforeTokenTransfer(
     //     address from,
@@ -189,7 +193,7 @@ abstract contract ERC721Lite is IERC721Lite, ERC721 {
 
         _beforeTokenTransfer(address(0), to, tokenId);
 
-        _balances[to] += 1;
+        ++_balances[to];
         _owners[tokenId] = to;
 
         emit Transfer(address(0), to, tokenId);
@@ -217,8 +221,8 @@ abstract contract ERC721Lite is IERC721Lite, ERC721 {
         // Clear approvals from the previous owner
         _approve(address(0), tokenId);
 
-        _balances[from] -= 1;
-        _balances[to] += 1;
+        --_balances[from];
+        ++_balances[to];
         _owners[tokenId] = to;
 
         emit Transfer(from, to, tokenId);
