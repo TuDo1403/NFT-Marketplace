@@ -104,7 +104,7 @@ describe("NFTFactory721", () => {
         })
 
         it("Create new collectible721 successfully when all the modifier is passed", async () => {
-            await nftFactory721.deployCollectible721("HoangCoin", "HLC", "")
+            await nftFactory721.deployCollectible("HoangCoin", "HLC", "")
             const version = ethers.utils.keccak256(
                 ethers.utils.toUtf8Bytes("NFTFactory721_v1")
             )
@@ -131,7 +131,7 @@ describe("NFTFactory721", () => {
 
         it("should emit an TokenDeployed event when deploy successfully", async () => {
             await expect(
-                nftFactory721.deployCollectible721("Apollo", "AP", "")
+                nftFactory721.deployCollectible("Apollo", "AP", "")
             ).to.emit(nftFactory721, "TokenDeployed")
         })
     })

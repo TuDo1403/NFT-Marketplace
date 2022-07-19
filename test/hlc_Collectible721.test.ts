@@ -4,14 +4,14 @@ import {SignerWithAddress} from "@nomiclabs/hardhat-ethers/signers"
 import {
     Governance,
     NFTFactory721,
-    TokenId,
     Collectible721,
-    TokenIdGenerator,
+    TokenCreator,
     ERC721,
 } from "../typechain"
 import {BigNumber} from "ethers"
 
 describe("Collectible721", () => {
+    let admin: SignerWithAddress
     let manager: SignerWithAddress
     let treasury: SignerWithAddress
     let verifier: SignerWithAddress
@@ -20,20 +20,31 @@ describe("Collectible721", () => {
     let governance: Governance
     let nftFactory721: NFTFactory721
     let collectible721: Collectible721
-    let tokenIdGenerator: TokenId
+    let tokenIdGenerator: TokenCreator
     beforeEach(async () => {
-        ;[manager, treasury, verifier, ...users] = await ethers.getSigners()
+        ;[admin, manager, treasury, verifier, ...users] =
+            await ethers.getSigners()
         // deploy nftfactory721
+        const GovernanceFactory = await ethers.getContractFactory(
+            "Governance",
+            admin
+        )
+        governance = await GovernanceFactory.deploy(
+            manager.address,
+            treasury.address,
+            verifier.address
+        )
+        await governance.deployed()
         const NFTFactory721 = await ethers.getContractFactory(
             "NFTFactory721",
-            manager
+            admin
         )
-        nftFactory721 = await NFTFactory721.deploy(manager.address)
+        nftFactory721 = await NFTFactory721.deploy(governance.address)
         await nftFactory721.deployed()
 
         const TokenIdFactory = await ethers.getContractFactory(
-            "TokenId",
-            manager
+            "TokenCreator",
+            admin
         )
         tokenIdGenerator = await TokenIdFactory.deploy()
         await tokenIdGenerator.deployed()
@@ -51,7 +62,7 @@ describe("Collectible721", () => {
             URI = ""
             await nftFactory721
                 .connect(users[0])
-                .deployCollectible721(name, symbol, URI)
+                .deployCollectible(name, symbol, URI)
             const salt = ethers.utils.keccak256(
                 ethers.utils.solidityPack(
                     ["bytes32", "string", "string", "string"],
@@ -71,15 +82,18 @@ describe("Collectible721", () => {
             const MINTER_ROLE = ethers.utils.keccak256(
                 ethers.utils.toUtf8Bytes("MINTER_ROLE")
             )
-            const URI_SETTER_ROLE = ethers.utils.keccak256(
-                ethers.utils.toUtf8Bytes("URI_SETTER_ROLE")
-            )
+            // const DEFAULT_ADMIN_ROLE =
+            //     ethers.utils.toUtf8Bytes("0x00")
+            // )
             expect(await newNftContract.hasRole(MINTER_ROLE, users[0].address))
                 .to.true
-            expect(
-                await newNftContract.hasRole(URI_SETTER_ROLE, users[0].address)
-            ).to.true
-            expect(await newNftContract.admin()).to.equal(manager.address)
+            // expect(
+            //     await newNftContract.hasRole(
+            //         ethers.utils.toUtf8Bytes("0x00"),
+            //         users[0].address
+            //     )
+            // ).to.true
+            expect(await newNftContract.admin()).to.equal(governance.address)
         })
 
         // it("should revert when nft names is longer than 32 bytes", async () => {
@@ -105,7 +119,7 @@ describe("Collectible721", () => {
             const URI = "https://"
             await nftFactory721
                 .connect(users[0])
-                .deployCollectible721(name, symbol, URI)
+                .deployCollectible(name, symbol, URI)
             const salt = ethers.utils.keccak256(
                 ethers.utils.solidityPack(
                     ["bytes32", "string", "string", "string"],
@@ -121,7 +135,7 @@ describe("Collectible721", () => {
             )
         })
 
-        it("mint a token and transfer to the owner", async () => {
+        it.only("mint a token and transfer to the owner", async () => {
             const token1 = {
                 _fee: 1,
                 _type: 721,
@@ -130,12 +144,21 @@ describe("Collectible721", () => {
                 _creator: users[0].address,
             }
 
-            const tokenId1 = await tokenIdGenerator.createTokenId(token1)
+            const tokenId1 = await tokenIdGenerator.createTokenId(
+                token1._fee,
+                token1._type,
+                token1._supply,
+                token1._index,
+                token1._creator
+            )
             expect(
-                await newNftContract
-                    .connect(users[0])
-                    .mint(users[0].address, tokenId1, "1", "")
-            ).to.emit("ERC721", "Transfer")
+                await newNftContract.connect(users[0]).mint(users[0].address, {
+                    amount: token1._supply,
+                    tokenId: tokenId1,
+                    unitPrice: 500,
+                    tokenURI: "",
+                })
+            ).to.emit("ERC721Lite", "Transfer")
 
             expect(await newNftContract.balanceOf(users[0].address)).to.equal(1)
             expect(await newNftContract.ownerOf(tokenId1)).to.equal(
@@ -147,16 +170,25 @@ describe("Collectible721", () => {
             const token1 = {
                 _fee: 1,
                 _type: 721,
-                _supply: 1,
+                _supply: 2,
                 _index: 1,
                 _creator: users[0].address,
             }
 
-            const tokenId1 = await tokenIdGenerator.createTokenId(token1)
+            const tokenId1 = await tokenIdGenerator.createTokenId(
+                token1._fee,
+                token1._type,
+                token1._supply,
+                token1._index,
+                token1._creator
+            )
             await expect(
-                newNftContract
-                    .connect(users[0])
-                    .mint(users[0].address, tokenId1, 2, "")
+                newNftContract.connect(users[0]).mint(users[0].address, {
+                    amount: token1._supply,
+                    tokenId: tokenId1,
+                    unitPrice: 500,
+                    tokenURI: "",
+                })
             ).to.be.revertedWith("NFT__InvalidInput")
         })
 
@@ -169,11 +201,20 @@ describe("Collectible721", () => {
                 _creator: users[0].address,
             }
 
-            const tokenId1 = await tokenIdGenerator.createTokenId(token1)
+            const tokenId1 = await tokenIdGenerator.createTokenId(
+                token1._fee,
+                token1._type,
+                token1._supply,
+                token1._index,
+                token1._creator
+            )
             await expect(
-                newNftContract
-                    .connect(users[1])
-                    .mint(users[1].address, tokenId1, 1, "")
+                newNftContract.connect(users[1]).mint(users[1].address, {
+                    amount: token1._supply,
+                    tokenId: tokenId1,
+                    unitPrice: 500,
+                    tokenURI: "",
+                })
             ).to.be.revertedWith(
                 `AccessControl: account ${users[1].address.toLowerCase()} is missing role ${ethers.utils.keccak256(
                     ethers.utils.toUtf8Bytes("MINTER_ROLE")
@@ -190,17 +231,29 @@ describe("Collectible721", () => {
                 _creator: users[0].address,
             }
 
-            const tokenId1 = await tokenIdGenerator.createTokenId(token1)
+            const tokenId1 = await tokenIdGenerator.createTokenId(
+                token1._fee,
+                token1._type,
+                token1._supply,
+                token1._index,
+                token1._creator
+            )
 
-            await newNftContract
-                .connect(users[0])
-                .mint(users[0].address, tokenId1, 1, "")
+            await newNftContract.connect(users[0]).mint(users[0].address, {
+                amount: token1._supply,
+                tokenId: tokenId1,
+                unitPrice: 500,
+                tokenURI: "",
+            })
 
             await expect(
-                newNftContract
-                    .connect(users[0])
-                    .mint(users[0].address, tokenId1, 1, "")
-            ).to.be.revertedWith("NFT__TokenExisted")
+                newNftContract.connect(users[0]).mint(users[0].address, {
+                    amount: token1._supply,
+                    tokenId: tokenId1,
+                    unitPrice: 500,
+                    tokenURI: "",
+                })
+            ).to.be.revertedWith("ERC721__TokenExisted")
         })
     })
 })

@@ -10,6 +10,7 @@ import {
 } from "../typechain"
 
 describe("Collectible1155", () => {
+    let admin: SignerWithAddress
     let manager: SignerWithAddress
     let verifier: SignerWithAddress
     let treasury: SignerWithAddress
@@ -20,10 +21,11 @@ describe("Collectible1155", () => {
     let tokenCreator: TokenCreator
     let governance: Governance
     beforeEach(async () => {
-        ;[manager, verifier, treasury, ...users] = await ethers.getSigners()
+        ;[admin, manager, verifier, treasury, ...users] =
+            await ethers.getSigners()
         const GovernanceFactory = await ethers.getContractFactory(
             "Governance",
-            manager
+            admin
         )
         governance = await GovernanceFactory.deploy(
             manager.address,
@@ -33,18 +35,18 @@ describe("Collectible1155", () => {
         await governance.deployed()
         const NFTFactory1155 = await ethers.getContractFactory(
             "NFTFactory1155",
-            manager
+            admin
         )
         nftFactory1155 = await NFTFactory1155.deploy(governance.address)
         await nftFactory1155.deployed()
-        const Collectible1155BaseFactory = await ethers.getContractFactory(
-            "Collectible1155",
-            manager
-        )
-        collectible1155Base = await Collectible1155BaseFactory.deploy(
-            governance.address
-        )
-        await collectible1155Base.deployed()
+        // const Collectible1155BaseFactory = await ethers.getContractFactory(
+        //     "Collectible1155",
+        //     m
+        // )
+        // collectible1155Base = await Collectible1155BaseFactory.deploy(
+        //     governance.address
+        // )
+        // await collectible1155Base.deployed()
         const TokenCreatorFactory = await ethers.getContractFactory(
             "TokenCreator"
         )
@@ -52,7 +54,7 @@ describe("Collectible1155", () => {
         await tokenCreator.deployed()
     })
 
-    describe("constructor, initialize", () => {
+    describe("constructor", () => {
         it("should deploy a clone of Collectible1155 contract and initialzie", async () => {
             const name = "HoangCoin"
             const symbol = "HLC"
@@ -62,12 +64,7 @@ describe("Collectible1155", () => {
             )
             await nftFactory1155
                 .connect(users[0])
-                .deployCollectible1155(
-                    collectible1155Base.address,
-                    name,
-                    symbol,
-                    URI
-                )
+                .deployCollectible(name, symbol, URI)
             const salt = ethers.utils.keccak256(
                 ethers.utils.solidityPack(
                     ["bytes32", "string", "string", "string"],
@@ -109,12 +106,7 @@ describe("Collectible1155", () => {
             await expect(
                 nftFactory1155
                     .connect(users[0])
-                    .deployCollectible1155(
-                        collectible1155Base.address,
-                        name,
-                        symbol,
-                        URI
-                    )
+                    .deployCollectible(name, symbol, URI)
             ).to.be.revertedWith("NFT__StringTooLong")
         })
     })
@@ -130,12 +122,7 @@ describe("Collectible1155", () => {
             )
             await nftFactory1155
                 .connect(users[0])
-                .deployCollectible1155(
-                    collectible1155Base.address,
-                    name,
-                    symbol,
-                    URI
-                )
+                .deployCollectible(name, symbol, URI)
             const salt = ethers.utils.keccak256(
                 ethers.utils.solidityPack(
                     ["bytes32", "string", "string", "string"],
@@ -151,7 +138,7 @@ describe("Collectible1155", () => {
             )
         })
 
-        it.only("mint the token and transfer to the owner", async () => {
+        it("mint the token and transfer to the owner", async () => {
             let tokenInfo = {
                 _fee: 1,
                 _type: 1155,
@@ -169,11 +156,14 @@ describe("Collectible1155", () => {
 
             await new1155Contract
                 .connect(users[0])
-                ["mint(address,uint256,uint256,string)"](
+                ["mint(address,(uint256,uint256,uint256,string))"](
                     users[0].address,
-                    tokenId,
-                    BigNumber.from(90),
-                    ""
+                    {
+                        amount: BigNumber.from(90),
+                        tokenId: tokenId,
+                        unitPrice: BigNumber.from(500),
+                        tokenURI: "",
+                    }
                 )
             await new1155Contract
                 .connect(users[0])

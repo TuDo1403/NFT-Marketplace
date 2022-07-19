@@ -6,6 +6,7 @@ import {SignerWithAddress} from "@nomiclabs/hardhat-ethers/signers"
 import {BigNumber} from "ethers"
 
 describe("NFTFactory1155", () => {
+    let admin: SignerWithAddress
     let manager: SignerWithAddress
     let treasury: SignerWithAddress
     let verifier: SignerWithAddress
@@ -16,11 +17,12 @@ describe("NFTFactory1155", () => {
     let collectible1155: Collectible1155
 
     beforeEach(async () => {
-        ;[manager, treasury, verifier, ...users] = await ethers.getSigners()
+        ;[admin, manager, treasury, verifier, ...users] =
+            await ethers.getSigners()
 
         const GovernanceFactory = await ethers.getContractFactory(
             "Governance",
-            manager
+            admin
         )
         governance = await GovernanceFactory.deploy(
             manager.address,
@@ -29,20 +31,20 @@ describe("NFTFactory1155", () => {
         )
         await governance.deployed()
 
-        const Collectible1155Factory = await ethers.getContractFactory(
-            "Collectible1155",
-            manager
-        )
+        // const Collectible1155Factory = await ethers.getContractFactory(
+        //     "Collectible1155",
+        //     admin
+        // )
 
-        collectible1155 = await Collectible1155Factory.deploy(manager.address)
-        await collectible1155.deployed()
+        // collectible1155 = await Collectible1155Factory.deploy(governance.address)
+        // await collectible1155.deployed()
     })
 
     describe("constructor", () => {
         it("should initialize the governace address", async () => {
             const NFTFactory1155Factory = await ethers.getContractFactory(
                 "NFTFactory1155",
-                manager
+                admin
             )
             nftFactory1155 = await NFTFactory1155Factory.deploy(
                 governance.address
@@ -70,10 +72,10 @@ describe("NFTFactory1155", () => {
                 manager
             )
 
-            collectible1155 = await Collectible1155Factory.deploy(
-                manager.address
-            )
-            await collectible1155.deployed()
+            // collectible1155 = await Collectible1155Factory.deploy(
+            //     manager.address
+            // )
+            // await collectible1155.deployed()
             const NFTFactory1155Factory = await ethers.getContractFactory(
                 "NFTFactory1155",
                 manager
@@ -117,10 +119,10 @@ describe("NFTFactory1155", () => {
                 manager
             )
 
-            collectible1155 = await Collectible1155Factory.deploy(
-                manager.address
-            )
-            await collectible1155.deployed()
+            // collectible1155 = await Collectible1155Factory.deploy(
+            //     manager.address
+            // )
+            // await collectible1155.deployed()
             const NFTFactory1155Factory = await ethers.getContractFactory(
                 "NFTFactory1155",
                 manager
@@ -132,12 +134,7 @@ describe("NFTFactory1155", () => {
         })
 
         it("Create new collectibe1155 contract as a clone of the implement", async () => {
-            await nftFactory1155.deployCollectible1155(
-                collectible1155.address,
-                "TriCoin",
-                "TC",
-                ""
-            )
+            await nftFactory1155.deployCollectible("TriCoin", "TC", "")
             const version = ethers.utils.keccak256(
                 ethers.utils.toUtf8Bytes("NFTFactory1155_v1")
             )
@@ -164,12 +161,7 @@ describe("NFTFactory1155", () => {
 
         it("should emit an TokenDeployed event when deploy successfully", async () => {
             await expect(
-                nftFactory1155.deployCollectible1155(
-                    collectible1155.address,
-                    "Apollo",
-                    "AP",
-                    ""
-                )
+                nftFactory1155.deployCollectible("Apollo", "AP", "")
             ).to.emit(nftFactory1155, "TokenDeployed")
         })
     })
