@@ -5,7 +5,7 @@ import "@openzeppelin/contracts-upgradeable/utils/Create2Upgradeable.sol";
 
 import "./Collectible721.sol";
 
-import "./interfaces/ICollectible.sol";
+import "./base/INFTBase.sol";
 import "./interfaces/INFTFactory.sol";
 import "./interfaces/IGovernance.sol";
 
@@ -65,7 +65,7 @@ contract NFTFactory721 is INFTFactory {
             name_,
             symbol_,
             baseURI_,
-            ICollectible(clone).TYPE(),
+            NFTBase(clone).TYPE(),
             owner,
             clone
         );

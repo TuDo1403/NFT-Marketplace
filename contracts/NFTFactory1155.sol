@@ -3,6 +3,7 @@ pragma solidity >=0.8.13;
 
 import "@openzeppelin/contracts-upgradeable/utils/Create2Upgradeable.sol";
 import "./Collectible1155.sol";
+import "./base/INFTBase.sol";
 import "./interfaces/INFTFactory.sol";
 import "./interfaces/IGovernance.sol";
 
@@ -61,7 +62,7 @@ contract NFTFactory1155 is INFTFactory {
             name_,
             symbol_,
             baseURI_,
-            ICollectible(clone).TYPE(),
+            INFTBase(clone).TYPE(),
             owner,
             clone
         );

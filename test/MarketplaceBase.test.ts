@@ -37,7 +37,7 @@ const typedData = {
             {name: "tokenId", type: "uint256"},
             {name: "unitPrice", type: "uint256"},
             {name: "nftContract", type: "address"},
-            {name: "tokenURI", type: "string"},
+            // {name: "tokenURI", type: "string"},
         ],
 
         Bulk: [
@@ -80,7 +80,7 @@ const typedData = {
             tokenId: BigNumber.from(0),
             unitPrice: BigNumber.from(0),
             nftContract: "",
-            tokenURI: "",
+            // tokenURI: "",
         },
     },
 }
@@ -99,7 +99,7 @@ async function signReceipt(
     seller: string,
     total: BigNumber,
     nonce: BigNumber,
-    tokenURI: string,
+    // tokenURI: string,
     amount: BigNumber,
     tokenId: BigNumber,
     subTotal: BigNumber,
@@ -132,6 +132,7 @@ async function signReceipt(
         tokenId: tokenId,
         unitPrice: unitPrice,
         nftContract: nftContract,
+<<<<<<< HEAD
         tokenURI: tokenURI,
     }
 
@@ -140,6 +141,17 @@ async function signReceipt(
     typedData_.domain.verifyingContract = verifyingContract
     const digest = TypedDataUtils.encodeDigest(typedData_)
     return [message, await verifier.signMessage(digest)]
+=======
+        // tokenURI: tokenURI,
+    };
+
+    let typedData_ = JSON.parse(JSON.stringify(typedData)); // copy data
+    typedData_.message = message;
+    typedData_.domain.verifyingContract = verifyingContract;
+    const digest = TypedDataUtils.encodeDigest(typedData_);
+    return [message, await verifier.signMessage(digest)];
+    //return [message.header, message.payment, message.item, await verifier.signMessage(digest)];
+>>>>>>> main
 }
 
 describe("MarketplaceBase", () => {
@@ -221,6 +233,7 @@ describe("MarketplaceBase", () => {
             0,
             2e5,
             creator.address
+<<<<<<< HEAD
         )
         let amount = 12
         let unitPrice = 500
@@ -233,10 +246,28 @@ describe("MarketplaceBase", () => {
         let receipt: any
         let signature: string
         ;[receipt, signature] = await signReceipt(
+=======
+        );
+        let amount = 12;
+        let unitPrice = 500;
+        const total = amount * unitPrice;
+        const creatorPayout = (total * creatorFee) / 1e4;
+        const servicePayout = (total * serviceFee) / 1e4;
+        const subTotal = total - creatorPayout - servicePayout;
+        const deadline = now + 60 * 1000;
+        const ticketExpiration = now + 5 * 60 * 1000;
+        let receipt: any;
+        let header: any;
+        let payment: any;
+        let item: any;
+        let signature: string;
+        //[receipt, signature] = await signReceipt(
+        [receipt, signature] = await signReceipt(
+>>>>>>> main
             creator.address,
             BigNumber.from(total),
             nonce,
-            tokenURI,
+            // tokenURI,
             BigNumber.from(amount),
             tokenId,
             BigNumber.from(subTotal),
@@ -258,7 +289,7 @@ describe("MarketplaceBase", () => {
         expect(
             await marketplace
                 .connect(buyer)
-                .redeem(deadline, receipt, signature, {value: total})
+                .redeem(deadline, receipt, tokenURI, signature, {value: total})
         )
             .to.emit(marketplace, "ItemRedeemed")
             .withArgs(

@@ -12,17 +12,20 @@ import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeab
 import "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/draft-IERC20PermitUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/IERC721ReceiverUpgradeable.sol";
 
+import "./base/MarketplaceIntegratable.sol";
+import "./base/NFTBase.sol";
+
 import "./interfaces/IMarketplace.sol";
-import "./interfaces/ICollectible.sol";
-import "./interfaces/ICollectible1155.sol";
-import "./interfaces/IERC721Permit.sol";
-import "./interfaces/IERC1155Permit.sol";
-import "hardhat/console.sol";
+import "./interfaces/INFT.sol";
+import "./interfaces/ISemiNFT.sol";
+import "./base/token/ERC721/extensions/IERC721Permit.sol";
+import "./base/token/ERC1155/extensions/IERC1155Permit.sol";
 
 contract MarketplaceBase is
     IMarketplace,
     EIP712Upgradeable,
     PausableUpgradeable,
+    MarketplaceIntegratable,
     ReentrancyGuardUpgradeable
 {
     //using Strings for uint256;
@@ -32,8 +35,6 @@ contract MarketplaceBase is
     using SafeERC20Upgradeable for IERC20Upgradeable;
     using CountersUpgradeable for CountersUpgradeable.Counter;
 
-    IGovernance public immutable admin;
-
     uint256 public serviceFee;
     uint256 public creatorFeeUB; // creator fee upper bound
 
@@ -42,19 +43,11 @@ contract MarketplaceBase is
 
     mapping(address => CountersUpgradeable.Counter) public nonces;
 
-    modifier onlyManager() {
-        if (_msgSender() != admin.manager()) {
-            revert MP__Unauthorized();
-        }
-        _;
-    }
-
     constructor(
         address admin_,
         uint256 serviceFee_,
         uint256 creatorFeeUB_
-    ) initializer {
-        admin = IGovernance(admin_);
+    ) MarketplaceIntegratable(admin_) initializer {
         __initialize(serviceFee_, creatorFeeUB_);
     }
 
@@ -80,7 +73,7 @@ contract MarketplaceBase is
         external
         payable
         override
-        onlyManager
+        onlyManager(_msgSender())
         whenNotPaused
         returns (bytes[] memory results)
     {
@@ -161,7 +154,7 @@ contract MarketplaceBase is
                 item
             );
             if (!tokenExists) {
-                ICollectible(nftContract).mint(sellerAddr, item);
+                INFT(nftContract).mint(sellerAddr, item);
             }
         }
 
@@ -322,11 +315,11 @@ contract MarketplaceBase is
     //     }
     // }
 
-    function pause() external override whenNotPaused onlyManager {
+    function pause() external override whenNotPaused onlyManager(_msgSender()) {
         _pause();
     }
 
-    function unpause() external override whenPaused onlyManager {
+    function unpause() external override whenPaused onlyManager(_msgSender()) {
         _unpause();
     }
 
@@ -337,7 +330,7 @@ contract MarketplaceBase is
         ReceiptUtil.Item memory item_,
         ReceiptUtil.User memory seller_
     ) internal {
-        if (ICollectible(nftContract_).TYPE() != 721) {
+        if (INFTBase(nftContract_).TYPE() != 721) {
             IERC1155Permit(nftContract_).permit(
                 seller_.deadline,
                 seller_.addr,
@@ -409,7 +402,7 @@ contract MarketplaceBase is
         }
 
         if (counter != 0) {
-            ICollectible1155(header_.nftContract).mintBatch(
+            ISemiNFT(header_.nftContract).mintBatch(
                 header_.seller.addr,
                 bulkToMint
             );
