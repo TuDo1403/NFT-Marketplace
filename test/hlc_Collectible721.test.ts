@@ -135,7 +135,7 @@ describe("Collectible721", () => {
             )
         })
 
-        it.only("mint a token and transfer to the owner", async () => {
+        it("mint a token and transfer to the owner", async () => {
             const token1 = {
                 _fee: 1,
                 _type: 721,
@@ -152,7 +152,7 @@ describe("Collectible721", () => {
                 token1._creator
             )
             expect(
-                await newNftContract.connect(users[0]).mint(users[0].address, tokenId1, 1, "https://")
+                await newNftContract.connect(users[0]).mint(users[0].address, tokenId1, 0, "https://")
             ).to.emit("ERC721Lite", "Transfer")
 
             expect(await newNftContract.balanceOf(users[0].address)).to.equal(1)
@@ -161,7 +161,7 @@ describe("Collectible721", () => {
             )
         })
 
-        it("revert when amount of token minted is larger than 1", async () => {
+        it("revert when amount of token minted is larger than 0", async () => {
             const token1 = {
                 _fee: 1,
                 _type: 721,
@@ -178,8 +178,8 @@ describe("Collectible721", () => {
                 token1._creator
             )
             await expect(
-                newNftContract.connect(users[0]).mint(users[0].address, tokenId1, 2, "https://")
-            ).to.be.revertedWith("NFT__InvalidInput")
+                newNftContract.connect(users[0]).mint(users[0].address, tokenId1, 1, "https://")
+            ).to.be.revertedWith("ERC721__InvalidInput")
         })
 
         it("revert when the address calling the mint function don't have minter role", async () => {
@@ -199,7 +199,7 @@ describe("Collectible721", () => {
                 token1._creator
             )
             await expect(
-                newNftContract.connect(users[1]).mint(users[1].address, tokenId1, 1, "https://")
+                newNftContract.connect(users[1]).mint(users[1].address, tokenId1, 0, "https://")
             ).to.be.revertedWith(
                 `AccessControl: account ${users[1].address.toLowerCase()} is missing role ${ethers.utils.keccak256(
                     ethers.utils.toUtf8Bytes("MINTER_ROLE")
@@ -224,10 +224,10 @@ describe("Collectible721", () => {
                 token1._creator
             )
 
-            await newNftContract.connect(users[0]).mint(users[0].address, tokenId1, 1, "https://")
+            await newNftContract.connect(users[0]).mint(users[0].address, tokenId1, 0, "https://")
 
             await expect(
-                newNftContract.connect(users[0]).mint(users[0].address, tokenId1, 1, "https://")
+                newNftContract.connect(users[0]).mint(users[0].address, tokenId1, 0, "https://")
             ).to.be.revertedWith("ERC721__TokenExisted")
         })
     })

@@ -324,8 +324,8 @@ abstract contract ERC721Lite is IERC721Lite, ERC721 {
     }
 
     function _onlyExists(uint256 tokenId_) internal view {
-        if (!_exists(tokenId_)) {
-            revert ERC721__TokenUnexisted();
+        if (_exists(tokenId_)) {
+            revert ERC721__TokenExisted();
         }
     }
 }
