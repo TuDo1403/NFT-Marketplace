@@ -10,7 +10,7 @@ import "./interfaces/INFT.sol";
 import "./interfaces/INFTFactory.sol";
 import "./interfaces/IGovernance.sol";
 
-contract NFTFactory1155 is
+contract NFTFactory is
     INFTFactory,
     MarketplaceIntegratable,
     ContextUpgradeable

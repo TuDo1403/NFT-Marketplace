@@ -20,9 +20,8 @@ abstract contract NFTBase is
     bytes32 internal constant MINTER_ROLE =
         0x9f2df0fed2c77648de5860a4cc508cd0818c85b8b8a1ab4ceeef8d981c8956a6;
 
-    constructor(uint256 type_) initializer {
+    constructor(uint256 type_) {
         TYPE = type_;
-        _disableInitializers();
     }
 
     function _initialize(address admin_, address owner_)

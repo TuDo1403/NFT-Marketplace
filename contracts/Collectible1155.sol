@@ -32,7 +32,9 @@ contract Collectible1155 is
     string public name;
     string public symbol;
 
-    constructor() NFTBase(1155) ERC1155Lite("") {}
+    constructor() NFTBase(1155) ERC1155Lite("") {
+        _disableInitializers();
+    }
 
     function initialize(
         address admin_,
