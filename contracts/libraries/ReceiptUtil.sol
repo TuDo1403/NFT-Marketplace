@@ -130,7 +130,8 @@ library ReceiptUtil {
     ) internal view {
         _verifyIntegrity(admin_, paymentToken_, total_, deadline_);
         // console.logBytes(signature_);
-        // console.logBytes32(ECDSA.toEthSignedMessageHash(hashedReceipt_));
+        // console.log("hash receipt");
+        // console.logBytes32(hashedReceipt_);
         if (
             ECDSA.recover(
                 ECDSA.toEthSignedMessageHash(hashedReceipt_),

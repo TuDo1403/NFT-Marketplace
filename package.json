@@ -49,6 +49,7 @@
   "dependencies": {
     "@openzeppelin/contracts": "^4.6.0",
     "@openzeppelin/contracts-upgradeable": "^4.6.0",
+    "@openzeppelin/hardhat-upgrades": "^1.19.0",
     "@polkadot/api": "^8.8.2",
     "@remix-project/remixd": "^0.6.2",
     "@uniswap/v3-periphery": "^1.4.1",

@@ -4,6 +4,7 @@ pragma solidity >=0.8.13;
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 
 import "./IERC1155Lite.sol";
+import "hardhat/console.sol";
 
 abstract contract ERC1155Lite is ERC1155, IERC1155Lite {
     using Address for address;
@@ -300,6 +301,7 @@ abstract contract ERC1155Lite is ERC1155, IERC1155Lite {
 
     function _onlyOwnerOrApproved(address from_) internal view {
         address sender = _msgSender();
+        
         if (from_ != sender && !isApprovedForAll(from_, sender)) {
             revert ERC1155__Unauthorized();
         }

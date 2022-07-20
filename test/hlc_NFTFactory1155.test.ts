@@ -1,5 +1,5 @@
 import { expect } from "chai"
-import { ethers } from "hardhat"
+import { ethers, upgrades } from "hardhat"
 import * as crypto from "crypto"
 import { Collectible1155, Governance, NFTFactory1155 } from "../typechain"
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers"
@@ -45,10 +45,12 @@ describe("NFTFactory1155", () => {
                 "NFTFactory1155",
                 admin
             )
-            nftFactory1155 = await NFTFactory1155Factory.deploy(
-            )
-            await nftFactory1155.deployed()
-            await nftFactory1155.initialize(governance.address)
+            // nftFactory1155 = await NFTFactory1155Factory.deploy(
+            // )
+            // await nftFactory1155.deployed()
+
+            // await nftFactory1155.initialize(governance.address)
+            // nftFactory1155 = (await upgrades.deployProxy()
             const governanceAddress = await nftFactory1155.admin()
             expect(governanceAddress).to.equal(governance.address)
         })

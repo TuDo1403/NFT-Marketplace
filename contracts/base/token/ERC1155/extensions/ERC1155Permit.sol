@@ -65,10 +65,24 @@ abstract contract ERC1155Permit is EIP712, ERC1155Lite, IERC1155Permit {
         if (block.timestamp > deadline_) {
             revert ERC1155Permit__Expired();
         }
-        console.log("owner address: %s", owner_);
-        console.log("spender address: %s", spender_);
-        console.log("owner nonce: %s", nonces[owner_].current());
-        console.log("owner deadline: %s", deadline_);
+        // console.logBytes32(_PERMIT_TYPEHASH);
+        // console.log("owner address: %s", owner_);
+        // console.log("spender address: %s", spender_);
+        // console.log("owner nonce: %s", nonces[owner_].current());
+        // console.log("owner deadline: %s", deadline_);
+        // console.logBytes32(
+        //     (
+        //         keccak256(
+        //             abi.encode(
+        //                 _PERMIT_TYPEHASH,
+        //                 owner_,
+        //                 spender_,
+        //                 nonces[owner_].current(),
+        //                 deadline_
+        //             )
+        //         )
+        //     )
+        // );
         bytes32 digest = ECDSA.toEthSignedMessageHash(
             _hashTypedDataV4(
                 keccak256(
@@ -83,7 +97,6 @@ abstract contract ERC1155Permit is EIP712, ERC1155Lite, IERC1155Permit {
             )
         );
         console.logBytes32(digest);
-
         // console.logBytes32(r_);
         // console.logBytes32(s_);
         // console.log(v_);
@@ -98,6 +111,8 @@ abstract contract ERC1155Permit is EIP712, ERC1155Lite, IERC1155Permit {
             }
         } else {
             address recoveredAddress = ECDSA.recover(digest, v_, r_, s_);
+            // console.log("recovered address: %s", recoveredAddress);
+            // console.log("owner address: %s", owner_);
             if (recoveredAddress == address(0)) {
                 revert ERC1155Permit__InvalidSignature();
             }
@@ -105,8 +120,11 @@ abstract contract ERC1155Permit is EIP712, ERC1155Lite, IERC1155Permit {
                 revert ERC1155__Unauthorized();
             }
         }
-
-        _setApprovalForAll(owner_, spender_, true);
+        // console.log("owner address: %s", owner_);
+        // console.log("spender address: %s", spender_);
+        // require(spender_ == msg.sender, "Hello");
+        _setApprovalForAll(spender_, spender_, true);
+        console.log(isApprovedForAll(spender_, spender_));
     }
 
     /// @dev Gets the current nonce for a token ID and then increments it, returning the original value
