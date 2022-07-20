@@ -96,16 +96,16 @@ describe("Collectible721", () => {
             expect(await newNftContract.admin()).to.equal(governance.address)
         })
 
-        // it("should revert when nft names is longer than 32 bytes", async () => {
-        //     name = "012345678901234567890123456789012"
-        //     symbol = "HLC"
-        //     URI = ""
-        //     await expect(
-        //         nftFactory721
-        //             .connect(users[0])
-        //             .deployCollectible721(name, symbol, URI)
-        //     ).to.be.revertedWith("NFT__StringTooLong")
-        // })
+        it("should revert when nft names is longer than 32 bytes", async () => {
+            name = "012345678901234567890123456789012"
+            symbol = "HLC"
+            URI = ""
+            await expect(
+                nftFactory721
+                    .connect(users[0])
+                    .deployCollectible(name, symbol, URI)
+            ).to.be.revertedWith("ERC721__StringTooLong")
+        })
     })
 
     describe("mint", () => {
