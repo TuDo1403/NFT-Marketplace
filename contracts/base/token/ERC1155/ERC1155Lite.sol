@@ -14,7 +14,7 @@ abstract contract ERC1155Lite is ERC1155, IERC1155Lite {
     // Mapping from account to operator approvals
     mapping(address => mapping(address => bool)) private _operatorApprovals;
 
-    constructor() ERC1155("") {}
+    constructor(string memory uri_) ERC1155(uri_) {}
 
     function safeTransferFrom(
         address from,
@@ -235,6 +235,38 @@ abstract contract ERC1155Lite is ERC1155, IERC1155Lite {
         }
 
         emit TransferSingle(operator, from, address(0), id, amount);
+
+        _afterTokenTransfer(operator, from, address(0), ids, amounts, "");
+    }
+
+    function _burnBatch(
+        address from,
+        uint256[] memory ids,
+        uint256[] memory amounts
+    ) internal virtual override {
+        // require(from != address(0), "ERC1155: burn from the zero address");
+        // require(ids.length == amounts.length, "ERC1155: ids and amounts length mismatch");
+        _nonZeroAddress(from);
+        _lengthMustMatch(ids.length, amounts.length);
+
+        address operator = _msgSender();
+
+        _beforeTokenTransfer(operator, from, address(0), ids, amounts, "");
+
+        for (uint256 i; i < ids.length; ) {
+            uint256 id = ids[i];
+            uint256 amount = amounts[i];
+
+            uint256 fromBalance = _balances[id][from];
+            // require(fromBalance >= amount, "ERC1155: burn amount exceeds balance");
+            _balanceMustSufficient(fromBalance, amount);
+            unchecked {
+                _balances[id][from] = fromBalance - amount;
+                ++i;
+            }
+        }
+
+        emit TransferBatch(operator, from, address(0), ids, amounts);
 
         _afterTokenTransfer(operator, from, address(0), ids, amounts, "");
     }

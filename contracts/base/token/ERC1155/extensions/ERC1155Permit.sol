@@ -15,7 +15,7 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 //import "./external/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/interfaces/IERC1271.sol";
-
+import "hardhat/console.sol";
 import "./IERC1155Permit.sol";
 
 /**
@@ -65,7 +65,7 @@ abstract contract ERC1155Permit is EIP712, ERC1155Lite, IERC1155Permit {
         if (block.timestamp > deadline_) {
             revert ERC1155Permit__Expired();
         }
-
+        // console.log(nonces[owner_].current());
         bytes32 digest = ECDSA.toEthSignedMessageHash(
             _hashTypedDataV4(
                 keccak256(
@@ -79,7 +79,10 @@ abstract contract ERC1155Permit is EIP712, ERC1155Lite, IERC1155Permit {
                 )
             )
         );
-
+        // console.log(address(this));
+        // console.logBytes32(r_);
+        // console.logBytes32(s_);
+        // console.log(v_);
         if (Address.isContract(owner_)) {
             if (
                 IERC1271(owner_).isValidSignature(

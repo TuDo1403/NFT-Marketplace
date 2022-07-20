@@ -15,12 +15,6 @@ interface INFTFactory {
         address indexed deployedAddr_
     );
 
-    function setGovernance(address governance_) external;
-
-    function multiDelegatecall(bytes[] calldata data)
-        external
-        returns (bytes[] memory);
-
     function deployCollectible(
         string calldata name_,
         string calldata symbol_,

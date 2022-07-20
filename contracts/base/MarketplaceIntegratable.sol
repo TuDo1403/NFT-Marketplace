@@ -1,36 +1,37 @@
 // SPDX-License-Identifier: Unlicensed
 pragma solidity >=0.8.13;
 
-import "@openzeppelin/contracts/utils/Context.sol";
-
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "./IMarketplaceIntegratable.sol";
-
 import "../interfaces/IGovernance.sol";
 
-abstract contract MarketplaceIntegratable is IMarketplaceIntegratable {
+abstract contract MarketplaceIntegratable is
+    Initializable,
+    IMarketplaceIntegratable
+{
     IGovernance public admin;
 
-    modifier onlyManager(address sender_) {
-        if (sender_ != admin.manager()) {
-            revert MPI__Unauthorized();
-        }
-        _;
-    }
-
-    constructor(address admin_) {
+    function _initialize(address admin_) internal onlyInitializing {
+        __nonZeroAddress(admin_);
         admin = IGovernance(admin_);
     }
 
-    function updateGovernance(address addr_)
-        external
-        virtual
-        override
-    {
+    function __nonZeroAddress(address addr_) private pure {
         if (addr_ == address(0)) {
             revert MPI__NonZeroAddress();
         }
-        admin = IGovernance(addr_);
+    }
 
+    function _onlyManager() internal view {
+        if (msg.sender != admin.owner()) {
+            revert MPI__Unauthorized();
+        }
+    }
+
+    function updateGovernance(address addr_) external override {
+        _onlyManager();
+        __nonZeroAddress(addr_);
+        admin = IGovernance(addr_);
         emit GovernanceUpdated(addr_);
     }
 }

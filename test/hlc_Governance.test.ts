@@ -1,48 +1,46 @@
-import {expect} from "chai"
-import {ethers} from "hardhat"
-import {Governance} from "../typechain"
-import {SignerWithAddress} from "@nomiclabs/hardhat-ethers/signers"
-import {BigNumber} from "ethers"
+import { expect } from "chai"
+import { ethers } from "hardhat"
+import { Governance } from "../typechain"
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers"
+import { BigNumber } from "ethers"
 
 const GLMR = "0x017bE64db48dfc962221c984b9A6937A5d09E81A"
 
 describe("Governance", () => {
-    let manager: SignerWithAddress
+    let admin: SignerWithAddress
     let treasury: SignerWithAddress
     let verifier: SignerWithAddress
-    let marketplace: SignerWithAddress
+    // let marketplace: SignerWithAddress
     let users: SignerWithAddress[]
     let governance: Governance
     beforeEach(async () => {
-        ;[manager, treasury, verifier, marketplace, ...users] =
+        ;[admin, treasury, verifier, ...users] =
             await ethers.getSigners()
     })
 
     describe("constructor", () => {
-        it("should initialize manager, treasury, verifier when all modifier is passed", async () => {
+        it("should initialize admin, treasury, verifier when all modifier is passed", async () => {
             const GovernanceFactory = await ethers.getContractFactory(
                 "Governance",
-                manager
+                admin
             )
             const governance = await GovernanceFactory.deploy(
-                manager.address,
                 treasury.address,
                 verifier.address
             )
             await governance.deployed()
-            expect(await governance.manager()).to.equal(manager.address)
+            // expect(await governance.admin()).to.equal(admin.address)
             expect(await governance.treasury()).to.equal(treasury.address)
             expect(await governance.verifier()).to.equal(verifier.address)
         })
-        it("should revert when manager address is invalid", async () => {
+        it("should revert when admin address is invalid", async () => {
             const GovernanceFactory = await ethers.getContractFactory(
                 "Governance",
-                manager
+                admin
             )
             await expect(
                 GovernanceFactory.deploy(
                     ethers.constants.AddressZero,
-                    treasury.address,
                     verifier.address
                 )
             ).to.be.revertedWith("Governance__InvalidAddress")
@@ -51,40 +49,39 @@ describe("Governance", () => {
         it("should revert when treasury address is invalid", async () => {
             const GovernanceFactory = await ethers.getContractFactory(
                 "Governance",
-                manager
+                admin
             )
             await expect(
                 GovernanceFactory.deploy(
-                    manager.address,
+                    verifier.address,
                     ethers.constants.AddressZero,
-                    verifier.address
+
                 )
             ).to.be.revertedWith("Governance__InvalidAddress")
         })
 
-        it("should revert when verifier address is invalid", async () => {
-            const GovernanceFactory = await ethers.getContractFactory(
-                "Governance",
-                manager
-            )
-            await expect(
-                GovernanceFactory.deploy(
-                    manager.address,
-                    treasury.address,
-                    ethers.constants.AddressZero
-                )
-            ).to.be.revertedWith("Governance__InvalidAddress")
-        })
+        // it("should revert when verifier address is invalid", async () => {
+        //     const GovernanceFactory = await ethers.getContractFactory(
+        //         "Governance",
+        //         admin
+        //     )
+        //     await expect(
+        //         GovernanceFactory.deploy(
+        //             admin.address,
+        //             treasury.address,
+        //             ethers.constants.AddressZero
+        //         )
+        //     ).to.be.revertedWith("Governance__InvalidAddress")
+        // })
     })
 
     describe("updateTreasury", () => {
         beforeEach(async () => {
             const GovernanceFactory = await ethers.getContractFactory(
                 "Governance",
-                manager
+                admin
             )
             governance = await GovernanceFactory.deploy(
-                manager.address,
                 treasury.address,
                 verifier.address
             )
@@ -99,7 +96,7 @@ describe("Governance", () => {
         it("should revert when the address calling the function is not owner of the contract", async () => {
             await expect(
                 governance.connect(users[1]).updateTreasury(users[0].address)
-            ).to.be.revertedWith("Governance__Unauthorized")
+            ).to.be.revertedWith("Ownable: caller is not the owner")
         })
 
         it("should revert when new treasury address is invalid", async () => {
@@ -120,10 +117,9 @@ describe("Governance", () => {
         beforeEach(async () => {
             const GovernanceFactory = await ethers.getContractFactory(
                 "Governance",
-                manager
+                admin
             )
             governance = await GovernanceFactory.deploy(
-                manager.address,
                 treasury.address,
                 verifier.address
             )
@@ -138,7 +134,7 @@ describe("Governance", () => {
         it("should revert when the address calling the function is not owner of the contract", async () => {
             await expect(
                 governance.connect(users[1]).updateVerifier(users[0].address)
-            ).to.be.revertedWith("Governance__Unauthorized")
+            ).to.be.revertedWith("Ownable: caller is not the owner")
         })
 
         it("should revert when new verifier address is invalid", async () => {
@@ -148,46 +144,46 @@ describe("Governance", () => {
         })
     })
 
-    describe("updateManager", () => {
+    /*
+    describe("updateadmin", () => {
         beforeEach(async () => {
             const GovernanceFactory = await ethers.getContractFactory(
                 "Governance",
-                manager
+                admin
             )
             governance = await GovernanceFactory.deploy(
-                manager.address,
                 treasury.address,
                 verifier.address
             )
             await governance.deployed()
         })
 
-        it("update manager address", async () => {
-            await governance.updateManager(users[0].address)
-            expect(await governance.manager()).to.equal(users[0].address)
+        it("update admin address", async () => {
+            await governance.updateadmin(users[0].address)
+            expect(await governance.admin()).to.equal(users[0].address)
         })
 
         it("should revert when the address calling the function is not owner of the contract", async () => {
             await expect(
-                governance.connect(users[1]).updateManager(users[0].address)
+                governance.connect(users[1]).updateadmin(users[0].address)
             ).to.be.revertedWith("Governance__Unauthorized")
         })
 
-        it("should revert when new manager address is invalid", async () => {
+        it("should revert when new admin address is invalid", async () => {
             await expect(
-                governance.updateManager(ethers.constants.AddressZero)
+                governance.updateadmin(ethers.constants.AddressZero)
             ).to.be.revertedWith("Governance__InvalidAddress")
         })
     })
+    */
 
     describe("updateMarketplace", () => {
         beforeEach(async () => {
             const GovernanceFactory = await ethers.getContractFactory(
                 "Governance",
-                manager
+                admin
             )
             governance = await GovernanceFactory.deploy(
-                manager.address,
                 treasury.address,
                 verifier.address
             )
@@ -202,7 +198,7 @@ describe("Governance", () => {
         it("should revert when the address calling the function is not owner of the contract", async () => {
             await expect(
                 governance.connect(users[1]).updateMarketplace(users[0].address)
-            ).to.be.revertedWith("Governance__Unauthorized")
+            ).to.be.revertedWith("Ownable: caller is not the owner")
         })
 
         it("should revert when new marketplace address is invalid", async () => {
@@ -216,10 +212,9 @@ describe("Governance", () => {
         beforeEach(async () => {
             const GovernanceFactory = await ethers.getContractFactory(
                 "Governance",
-                manager
+                admin
             )
             governance = await GovernanceFactory.deploy(
-                manager.address,
                 treasury.address,
                 verifier.address
             )
@@ -241,7 +236,7 @@ describe("Governance", () => {
         it("should revert when the address calling the function is not owner of the contract", async () => {
             await expect(
                 governance.connect(users[1]).registerToken(GLMR)
-            ).to.be.revertedWith("Governance__Unauthorized")
+            ).to.be.revertedWith("Ownable: caller is not the owner")
         })
 
         it("should revert when new token address is invalid", async () => {
@@ -255,10 +250,9 @@ describe("Governance", () => {
         beforeEach(async () => {
             const GovernanceFactory = await ethers.getContractFactory(
                 "Governance",
-                manager
+                admin
             )
             governance = await GovernanceFactory.deploy(
-                manager.address,
                 treasury.address,
                 verifier.address
             )
@@ -280,7 +274,7 @@ describe("Governance", () => {
         it("should revert when the address calling the function is not owner of the contract", async () => {
             await expect(
                 governance.connect(users[0]).unregisterToken(GLMR)
-            ).to.be.revertedWith("Governance__Unauthorized")
+            ).to.be.revertedWith("Ownable: caller is not the owner")
         })
     })
 })

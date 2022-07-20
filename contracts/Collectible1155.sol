@@ -2,27 +2,31 @@
 pragma solidity >=0.8.13;
 
 import "./base/NFTBase.sol";
+import "./base/TokenFreezable.sol";
 import "./base/token/ERC1155/extensions/ERC1155Permit.sol";
 import "./base/token/ERC1155/extensions/ERC1155Royalty.sol";
 import "./base/token/ERC1155/extensions/ERC1155SupplyLite.sol";
 import "./base/token/ERC1155/extensions/ERC1155URIStorage.sol";
 import "./base/token/ERC1155/extensions/ERC1155BurnableLite.sol";
-import "./base/NFTFreezable.sol";
 
 import "./interfaces/ISemiNFT.sol";
 
 contract Collectible1155 is
-    ISemiNFT,
     NFTBase,
-    NFTFreezable,
+    ISemiNFT,
+    TokenFreezable,
     ERC1155Permit,
     ERC1155Royalty,
     ERC1155URIStorage,
     ERC1155SupplyLite,
     ERC1155BurnableLite
 {
-    // keccak256("URI_SETTER_ROLE")
-    bytes32 public constant URI_SETTER_ROLE =
+    //keccak256("Collectible1155_v1")
+    bytes32 public constant VERSION =
+        0xacedfc5229b6e6214a0c4700d2ef118b801c7cd97402548296df8a5fa50e967c;
+
+    //keccak256("URI_SETTER_ROLE")
+    bytes32 internal constant URI_SETTER_ROLE =
         0x7804d923f43a17d325d77e781528e0793b2edd9890ab45fc64efd7b4b427744c;
 
     string public name;
@@ -35,7 +39,8 @@ contract Collectible1155 is
         string memory symbol_,
         string memory baseURI_
     )
-        ERC1155Permit(name_, VERSION)
+        ERC1155Lite("")
+        ERC1155Permit(name_, "Collectible1155_v1")
         NFTBase(admin_, owner_, 1155)
     {
         if (bytes(name_).length > 32 || bytes(symbol_).length > 32) {
@@ -43,6 +48,7 @@ contract Collectible1155 is
         }
         name = name_;
         symbol = symbol_;
+
         _setBaseURI(baseURI_);
         _grantRole(URI_SETTER_ROLE, owner_);
     }
@@ -52,19 +58,24 @@ contract Collectible1155 is
         _notFrozenToken(tokenId_);
         address sender = _msgSender();
         _onlyCreatorOrHasRole(sender, tokenId_, MINTER_ROLE);
+        // if (sender != owner()) {
+        //     revert ERC1155__Unauthorized();
+        // }
         _mint(sender, tokenId_, amount_, "");
     }
 
-    function mint(address to_, ReceiptUtil.Item memory item_)
-        external
-        override
-        onlyMarketplaceOrMinter
-    {
-        _onlyUnexists(item_.tokenId);
-        _mint(to_, item_.tokenId, item_.amount, "");
+    function mint(
+        address to_,
+        uint256 tokenId_,
+        uint256 amount_,
+        string memory tokenURI_
+    ) external override {
+        _onlyMarketplaceOrMinter();
+        //_onlyUnexists(item_.tokenId);
+        _mint(to_, tokenId_, amount_, "");
 
-        if (bytes(item_.tokenURI).length != 0) {
-            _setURI(item_.tokenId, item_.tokenURI);
+        if (bytes(tokenURI_).length != 0) {
+            _setURI(tokenId_, tokenURI_);
         }
     }
 
@@ -87,26 +98,22 @@ contract Collectible1155 is
         _mintBatch(sender, tokenIds_, amounts_, "");
     }
 
-    function mintBatch(address to_, ReceiptUtil.Bulk memory bulk_)
-        external
-        override
-        onlyMarketplaceOrMinter
-    {
-        string[] memory tokenURIs = bulk_.tokenURIs;
-        uint256[] memory tokenIds = bulk_.tokenIds;
-        //uint256 length = tokenURIs.length;
-        _lengthMustMatch(tokenURIs.length, tokenIds.length);
-
-        for (uint256 i; i < tokenURIs.length; ) {
-            _onlyUnexists(tokenIds[i]);
-            if (bytes(tokenURIs[i]).length != 0) {
-                _setURI(tokenIds[i], tokenURIs[i]);
+    function mintBatch(
+        address to_,
+        uint256[] memory tokenIds_,
+        uint256[] memory amounts_,
+        string[] memory tokenURIs_
+    ) external override {
+        _onlyMarketplaceOrMinter();
+        for (uint256 i; i < tokenURIs_.length; ) {
+            if (bytes(tokenURIs_[i]).length != 0) {
+                _setURI(tokenIds_[i], tokenURIs_[i]);
             }
             unchecked {
                 ++i;
             }
         }
-        _mintBatch(to_, tokenIds, bulk_.amounts, "");
+        _mintBatch(to_, tokenIds_, amounts_, "");
     }
 
     function setTokenURI(uint256 tokenId_, string calldata tokenURI_)
@@ -193,11 +200,8 @@ contract Collectible1155 is
         );
     }
 
-    function freezeToken(uint256 tokenId_)
-        external
-        override
-        onlyCreator(_msgSender(), tokenId_)
-    {
+    function freezeToken(uint256 tokenId_) external override {
+        _onlyCreator(_msgSender(), tokenId_);
         _freezeToken(tokenId_);
     }
 
@@ -221,15 +225,22 @@ contract Collectible1155 is
         }
     }
 
-    function _onlyUnexists(uint256 tokenId_) internal view virtual {
-        if (exists(tokenId_)) {
-            revert ERC1155__TokenExisted();
-        }
-    }
+    // function _onlyUnexists(uint256 tokenId_) internal view virtual {
+    //     if (exists(tokenId_)) {
+    //         revert ERC1155__TokenExisted();
+    //     }
+    // }
 
     function _onlyExists(uint256 tokenId_) internal view virtual {
         if (!exists(tokenId_)) {
             revert ERC1155__TokenUnexisted();
+        }
+    }
+
+    function _onlyMarketplaceOrMinter() internal view {
+        address sender = _msgSender();
+        if (sender != admin.marketplace()) {
+            _checkRole(MINTER_ROLE, sender);
         }
     }
 }

@@ -1,10 +1,15 @@
 // SPDX-License-Identifier: Unlicensed
 pragma solidity >=0.8.13;
 
-import "@openzeppelin/contracts/access/IAccessControlEnumerable.sol";
+interface IGovernance {
+    error Governance__Unauthorized();
+    error Governance__InvalidAddress();
+    error Governance__UnregisteredToken();
 
-interface IGovernance is IAccessControlEnumerable {
-    function manager() external view returns (address);
+    event PaymentUpdated(address indexed token_, bool registed);
+    event TreasuryUpdated(address indexed from_, address indexed to_);
+
+    function owner() external view returns (address);
 
     function treasury() external view returns (address);
 

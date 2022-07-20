@@ -1,31 +1,16 @@
 // SPDX-License-Identifier: Unlicensed
 pragma solidity >=0.8.13;
 
-import "@openzeppelin/contracts/utils/Context.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
 import "./interfaces/IGovernance.sol";
 
-contract Governance is IGovernance, Context {
-    error Governance__Unauthorized();
-    error Governance__InvalidAddress();
-    error Governance__UnregisteredToken();
-
-    address public manager;
+contract Governance is IGovernance, Ownable {
     address public treasury;
     address public verifier;
     address public marketplace;
 
     mapping(address => bool) public acceptedPayments;
-
-    event PaymentUpdated(address indexed token_, bool registed);
-    event TreasuryUpdated(address indexed from_, address indexed to_);
-
-    modifier onlyOwner() {
-        if (_msgSender() != manager) {
-            revert Governance__Unauthorized();
-        }
-        _;
-    }
 
     modifier validAddress(address addr_) {
         if (addr_ == address(0)) {
@@ -36,11 +21,11 @@ contract Governance is IGovernance, Context {
 
     // 363880
     constructor(
-        address manager_,
+        //address manager_,
         address treasury_,
         address verifier_
-    ) validAddress(manager_) validAddress(treasury_) validAddress(verifier_) {
-        manager = manager_;
+    ) validAddress(treasury_) validAddress(verifier_) {
+        _transferOwnership(_msgSender());
         treasury = treasury_;
         verifier = verifier_;
     }
@@ -60,14 +45,6 @@ contract Governance is IGovernance, Context {
         validAddress(verifier_)
     {
         verifier = verifier_;
-    }
-
-    function updateManager(address manager_)
-        external
-        onlyOwner
-        validAddress(manager_)
-    {
-        manager = manager_;
     }
 
     function updateMarketplace(address marketplace_)
@@ -95,37 +72,12 @@ contract Governance is IGovernance, Context {
         emit PaymentUpdated(token_, false);
     }
 
-    function hasRole(bytes32 role, address account)
-        external
+    function owner()
+        public
         view
-        override
-        returns (bool)
-    {}
-
-    function getRoleAdmin(bytes32 role)
-        external
-        view
-        override
-        returns (bytes32)
-    {}
-
-    function grantRole(bytes32 role, address account) external override {}
-
-    function revokeRole(bytes32 role, address account) external override {}
-
-    function renounceRole(bytes32 role, address account) external override {}
-
-    function getRoleMember(bytes32 role, uint256 index)
-        external
-        view
-        override
+        override(Ownable, IGovernance)
         returns (address)
-    {}
-
-    function getRoleMemberCount(bytes32 role)
-        external
-        view
-        override
-        returns (uint256)
-    {}
+    {
+        return Ownable.owner();
+    }
 }

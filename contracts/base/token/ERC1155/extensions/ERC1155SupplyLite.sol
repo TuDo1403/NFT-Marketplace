@@ -7,6 +7,7 @@ import "../../../../libraries/TokenIdGenerator.sol";
 
 abstract contract ERC1155SupplyLite is ERC1155Lite {
     using TokenIdGenerator for uint256;
+
     mapping(uint256 => uint256) private _totalSupply;
 
     /**
@@ -35,11 +36,25 @@ abstract contract ERC1155SupplyLite is ERC1155Lite {
         bytes memory data
     ) internal virtual override {
         super._beforeTokenTransfer(operator, from, to, ids, amounts, data);
-        uint256 length = ids.length;
+        //uint256 length = ids.length;
         if (from == address(0)) {
-            for (uint256 i; i < length; ) {
-                _supplyCheck(ids[i], amounts[i]);
-                _totalSupply[ids[i]] += amounts[i];
+            uint256 MAX_SUPPLY = 2**TokenIdGenerator.SUPPLY_BIT - 1;
+            for (uint256 i; i < ids.length; ) {
+                uint256 tokenId = ids[i];
+                uint256 amount = amounts[i];
+                //_supplyCheck(tokenId, amount);
+                if (amount > MAX_SUPPLY) {
+                    revert ERC1155__AllocationExceeds();
+                }
+                uint256 maxSupply = tokenId.getTokenMaxSupply();
+                if (maxSupply != 0) {
+                    unchecked {
+                        if (amount + totalSupply(tokenId) > maxSupply) {
+                            revert ERC1155__AllocationExceeds();
+                        }
+                    }
+                }
+                _totalSupply[tokenId] += amount;
                 unchecked {
                     ++i;
                 }
@@ -47,7 +62,7 @@ abstract contract ERC1155SupplyLite is ERC1155Lite {
         }
 
         if (to == address(0)) {
-            for (uint256 i = 0; i < length; ) {
+            for (uint256 i; i < ids.length; ) {
                 uint256 id = ids[i];
                 uint256 amount = amounts[i];
                 uint256 supply = _totalSupply[id];
@@ -62,21 +77,21 @@ abstract contract ERC1155SupplyLite is ERC1155Lite {
         }
     }
 
-    function _supplyCheck(uint256 tokenId_, uint256 amount_)
-        internal
-        view
-        virtual
-    {
-        if (amount_ > 2**TokenIdGenerator.SUPPLY_BIT - 1) {
-            revert ERC1155__AllocationExceeds();
-        }
-        uint256 maxSupply = tokenId_.getTokenMaxSupply();
-        if (maxSupply != 0) {
-            unchecked {
-                if (amount_ + totalSupply(tokenId_) > maxSupply) {
-                    revert ERC1155__AllocationExceeds();
-                }
-            }
-        }
-    }
+    // function _supplyCheck(uint256 tokenId_, uint256 amount_)
+    //     internal
+    //     view
+    //     virtual
+    // {
+    //     if (amount_ > 2**TokenIdGenerator.SUPPLY_BIT - 1) {
+    //         revert ERC1155__AllocationExceeds();
+    //     }
+    //     uint256 maxSupply = tokenId_.getTokenMaxSupply();
+    //     if (maxSupply != 0) {
+    //         unchecked {
+    //             if (amount_ + totalSupply(tokenId_) > maxSupply) {
+    //                 revert ERC1155__AllocationExceeds();
+    //             }
+    //         }
+    //     }
+    // }
 }
