@@ -3,7 +3,7 @@
 
 pragma solidity 0.8.15;
 
-import "@openzeppelin/contracts/utils/Strings.sol";
+import "@openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol";
 import "../ERC1155Lite.sol";
 
 /**
@@ -13,7 +13,7 @@ import "../ERC1155Lite.sol";
  * _Available since v4.6._
  */
 abstract contract ERC1155URIStorage is ERC1155Lite {
-    using Strings for uint256;
+    using StringsUpgradeable for uint256;
 
     // Optional base URI
     string private _baseURI;

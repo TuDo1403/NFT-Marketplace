@@ -2,11 +2,11 @@
 pragma solidity 0.8.15;
 
 import "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/utils/Create2Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/ClonesUpgradeable.sol";
 import "./base/MarketplaceIntegratable.sol";
-import "./Collectible1155.sol";
-
 import "./base/INFTBase.sol";
+import "./interfaces/INFT.sol";
+
 import "./interfaces/INFTFactory.sol";
 import "./interfaces/IGovernance.sol";
 
@@ -15,9 +15,11 @@ contract NFTFactory1155 is
     MarketplaceIntegratable,
     ContextUpgradeable
 {
-    //keccak256("NFTFactory1155_v1")
+    using ClonesUpgradeable for address;
+
+    //keccak256("NFTFactory_v1")
     bytes32 public constant VERSION =
-        0xf4d0561b5f6e1e5f8cb96e6d518884af129a597ed8278acfc07f4424835889db;
+        0xc42665b4953fdd2cb30dcf1befa0156911485f4e84e3f90b1360ddfb4fa2f766;
 
     mapping(uint256 => address) public deployedContracts;
 
@@ -26,6 +28,7 @@ contract NFTFactory1155 is
     }
 
     function deployCollectible(
+        address implement_,
         string calldata name_,
         string calldata symbol_,
         string calldata baseURI_
@@ -35,11 +38,9 @@ contract NFTFactory1155 is
             abi.encodePacked(VERSION, name_, symbol_, baseURI_)
         );
 
-        bytes memory bytecode = abi.encodePacked(
-            type(Collectible1155).creationCode,
-            abi.encode(address(admin), owner, name_, symbol_, baseURI_)
-        );
-        clone = Create2Upgradeable.deploy(0, salt, bytecode);
+        clone = implement_.cloneDeterministic(salt);
+        INFT(clone).initialize(address(admin), owner, name_, symbol_, baseURI_);
+
         deployedContracts[uint256(salt)] = clone;
         emit TokenDeployed(
             name_,

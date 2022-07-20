@@ -26,31 +26,32 @@ contract Collectible1155 is
         0xacedfc5229b6e6214a0c4700d2ef118b801c7cd97402548296df8a5fa50e967c;
 
     //keccak256("URI_SETTER_ROLE")
-    bytes32 internal constant URI_SETTER_ROLE =
+    bytes32 private constant URI_SETTER_ROLE =
         0x7804d923f43a17d325d77e781528e0793b2edd9890ab45fc64efd7b4b427744c;
 
     string public name;
     string public symbol;
 
-    constructor(
+    constructor() NFTBase(1155) ERC1155Lite("") {}
+
+    function initialize(
         address admin_,
         address owner_,
-        string memory name_,
-        string memory symbol_,
-        string memory baseURI_
-    )
-        ERC1155Lite("")
-        ERC1155Permit(name_, "Collectible1155_v1")
-        NFTBase(admin_, owner_, 1155)
-    {
+        string calldata name_,
+        string calldata symbol_,
+        string calldata baseURI_
+    ) external override initializer {
         if (bytes(name_).length > 32 || bytes(symbol_).length > 32) {
-            revert ERC1155__StringTooLong();
+            revert NFT__StringTooLong();
         }
         name = name_;
         symbol = symbol_;
 
         _setBaseURI(baseURI_);
         _grantRole(URI_SETTER_ROLE, owner_);
+
+        _initialize(admin_, owner_);
+        __EIP712_init(type(Collectible1155).name, "v1");
     }
 
     function mint(uint256 tokenId_, uint256 amount_) external override {

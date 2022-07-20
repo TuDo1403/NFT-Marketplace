@@ -20,20 +20,29 @@ contract Collectible721 is
     //keccak256("Collectible721_v1");
     bytes32 public constant VERSION =
         0x9de63d708ee09a8f840a47cc975044d19e4c3537fe6b165971d829e6619e0ffa;
-    string public baseURI;
 
-    constructor(
+    string private _name;
+    string private _symbol;
+    string private baseURI;
+
+    constructor() NFTBase(721) {}
+
+    function initialize(
         address admin_,
         address owner_,
-        string memory name_,
-        string memory symbol_,
-        string memory baseURI_
-    )
-        ERC721Lite(name_, symbol_)
-        ERC721Permit(name_, "Collectible721_v1")
-        NFTBase(admin_, owner_, 721)
-    {
+        string calldata name_,
+        string calldata symbol_,
+        string calldata baseURI_
+    ) external override initializer {
+        if (bytes(name_).length > 32 || bytes(symbol_).length > 32) {
+            revert NFT__StringTooLong();
+        }
+        _name = name_;
+        _symbol = symbol_;
         baseURI = baseURI_;
+
+        _initialize(admin_, owner_);
+        __EIP712_init(type(Collectible721).name, "v1");
     }
 
     function _beforeTokenTransfer(
@@ -90,7 +99,7 @@ contract Collectible721 is
         ERC721URIStorageLite._burn(tokenId);
     }
 
-    function _baseURI() internal view virtual override returns (string memory) {
+    function _baseURI() internal view override returns (string memory) {
         return baseURI;
     }
 }

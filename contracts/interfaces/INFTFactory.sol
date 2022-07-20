@@ -16,6 +16,7 @@ interface INFTFactory {
     );
 
     function deployCollectible(
+        address implement_,
         string calldata name_,
         string calldata symbol_,
         string calldata baseURI_

@@ -4,7 +4,7 @@ pragma solidity 0.8.15;
 import "../ERC721Lite.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 //import "@openzeppelin/contracts/utils/Address.sol";
-import "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol";
+import "@openzeppelin/contracts-upgradeable/utils/cryptography/draft-EIP712Upgradeable.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/interfaces/IERC1271.sol";
 //import "@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol";
@@ -13,16 +13,12 @@ import "./IERC721Permit.sol";
 
 /// @title ERC721 with permit
 /// @notice Nonfungible tokens that support an approve via signature, i.e. permit
-abstract contract ERC721Permit is ERC721Lite, IERC721Permit, EIP712 {
+abstract contract ERC721Permit is ERC721Lite, IERC721Permit, EIP712Upgradeable {
     using Counters for Counters.Counter;
 
     mapping(uint256 => Counters.Counter) public nonces;
 
     /// @dev Gets the current nonce for a token ID and then increments it, returning the original value
-
-    constructor(string memory name_, string memory version_)
-        EIP712(name_, version_)
-    {}
 
     /// @inheritdoc IERC721Permit
     function DOMAIN_SEPARATOR() public view override returns (bytes32) {

@@ -9,7 +9,6 @@ interface IERC1155Lite is IERC1155 {
     error ERC1155__TokenExisted();
     error ERC1155__TokenRejected();
     error ERC1155__SelfApproving();
-    error ERC1155__StringTooLong();
     error ERC1155__LengthMismatch();
     error ERC1155__TokenUnexisted();
     error ERC1155__AllocationExceeds();

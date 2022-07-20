@@ -2,6 +2,16 @@
 pragma solidity 0.8.15;
 
 interface INFT {
+    error NFT__StringTooLong();
+
+    function initialize(
+        address admin_,
+        address owner_,
+        string calldata name_,
+        string calldata symbol_,
+        string calldata baseURI_
+    ) external;
+
     function mint(
         address to_,
         uint256 tokenId_,

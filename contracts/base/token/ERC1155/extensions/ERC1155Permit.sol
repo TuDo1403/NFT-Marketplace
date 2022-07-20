@@ -9,7 +9,8 @@ pragma solidity 0.8.15;
 import "../ERC1155Lite.sol";
 //import "./external/contracts/token/ERC1155/ERC1155.sol";
 //import "./external/contracts/utils/cryptography/draft-EIP712.sol";
-import "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol";
+// import "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol";
+import "@openzeppelin/contracts-upgradeable/utils/cryptography/draft-EIP712Upgradeable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 //import "@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
@@ -28,7 +29,11 @@ import "./IERC1155Permit.sol";
  *
  * _Available since v3.4._
  */
-abstract contract ERC1155Permit is EIP712, ERC1155Lite, IERC1155Permit {
+abstract contract ERC1155Permit is
+    ERC1155Lite,
+    IERC1155Permit,
+    EIP712Upgradeable
+{
     using Counters for Counters.Counter;
 
     mapping(address => Counters.Counter) public nonces;
@@ -40,9 +45,6 @@ abstract contract ERC1155Permit is EIP712, ERC1155Lite, IERC1155Permit {
     // bytes32 private immutable versionHash;
 
     /// @notice Computes the nameHash and versionHash
-    constructor(string memory name_, string memory version_)
-        EIP712(name_, version_)
-    {}
 
     /// @inheritdoc IERC1155Permit
     function DOMAIN_SEPARATOR() public view override returns (bytes32) {

@@ -5,7 +5,7 @@ import "./IERC721Lite.sol";
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
-abstract contract ERC721Lite is IERC721Lite, ERC721 {
+abstract contract ERC721Lite is IERC721Lite, ERC721("", "") {
     using Address for address;
     using Strings for uint256;
 
@@ -21,30 +21,6 @@ abstract contract ERC721Lite is IERC721Lite, ERC721 {
     // Mapping from owner to operator approvals
     mapping(address => mapping(address => bool)) private _operatorApprovals;
 
-    constructor(string memory name_, string memory symbol_)
-        ERC721(name_, symbol_)
-    {
-        if (bytes(name_).length > 32 || bytes(symbol_).length > 32) {
-            revert ERC721__StringTooLong();
-        }
-    }
-
-    // function _beforeTokenTransfer(
-    //     address from,
-    //     address to,
-    //     uint256 tokenId
-    // ) internal virtual override {
-    //     _nonZeroAddress(from);
-    // }
-
-    // function _afterTokenTransfer(
-    //     address from,
-    //     address to,
-    //     uint256 tokenId
-    // ) internal virtual override {
-    //     _nonZeroAddress(to);
-    // }
-
     function balanceOf(address owner)
         public
         view
@@ -52,10 +28,6 @@ abstract contract ERC721Lite is IERC721Lite, ERC721 {
         override(ERC721, IERC721)
         returns (uint256)
     {
-        // require(
-        //     owner != address(0),
-        //     "ERC721: balance query for the zero address"
-        // );
         _nonZeroAddress(owner);
         return _balances[owner];
     }

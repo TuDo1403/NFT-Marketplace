@@ -9,7 +9,6 @@ interface IERC721Lite is IERC721 {
     error ERC721__TokenExisted();
     error ERC721__InvalidInput();
     error ERC721__SelfApproving();
-    error ERC721__StringTooLong();
     error ERC721__TokenUnexisted();
     error ERC721__ERC721ReceiverNotImplemented();
 }
