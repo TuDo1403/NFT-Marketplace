@@ -107,7 +107,7 @@ describe("Collectible1155", () => {
                 nftFactory1155
                     .connect(users[0])
                     .deployCollectible(name, symbol, URI)
-            ).to.be.revertedWith("NFT__StringTooLong")
+            ).to.be.revertedWith("ERC1155__StringTooLong")
         })
     })
 
