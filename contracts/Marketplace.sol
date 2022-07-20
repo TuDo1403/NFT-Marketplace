@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Unlicensed
-pragma solidity >=0.8.13;
+pragma solidity 0.8.15;
 
 import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/interfaces/IERC2981Upgradeable.sol";
@@ -38,16 +38,18 @@ contract Marketplace is
     bytes32 public constant VERSION =
         0x58166ef1331604f9d1096f21021b62681af867d090bf7bef436de91286e1ed67;
 
-    uint256 public serviceFee;
-    uint256 public creatorFeeUB; // creator fee upper bound
+    uint8 public serviceFee;
+    uint8 public creatorFeeUB; // creator fee upper bound
+
+    //bytes4 private constant _ERC721_MINT_ID = 0x;
 
     mapping(address => CountersUpgradeable.Counter) public nonces;
 
     // 2521470
     function initialize(
         address admin_,
-        uint256 serviceFee_,
-        uint256 creatorFeeUB_ // Pausable() // ReentrancyGuard()
+        uint8 serviceFee_,
+        uint8 creatorFeeUB_ // Pausable() // ReentrancyGuard()
     ) external initializer {
         _initialize(admin_, serviceFee_, creatorFeeUB_);
     }
@@ -79,11 +81,12 @@ contract Marketplace is
             signature_
         );
 
-        address nftContract = header.nftContract;
         address sellerAddr = header.seller.addr;
         nonces[sellerAddr].increment();
+
         uint256 tokenId = item.tokenId;
         address buyerAddr = header.buyer.addr;
+        address nftContract = header.nftContract;
         {
             ReceiptUtil.User memory buyer = header.buyer;
             if (buyer.v != 0) {
@@ -162,9 +165,10 @@ contract Marketplace is
         ReceiptUtil.User memory seller = header.seller;
         address sellerAddr = seller.addr;
         nonces[sellerAddr].increment();
-        address buyerAdrr = header.buyer.addr;
+        address buyerAdrr;
         {
             ReceiptUtil.User memory buyer = header.buyer;
+            buyerAdrr = buyer.addr;
             if (buyer.v != 0) {
                 IERC20PermitUpgradeable(header.paymentToken).permit(
                     buyerAdrr,
@@ -347,7 +351,7 @@ contract Marketplace is
         return royaltyAmount != 0;
     }
 
-    function _feeDominator() internal pure virtual returns (uint256) {
+    function _feeDominator() internal pure virtual returns (uint16) {
         return 1e4;
     }
 
@@ -374,15 +378,17 @@ contract Marketplace is
 
     function _initialize(
         address admin_,
-        uint256 serviceFee_,
-        uint256 creatorFeeUB_
+        uint8 serviceFee_,
+        uint8 creatorFeeUB_
     ) internal virtual onlyInitializing {
-        if (serviceFee_ != 0) {
-            serviceFee = serviceFee_ % _feeDominator();
-        }
-        if (creatorFeeUB_ != 0) {
-            creatorFeeUB = creatorFeeUB_ % _feeDominator();
-        }
+        // if (serviceFee_ != 0) {
+        //     serviceFee = serviceFee_ % _feeDominator();
+        // }
+        // if (creatorFeeUB_ != 0) {
+        //     creatorFeeUB = creatorFeeUB_ % _feeDominator();
+        // }
+        serviceFee = serviceFee_;
+        creatorFeeUB = creatorFeeUB_;
         _initialize(admin_);
 
         __Pausable_init();

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Unlicensed
-pragma solidity >=0.8.13;
+pragma solidity 0.8.15;
 
 import "./IERC721Lite.sol";
 
@@ -186,10 +186,9 @@ abstract contract ERC721Lite is IERC721Lite, ERC721 {
         // require(to != address(0), "ERC721: mint to the zero address");
         // require(!_exists(tokenId), "ERC721: token already minted");
         _nonZeroAddress(to);
-        // if (_exists(tokenId)) {
-        //     revert ERC721__TokenExisted();
-        // }
-        _onlyExists(tokenId);
+        if (_exists(tokenId)) {
+            revert ERC721__TokenExisted();
+        }
 
         _beforeTokenTransfer(address(0), to, tokenId);
 
@@ -324,7 +323,7 @@ abstract contract ERC721Lite is IERC721Lite, ERC721 {
     }
 
     function _onlyExists(uint256 tokenId_) internal view {
-        if (!_exists(tokenId_)) {
+        if (_exists(tokenId_)) {
             revert ERC721__TokenUnexisted();
         }
     }

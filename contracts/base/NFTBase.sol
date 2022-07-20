@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Unlicensed
-pragma solidity >=0.8.13;
+pragma solidity 0.8.15;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
@@ -24,7 +24,7 @@ abstract contract NFTBase is
         address admin_,
         address owner_,
         uint256 type_
-    ) {
+    ) initializer {
         TYPE = type_;
         _initialize(admin_);
         _grantRole(MINTER_ROLE, owner_);

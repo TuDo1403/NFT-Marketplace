@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-pragma solidity >=0.7.5;
+pragma solidity 0.8.15;
 
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 
@@ -7,15 +7,7 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 /// @notice Extension to ERC721 that includes a permit function for signature based approvals
 interface IERC721Permit is IERC721 {
     error ERC721Permit__Expired();
-    //error ERC721__Unauthorized();
-    //error ERC721__TokenExisted();
-    //error ERC721__InvalidInput();
-    //error ERC721__SelfApproving();
-    //error ERC721__StringTooLong();
-    //error ERC721__TokenUnexisted();
     error ERC721Permit__InvalidSignature();
-
-    //error ERC721__ERC721ReceiverNotImplemented();
 
     /// @notice The domain separator used in the permit signature
     /// @return The domain seperator used in encoding of permit signature

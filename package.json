@@ -16,7 +16,7 @@
     "ts:prettier": "npx prettier --write ./test/*.ts && npx prettier --write ./scripts/*.ts",
     "prepare": "husky install"
   },
-  "name": "hardhat-project",
+  "name": "triton-marketplace",
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.6",
     "@nomiclabs/hardhat-etherscan": "^3.1.0",
@@ -52,10 +52,15 @@
   "dependencies": {
     "@openzeppelin/contracts": "^4.6.0",
     "@openzeppelin/contracts-upgradeable": "^4.6.0",
-    "@polkadot/api": "^8.8.2",
     "@remix-project/remixd": "^0.6.2",
     "@uniswap/v3-periphery": "^1.4.1",
     "ethers-eip712": "^0.2.0",
     "hardhat-contract-sizer": "^2.6.1"
-  }
+  },
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@gitlab.com:triton2/blockchain/triton-smart-contract.git",
+  "author": "Tu Do <tudm@inspirelab.io>",
+  "license": "MIT",
+  "packageManager": "yarn@3.2.1"
 }
