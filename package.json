@@ -18,7 +18,7 @@
   },
   "name": "triton-marketplace",
   "devDependencies": {
-    "@nomiclabs/hardhat-ethers": "^2.0.6",
+    "@nomiclabs/hardhat-ethers": "^2.1.0",
     "@nomiclabs/hardhat-etherscan": "^3.1.0",
     "@nomiclabs/hardhat-waffle": "^2.0.3",
     "@typechain/ethers-v5": "^7.2.0",
@@ -38,7 +38,7 @@
     "eslint-plugin-prettier": "^3.4.1",
     "eslint-plugin-promise": "^5.2.0",
     "ethereum-waffle": "^3.4.4",
-    "ethers": "^5.6.8",
+    "ethers": "^5.6.9",
     "hardhat": "^2.9.9",
     "hardhat-gas-reporter": "^1.0.8",
     "prettier": "^2.7.1",
