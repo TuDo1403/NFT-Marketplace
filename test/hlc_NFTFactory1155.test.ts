@@ -1,9 +1,9 @@
-import {expect} from "chai"
-import {ethers} from "hardhat"
+import { expect } from "chai"
+import { ethers } from "hardhat"
 import * as crypto from "crypto"
-import {Collectible1155, Governance, NFTFactory1155} from "../typechain"
-import {SignerWithAddress} from "@nomiclabs/hardhat-ethers/signers"
-import {BigNumber} from "ethers"
+import { Collectible1155, Governance, NFTFactory1155 } from "../typechain"
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers"
+import { BigNumber } from "ethers"
 
 describe("NFTFactory1155", () => {
     let admin: SignerWithAddress
@@ -25,7 +25,6 @@ describe("NFTFactory1155", () => {
             admin
         )
         governance = await GovernanceFactory.deploy(
-            manager.address,
             treasury.address,
             verifier.address
         )
@@ -47,21 +46,23 @@ describe("NFTFactory1155", () => {
                 admin
             )
             nftFactory1155 = await NFTFactory1155Factory.deploy(
-                governance.address
             )
             await nftFactory1155.deployed()
-            const governanceAddress = await nftFactory1155.governance()
+            await nftFactory1155.initialize(governance.address)
+            const governanceAddress = await nftFactory1155.admin()
             expect(governanceAddress).to.equal(governance.address)
         })
 
         it("should revert when governance address is invalid", async () => {
             const NFTFactory1155Factory = await ethers.getContractFactory(
                 "NFTFactory1155",
-                manager
+                admin
             )
+            nftFactory1155 = await NFTFactory1155Factory.deploy()
+            await nftFactory1155.deployed()
             await expect(
-                NFTFactory1155Factory.deploy(ethers.constants.AddressZero)
-            ).to.be.revertedWith("Factory__InvalidAddress")
+                nftFactory1155.initialize(ethers.constants.AddressZero)
+            ).to.be.revertedWith("MPI__NonZeroAddress")
         })
     })
 
@@ -69,7 +70,7 @@ describe("NFTFactory1155", () => {
         beforeEach(async () => {
             const Collectible1155Factory = await ethers.getContractFactory(
                 "Collectible1155",
-                manager
+                admin
             )
 
             // collectible1155 = await Collectible1155Factory.deploy(
@@ -78,27 +79,27 @@ describe("NFTFactory1155", () => {
             // await collectible1155.deployed()
             const NFTFactory1155Factory = await ethers.getContractFactory(
                 "NFTFactory1155",
-                manager
+                admin
             )
             nftFactory1155 = await NFTFactory1155Factory.deploy(
-                governance.address
             )
             await nftFactory1155.deployed()
+            await nftFactory1155.initialize(governance.address)
         })
 
         it("set new governance address successfully when all the modifier is passed", async () => {
             const privateKey = "0x" + crypto.randomBytes(32).toString("hex")
             const newGovernance = new ethers.Wallet(privateKey)
-            await nftFactory1155.setGovernance(newGovernance.address)
-            expect((await nftFactory1155.governance()).toString()).to.equal(
+            await nftFactory1155.updateGovernance(newGovernance.address)
+            expect((await nftFactory1155.admin()).toString()).to.equal(
                 newGovernance.address
             )
         })
 
         it("should revert when new governance address is invalid", async () => {
             await expect(
-                nftFactory1155.setGovernance(ethers.constants.AddressZero)
-            ).to.be.revertedWith("Factory__InvalidAddress")
+                nftFactory1155.updateGovernance(ethers.constants.AddressZero)
+            ).to.be.revertedWith("MPI__NonZeroAddress")
         })
 
         it("should revert when the address calling the function is not the owner address", async () => {
@@ -107,8 +108,8 @@ describe("NFTFactory1155", () => {
             await expect(
                 nftFactory1155
                     .connect(users[0])
-                    .setGovernance(newGovernance.address)
-            ).to.be.revertedWith("Factory__Unauthorized")
+                    .updateGovernance(newGovernance.address)
+            ).to.be.revertedWith("MPI__Unauthorized")
         })
     })
 
@@ -116,7 +117,7 @@ describe("NFTFactory1155", () => {
         beforeEach(async () => {
             const Collectible1155Factory = await ethers.getContractFactory(
                 "Collectible1155",
-                manager
+                admin
             )
 
             // collectible1155 = await Collectible1155Factory.deploy(
@@ -125,12 +126,12 @@ describe("NFTFactory1155", () => {
             // await collectible1155.deployed()
             const NFTFactory1155Factory = await ethers.getContractFactory(
                 "NFTFactory1155",
-                manager
+                admin
             )
             nftFactory1155 = await NFTFactory1155Factory.deploy(
-                governance.address
             )
             await nftFactory1155.deployed()
+            await nftFactory1155.initialize(governance.address)
         })
 
         it("Create new collectibe1155 contract as a clone of the implement", async () => {
