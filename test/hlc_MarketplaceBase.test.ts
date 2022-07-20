@@ -14,6 +14,7 @@ import {
 import { types } from "hardhat/config"
 import { parseBytes32String, toUtf8Bytes } from "ethers/lib/utils"
 import { AnyTuple } from "@polkadot/types-codec/types"
+import { type } from "os"
 
 const typedData = {
     types: {
@@ -161,31 +162,10 @@ async function signReceipt(
     typedData_.message = message
     typedData_.domain.verifyingContract = verifyingContract
     const digest = TypedDataUtils.encodeDigest(typedData_)
-    // console.log(`digestHex: ${ethers.utils.hexlify(digest)}`)
-    // console.log("receipt ts", ethers.utils.hexlify(receiptHash))
-    // console.log(`signature: ${signature}`)
-    // console.log(`signature: ${await verifier.signMessage(digest)}`)
     return [message, await verifier.signMessage(digest)]
-    // return [message, signature]
 
 }
 
-// async function buyerSign(
-//     buyer: SignerWithAddress,
-//     owner: string,
-//     spender: string,
-//     value: BigNumber,
-//     nonce: BigNumber,
-//     deadline: BigNumber
-// ): Promise<[string, string, number]> {
-//     const message = ethers.utils.solidityKeccak256(
-//         ["address", "address", "uint256", "uint256", "uint256"],
-//         [owner, spender, value, nonce, deadline]
-//     )
-//     const signature = await buyer.signMessage(ethers.utils.arrayify(message))
-//     const {r, s, v} = ethers.utils.splitSignature(signature)
-//     return [r, s, v]
-// }
 
 async function erc20PermitSignature(
     buyer: SignerWithAddress,
@@ -234,74 +214,17 @@ async function erc20PermitSignature(
             deadline,
         }
     )
-    // console.log("owner address: ", buyer.address)
-    // console.log("spender address: ", spender)
-    // console.log("value: ", value)
     const { r, s, v } = ethers.utils.splitSignature(signature)
-    // console.log("r: ", r)
-    // console.log("s: ", s)
-    // console.log("v: ", v)
     return [r, s, v]
 }
-
-// async function sellerSign(
-//     seller: SignerWithAddress,
-//     owner: string,
-//     spender: string,
-//     nonce: BigNumber,
-//     deadline: BigNumber
-// ): Promise<[string, string, number]> {
-//     const message = ethers.utils.solidityKeccak256(
-//         ["address", "address", "uint256", "uint256"],
-//         [owner, spender, nonce, deadline]
-//     )
-//     const signature = await seller.signMessage(ethers.utils.arrayify(message))
-//     const { r, s, v } = ethers.utils.splitSignature(signature)
-//     return [r, s, v]
-// }
 
 async function erc1155PermitSignature(
     seller: SignerWithAddress,
     spender: string,
     nonce: BigNumber,
     deadline: BigNumber,
-    verifyingContract: string
+    verifyingContract: string,
 ): Promise<[string, string, number]> {
-    // const signature = await seller._signTypedData(
-    //     {
-    //         name: "Triton",
-    //         version: "Collectible1155_v1",
-    //         chainId: 31337,
-    //         verifyingContract: verifyingContract,
-    //     },
-    //     {
-    //         Permit: [
-    //             {
-    //                 name: "owner",
-    //                 type: "address",
-    //             },
-    //             {
-    //                 name: "spender",
-    //                 type: "address",
-    //             },
-    //             {
-    //                 name: "nonce",
-    //                 type: "uint256",
-    //             },
-    //             {
-    //                 name: "deadline",
-    //                 type: "uint256",
-    //             },
-    //         ],
-    //     },
-    //     {
-    //         owner: seller.address,
-    //         spender,
-    //         nonce,
-    //         deadline,
-    //     }
-    // )
-
     const typedData = {
         types: {
             EIP712Domain: [
@@ -322,7 +245,7 @@ async function erc1155PermitSignature(
             name: "Triton",
             version: "Collectible1155_v1",
             chainId: 31337,
-            verifyingContract: "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC",
+            verifyingContract: verifyingContract,
         },
         message: {
             owner: "",
@@ -340,28 +263,11 @@ async function erc1155PermitSignature(
     }
     let typedData_ = JSON.parse(JSON.stringify(typedData))
     typedData_.message = message
-    typedData_.domain.verifyingContract = verifyingContract
     const digest = TypedDataUtils.encodeDigest(typedData_)
-    const encodeType = TypedDataUtils.encodeType(typedData.types, "Permit")
-    console.log(`owner address: ${seller.address}`)
-    console.log(`spender address: ${spender}`)
-    console.log(`nonce: ${nonce}`)
-    console.log(`deadline: ${deadline}`)
-    console.log('PermitHash: ', ethers.utils.keccak256(ethers.utils.toUtf8Bytes(encodeType)))
-    console.log(`digestHex: ${ethers.utils.hexlify(digest)}`)
-    // const signature = await seller._signTypedData(typedData.domain, { Permit: typedData.types.Permit }, typedData.message)
     const signature = await seller.signMessage(digest)
-    // console.log(`hashed name: ${ethers.utils.keccak256(ethers.utils.toUtf8Bytes("Triton"))}`)
-    // console.log(`hashed version: ${ethers.utils.keccak256(ethers.utils.toUtf8Bytes("1"))}`)
-    // console.log("owner address: ", seller.address)
-    // console.log("spender address: ", spender)
-    // console.log("typehash: ", ethers.utils.keccak256(ethers.utils.toUtf8Bytes("Permit(address owner,address spender,uint256 nonce,uint256 deadline)")))
-    // console.log("value: ", value)
     const { r, s, v } = ethers.utils.splitSignature(signature)
-    // console.log("r: ", r)
-    // console.log("s: ", s)
-    // console.log("v: ", v)
     return [r, s, v]
+
 }
 
 describe("MarketplaceBase", () => {
@@ -451,6 +357,7 @@ describe("MarketplaceBase", () => {
         )
         tokenCreator = await TokenCreatorFactory.deploy()
         await tokenCreator.deployed()
+
     })
 
     it("should let user redeem with valid receipt", async () => {
@@ -497,9 +404,8 @@ describe("MarketplaceBase", () => {
                 marketplace.address,
                 BigNumber.from(sellerNonce),
                 BigNumber.from(deadline),
-                nftFactory1155.address,
+                cloneNft1155.address
             )
-        console.log("nft1155 address: ", cloneNft1155.address)
             ;[receipt, signature] = await signReceipt(
                 buyer.address,
                 BigNumber.from(vBuyer),
@@ -533,9 +439,11 @@ describe("MarketplaceBase", () => {
         // console.log(
         //     ethers.utils.keccak256(ethers.utils.toUtf8Bytes(enodeType2))
         // )
-
+        console.log(creator.address)
+        console.log(marketplace.address)
         console.log("----------------------------------------------------")
         // await paymentToken.connect(buyer).approve(marketplace.address, totalPay)
+
         const tx = await marketplace
             .connect(buyer)
             .redeem(receipt, signature, { value: salePrice })
