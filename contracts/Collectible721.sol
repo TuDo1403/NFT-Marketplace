@@ -25,9 +25,7 @@ contract Collectible721 is
     string private _symbol;
     string private baseURI;
 
-    constructor() NFTBase(721) {
-        _disableInitializers();
-    }
+    constructor() NFTBase(721) {}
 
     function initialize(
         address admin_,
@@ -90,6 +88,14 @@ contract Collectible721 is
         returns (string memory)
     {
         return ERC721URIStorageLite.tokenURI(tokenId);
+    }
+
+    function name() public view override returns (string memory) {
+        return _name;
+    }
+
+    function symbol() public view override returns (string memory) {
+        return _symbol;
     }
 
     function _burn(uint256 tokenId)

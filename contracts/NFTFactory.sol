@@ -23,6 +23,11 @@ contract NFTFactory is
 
     mapping(uint256 => address) public deployedContracts;
 
+    constructor(address admin_) initializer {
+        _initialize(admin_);
+        //_disableInitializers();
+    }
+
     function initialize(address admin_) external initializer {
         _initialize(admin_);
     }
@@ -39,7 +44,16 @@ contract NFTFactory is
         );
 
         clone = implement_.cloneDeterministic(salt);
-        INFT(clone).initialize(address(admin), owner, name_, symbol_, baseURI_);
+        //bytes4 initId = bytes4(keccak256(bytes("initialize(address,address,string,string,string)")));
+        //INFT(clone).initialize(address(admin), owner, name_, symbol_, baseURI_);
+        //console.logBytes4(initId);
+        (bool ok, ) = clone.call(abi.encodePacked(bytes4(0x3f2f5ee2), abi.encode(
+            address(admin), owner, name_, symbol_, baseURI_
+        )));
+
+        if (!ok) {
+            revert Factory__ExecutionFailed();
+        }
 
         deployedContracts[uint256(salt)] = clone;
         emit TokenDeployed(

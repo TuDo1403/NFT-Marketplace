@@ -32,9 +32,7 @@ contract Collectible1155 is
     string public name;
     string public symbol;
 
-    constructor() NFTBase(1155) ERC1155Lite("") {
-        _disableInitializers();
-    }
+    constructor() NFTBase(1155) ERC1155Lite("") {}
 
     function initialize(
         address admin_,
@@ -51,6 +49,7 @@ contract Collectible1155 is
 
         _setBaseURI(baseURI_);
         _grantRole(URI_SETTER_ROLE, owner_);
+        _grantRole(DEFAULT_ADMIN_ROLE, owner_);
 
         _initialize(admin_, owner_);
         __EIP712_init(type(Collectible1155).name, "v1");

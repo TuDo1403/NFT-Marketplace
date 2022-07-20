@@ -11,9 +11,6 @@ import {
     Collectible1155,
     NFTFactory1155,
 } from "../typechain"
-import { types } from "hardhat/config"
-import { parseBytes32String, toUtf8Bytes } from "ethers/lib/utils"
-import { AnyTuple } from "@polkadot/types-codec/types"
 
 const typedData = {
     types: {
@@ -373,6 +370,7 @@ describe("MarketplaceBase", () => {
     let governance: Governance
     let paymentToken: ERC20Test
     let nftFactory1155: NFTFactory1155
+    let collectible1155: Collectible1155
     let cloneNft1155: Collectible1155
     let marketplace: Marketplace
     let tokenCreator: TokenCreator
@@ -385,8 +383,8 @@ describe("MarketplaceBase", () => {
     beforeEach(async () => {
         ;[admin, verifier, treasury, ...users] =
             await ethers.getSigners()
-        buyer = users[0]
-        creator = users[1]
+        ;[buyer, creator, ] = users
+
         const ERC20TestFactory = await ethers.getContractFactory(
             "ERC20Test",
             admin
@@ -406,6 +404,14 @@ describe("MarketplaceBase", () => {
         await governance.deployed()
         await governance.connect(admin).registerToken(paymentToken.address)
 
+        const Collectible1155Factory = await ethers.getContractFactory(
+            "Collectible1155",
+            admin
+        )
+
+        collectible1155 = await Collectible1155Factory.deploy()
+        await collectible1155.deployed()
+
         const NFTFactory1155Factory = await ethers.getContractFactory(
             "NFTFactory1155",
             admin
@@ -413,10 +419,10 @@ describe("MarketplaceBase", () => {
         nftFactory1155 = await NFTFactory1155Factory.deploy()
         await nftFactory1155.deployed()
         await nftFactory1155.initialize(governance.address)
-
+        
         await nftFactory1155
             .connect(creator)
-            .deployCollectible("Triton", "TNT", "")
+            .deployCollectible(collectible1155.address, "Triton", "TNT", "")
         const version = ethers.utils.keccak256(
             ethers.utils.toUtf8Bytes("NFTFactory1155_v1")
         )
