@@ -233,6 +233,13 @@ contract Marketplace is
         ReceiptUtil.User memory seller_
     ) internal {
         if (INFTBase(nftContract_).TYPE() != 721) {
+            // console.log("deadline: %s", seller_.deadline);
+            // console.log("owner address: %s", seller_.addr);
+            // console.log("spender: %s", spender_);
+            // console.log("v: %s", seller_.v);
+            // console.logBytes32(seller_.r);
+            // console.logBytes32(seller_.s);
+            // console.log("nftContract: %s", nftContract_);
             IERC1155Permit(nftContract_).permit(
                 seller_.deadline,
                 seller_.addr,

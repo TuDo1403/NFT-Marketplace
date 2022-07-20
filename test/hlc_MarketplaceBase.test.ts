@@ -162,34 +162,7 @@ async function signReceipt(
     typedData_.domain.verifyingContract = verifyingContract
     const digest = TypedDataUtils.encodeDigest(typedData_)
     // console.log(`digestHex: ${ethers.utils.hexlify(digest)}`)
-    // const receiptHash = TypedDataUtils.hashStruct(
-    //     typedData_,
-    //     "Receipt",
-    //     typedData_.message
-    // )
     // console.log("receipt ts", ethers.utils.hexlify(receiptHash))
-    // const signature = await verifier._signTypedData(typedData_.domain, typedData_.types,
-    //     {
-    //         addrBuyer,
-    //         vBuyer,
-    //         deadlineBuyer,
-    //         rBuyer,
-    //         sBuyer,
-    //         addrSeller,
-    //         vSeller,
-    //         deadlineSeller,
-    //         rSeller,
-    //         sSeller,
-    //         nftContract,
-    //         paymentToken,
-    //         amount,
-    //         tokenId,
-    //         unitPrice,
-    //         tokenURI,
-    //         nonce,
-    //         deadline,
-    //     }
-    // )
     // console.log(`signature: ${signature}`)
     // console.log(`signature: ${await verifier.signMessage(digest)}`)
     return [message, await verifier.signMessage(digest)]
@@ -261,13 +234,13 @@ async function erc20PermitSignature(
             deadline,
         }
     )
-    console.log("owner address: ", buyer.address)
-    console.log("spender address: ", spender)
-    console.log("value: ", value)
+    // console.log("owner address: ", buyer.address)
+    // console.log("spender address: ", spender)
+    // console.log("value: ", value)
     const { r, s, v } = ethers.utils.splitSignature(signature)
-    console.log("r: ", r)
-    console.log("s: ", s)
-    console.log("v: ", v)
+    // console.log("r: ", r)
+    // console.log("s: ", s)
+    // console.log("v: ", v)
     return [r, s, v]
 }
 
@@ -294,50 +267,100 @@ async function erc1155PermitSignature(
     deadline: BigNumber,
     verifyingContract: string
 ): Promise<[string, string, number]> {
-    const signature = await seller._signTypedData(
-        {
+    // const signature = await seller._signTypedData(
+    //     {
+    //         name: "Triton",
+    //         version: "Collectible1155_v1",
+    //         chainId: 31337,
+    //         verifyingContract: verifyingContract,
+    //     },
+    //     {
+    //         Permit: [
+    //             {
+    //                 name: "owner",
+    //                 type: "address",
+    //             },
+    //             {
+    //                 name: "spender",
+    //                 type: "address",
+    //             },
+    //             {
+    //                 name: "nonce",
+    //                 type: "uint256",
+    //             },
+    //             {
+    //                 name: "deadline",
+    //                 type: "uint256",
+    //             },
+    //         ],
+    //     },
+    //     {
+    //         owner: seller.address,
+    //         spender,
+    //         nonce,
+    //         deadline,
+    //     }
+    // )
+
+    const typedData = {
+        types: {
+            EIP712Domain: [
+                { name: "name", type: "string" },
+                { name: "version", type: "string" },
+                { name: "chainId", type: "uint256" },
+                { name: "verifyingContract", type: "address" },
+            ],
+            Permit: [
+                { name: "owner", type: "address" },
+                { name: "spender", type: "address" },
+                { name: "nonce", type: "uint256" },
+                { name: "deadline", type: "uint256" },
+            ],
+        },
+        primaryType: "Permit" as const,
+        domain: {
             name: "Triton",
             version: "Collectible1155_v1",
             chainId: 31337,
-            verifyingContract: verifyingContract,
+            verifyingContract: "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC",
         },
-        {
-            Permit: [
-                {
-                    name: "owner",
-                    type: "address",
-                },
-                {
-                    name: "spender",
-                    type: "address",
-                },
-                {
-                    name: "nonce",
-                    type: "uint256",
-                },
-                {
-                    name: "deadline",
-                    type: "uint256",
-                },
-            ],
-        },
-        {
-            owner: seller.address,
-            spender,
-            nonce,
-            deadline,
+        message: {
+            owner: "",
+            spender: "",
+            nonce: BigNumber.from(0),
+            deadline: BigNumber.from(0),
         }
-    )
-    console.log(`hashed name: ${ethers.utils.keccak256(ethers.utils.toUtf8Bytes("Triton"))}`)
-    console.log(`hashed version: ${ethers.utils.keccak256(ethers.utils.toUtf8Bytes("1"))}`)
-    console.log("owner address: ", seller.address)
-    console.log("spender address: ", spender)
-    console.log("typehash: ", ethers.utils.keccak256(ethers.utils.toUtf8Bytes("Permit(address owner,address spender,uint256 nonce,uint256 deadline)")))
+    }
+    let message = Object.assign({}, typedData.message)
+    message = {
+        owner: seller.address,
+        spender: spender,
+        nonce: nonce,
+        deadline: deadline,
+    }
+    let typedData_ = JSON.parse(JSON.stringify(typedData))
+    typedData_.message = message
+    typedData_.domain.verifyingContract = verifyingContract
+    const digest = TypedDataUtils.encodeDigest(typedData_)
+    const encodeType = TypedDataUtils.encodeType(typedData.types, "Permit")
+    console.log(`owner address: ${seller.address}`)
+    console.log(`spender address: ${spender}`)
+    console.log(`nonce: ${nonce}`)
+    console.log(`deadline: ${deadline}`)
+    console.log('PermitHash: ', ethers.utils.keccak256(ethers.utils.toUtf8Bytes(encodeType)))
+    console.log(`digestHex: ${ethers.utils.hexlify(digest)}`)
+    // const signature = await seller._signTypedData(typedData.domain, { Permit: typedData.types.Permit }, typedData.message)
+    const signature = await seller.signMessage(digest)
+    // console.log(`hashed name: ${ethers.utils.keccak256(ethers.utils.toUtf8Bytes("Triton"))}`)
+    // console.log(`hashed version: ${ethers.utils.keccak256(ethers.utils.toUtf8Bytes("1"))}`)
+    // console.log("owner address: ", seller.address)
+    // console.log("spender address: ", spender)
+    // console.log("typehash: ", ethers.utils.keccak256(ethers.utils.toUtf8Bytes("Permit(address owner,address spender,uint256 nonce,uint256 deadline)")))
     // console.log("value: ", value)
     const { r, s, v } = ethers.utils.splitSignature(signature)
-    console.log("r: ", r)
-    console.log("s: ", s)
-    console.log("v: ", v)
+    // console.log("r: ", r)
+    // console.log("s: ", s)
+    // console.log("v: ", v)
     return [r, s, v]
 }
 

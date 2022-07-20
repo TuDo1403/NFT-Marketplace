@@ -1,7 +1,7 @@
-import {SignerWithAddress} from "@nomiclabs/hardhat-ethers/signers"
-import {expect} from "chai"
-import {ethers} from "hardhat"
-import {BigNumber} from "ethers"
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers"
+import { expect } from "chai"
+import { ethers } from "hardhat"
+import { BigNumber } from "ethers"
 import {
     Collectible1155,
     Governance,
@@ -28,7 +28,6 @@ describe("Collectible1155", () => {
             admin
         )
         governance = await GovernanceFactory.deploy(
-            manager.address,
             treasury.address,
             verifier.address
         )
@@ -37,8 +36,9 @@ describe("Collectible1155", () => {
             "NFTFactory1155",
             admin
         )
-        nftFactory1155 = await NFTFactory1155.deploy(governance.address)
+        nftFactory1155 = await NFTFactory1155.deploy()
         await nftFactory1155.deployed()
+        await nftFactory1155.initialize(governance.address)
         // const Collectible1155BaseFactory = await ethers.getContractFactory(
         //     "Collectible1155",
         //     m
@@ -156,18 +156,15 @@ describe("Collectible1155", () => {
 
             await new1155Contract
                 .connect(users[0])
-                ["mint(address,(uint256,uint256,uint256,string))"](
-                    users[0].address,
-                    {
-                        amount: BigNumber.from(90),
-                        tokenId: tokenId,
-                        unitPrice: BigNumber.from(500),
-                        tokenURI: "",
-                    }
-                )
+            ["mint(address,uint256,uint256,string)"](
+                users[0].address,
+                tokenId,
+                BigNumber.from(90),
+                "",
+            )
             await new1155Contract
                 .connect(users[0])
-                ["mint(uint256,uint256)"](tokenId, BigNumber.from(10))
+            ["mint(uint256,uint256)"](tokenId, BigNumber.from(10))
 
             expect(
                 await new1155Contract.balanceOf(users[0].address, tokenId)
