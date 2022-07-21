@@ -1,6 +1,6 @@
-import { ethers } from "hardhat"
-import { expect } from "chai"
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers"
+import {ethers} from "hardhat"
+import {expect} from "chai"
+import {SignerWithAddress} from "@nomiclabs/hardhat-ethers/signers"
 import {
     Governance,
     NFTFactory721,
@@ -8,7 +8,7 @@ import {
     TokenCreator,
     ERC721,
 } from "../typechain"
-import { BigNumber } from "ethers"
+import {BigNumber} from "ethers"
 
 describe("Collectible721", () => {
     let admin: SignerWithAddress
@@ -82,17 +82,9 @@ describe("Collectible721", () => {
             const MINTER_ROLE = ethers.utils.keccak256(
                 ethers.utils.toUtf8Bytes("MINTER_ROLE")
             )
-            // const DEFAULT_ADMIN_ROLE =
-            //     ethers.utils.toUtf8Bytes("0x00")
-            // )
+
             expect(await newNftContract.hasRole(MINTER_ROLE, users[0].address))
                 .to.true
-            // expect(
-            //     await newNftContract.hasRole(
-            //         ethers.utils.toUtf8Bytes("0x00"),
-            //         users[0].address
-            //     )
-            // ).to.true
             expect(await newNftContract.admin()).to.equal(governance.address)
         })
 
@@ -152,7 +144,9 @@ describe("Collectible721", () => {
                 token1._creator
             )
             expect(
-                await newNftContract.connect(users[0]).mint(users[0].address, tokenId1, 0, "https://")
+                await newNftContract
+                    .connect(users[0])
+                    .mint(users[0].address, tokenId1, 0, "https://")
             ).to.emit("ERC721Lite", "Transfer")
 
             expect(await newNftContract.balanceOf(users[0].address)).to.equal(1)
@@ -178,7 +172,9 @@ describe("Collectible721", () => {
                 token1._creator
             )
             await expect(
-                newNftContract.connect(users[0]).mint(users[0].address, tokenId1, 1, "https://")
+                newNftContract
+                    .connect(users[0])
+                    .mint(users[0].address, tokenId1, 1, "https://")
             ).to.be.revertedWith("ERC721__InvalidInput")
         })
 
@@ -199,7 +195,9 @@ describe("Collectible721", () => {
                 token1._creator
             )
             await expect(
-                newNftContract.connect(users[1]).mint(users[1].address, tokenId1, 0, "https://")
+                newNftContract
+                    .connect(users[1])
+                    .mint(users[1].address, tokenId1, 0, "https://")
             ).to.be.revertedWith(
                 `AccessControl: account ${users[1].address.toLowerCase()} is missing role ${ethers.utils.keccak256(
                     ethers.utils.toUtf8Bytes("MINTER_ROLE")
@@ -224,10 +222,14 @@ describe("Collectible721", () => {
                 token1._creator
             )
 
-            await newNftContract.connect(users[0]).mint(users[0].address, tokenId1, 0, "https://")
+            await newNftContract
+                .connect(users[0])
+                .mint(users[0].address, tokenId1, 0, "https://")
 
             await expect(
-                newNftContract.connect(users[0]).mint(users[0].address, tokenId1, 0, "https://")
+                newNftContract
+                    .connect(users[0])
+                    .mint(users[0].address, tokenId1, 0, "https://")
             ).to.be.revertedWith("ERC721__TokenExisted")
         })
     })

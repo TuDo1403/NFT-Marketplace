@@ -6,7 +6,6 @@ import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
 import "../interfaces/IGovernance.sol";
 import "./TokenIdGenerator.sol";
-import "hardhat/console.sol";
 
 library ReceiptUtil {
     error RU__Expired();
