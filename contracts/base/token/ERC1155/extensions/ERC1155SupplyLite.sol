@@ -54,8 +54,8 @@ abstract contract ERC1155SupplyLite is ERC1155Lite {
                         }
                     }
                 }
-                _totalSupply[tokenId] += amount;
                 unchecked {
+                    _totalSupply[tokenId] += amount;
                     ++i;
                 }
             }
@@ -76,22 +76,4 @@ abstract contract ERC1155SupplyLite is ERC1155Lite {
             }
         }
     }
-
-    // function _supplyCheck(uint256 tokenId_, uint256 amount_)
-    //     internal
-    //     view
-    //     virtual
-    // {
-    //     if (amount_ > 2**TokenIdGenerator.SUPPLY_BIT - 1) {
-    //         revert ERC1155__AllocationExceeds();
-    //     }
-    //     uint256 maxSupply = tokenId_.getTokenMaxSupply();
-    //     if (maxSupply != 0) {
-    //         unchecked {
-    //             if (amount_ + totalSupply(tokenId_) > maxSupply) {
-    //                 revert ERC1155__AllocationExceeds();
-    //             }
-    //         }
-    //     }
-    // }
 }

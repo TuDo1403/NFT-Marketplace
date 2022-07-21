@@ -12,8 +12,8 @@ import "./interfaces/IGovernance.sol";
 
 contract NFTFactory is
     INFTFactory,
-    MarketplaceIntegratable,
-    ContextUpgradeable
+    ContextUpgradeable,
+    MarketplaceIntegratable
 {
     using ClonesUpgradeable for address;
 
@@ -25,7 +25,6 @@ contract NFTFactory is
 
     constructor(address admin_) initializer {
         _initialize(admin_);
-        //_disableInitializers();
     }
 
     function initialize(address admin_) external initializer {
@@ -44,13 +43,12 @@ contract NFTFactory is
         );
 
         clone = implement_.cloneDeterministic(salt);
-        //bytes4 initId = bytes4(keccak256(bytes("initialize(address,address,string,string,string)")));
-        //INFT(clone).initialize(address(admin), owner, name_, symbol_, baseURI_);
-        //console.logBytes4(initId);
-        (bool ok, ) = clone.call(abi.encodePacked(bytes4(0x3f2f5ee2), abi.encode(
-            address(admin), owner, name_, symbol_, baseURI_
-        )));
-
+        (bool ok, ) = clone.call(
+            abi.encodePacked(
+                bytes4(0x3f2f5ee2), // initialize(address,address,string,string,string)
+                abi.encode(address(admin), owner, name_, symbol_, baseURI_)
+            )
+        );
         if (!ok) {
             revert Factory__ExecutionFailed();
         }
@@ -64,5 +62,9 @@ contract NFTFactory is
             owner,
             clone
         );
+    }
+
+    function _notMaliciousAddress(address addr_) private view {
+        assert(addr_ != address(this));
     }
 }

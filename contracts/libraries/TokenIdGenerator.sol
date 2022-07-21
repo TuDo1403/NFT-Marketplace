@@ -3,13 +3,13 @@ pragma solidity 0.8.15;
 
 library TokenIdGenerator {
     // TOKEN ID = ADDRESS + SUPPLY + TYPE + FEE + ID
-    struct Token {
-        uint256 _fee;
-        uint256 _type;
-        uint256 _supply;
-        uint256 _index;
-        address _creator;
-    }
+    // struct Token {
+    //     uint256 _fee;
+    //     uint256 _type;
+    //     uint256 _supply;
+    //     uint256 _index;
+    //     address _creator;
+    // }
 
     uint256 public constant FEE_BIT = 16; // creator fee
     uint256 public constant TYPE_BIT = 16;
@@ -26,18 +26,20 @@ library TokenIdGenerator {
         ((1 << (INDEX_BIT + FEE_BIT + TYPE_BIT + SUPPLY_BIT)) - 1) ^
             (INDEX_MASK | FEE_MASK | TYPE_MASK);
 
-    function createTokenId(Token memory token_)
-        internal
-        pure
-        returns (uint256)
-    {
+    function createTokenId(
+        uint256 fee_,
+        uint256 type_,
+        uint256 supply_,
+        uint256 index_,
+        address creator_
+    ) internal pure returns (uint256) {
         unchecked {
             return
-                token_._index |
-                (token_._fee << (INDEX_BIT)) |
-                (token_._type << (INDEX_BIT + FEE_BIT)) |
-                (token_._supply << (INDEX_BIT + FEE_BIT + TYPE_BIT)) |
-                (uint256(uint160(token_._creator)) <<
+                index_ |
+                (fee_ << (INDEX_BIT)) |
+                (type_ << (INDEX_BIT + FEE_BIT)) |
+                (supply_ << (INDEX_BIT + FEE_BIT + TYPE_BIT)) |
+                (uint256(uint160(creator_)) <<
                     (INDEX_BIT + FEE_BIT + TYPE_BIT + SUPPLY_BIT));
         }
     }

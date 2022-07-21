@@ -41,8 +41,6 @@ contract Marketplace is
     uint8 public serviceFee;
     uint8 public creatorFeeUB; // creator fee upper bound
 
-    //bytes4 private constant _ERC721_MINT_ID = 0x;
-
     mapping(address => CountersUpgradeable.Counter) public nonces;
 
     // 2521470
@@ -87,12 +85,13 @@ contract Marketplace is
         uint256 tokenId = item.tokenId;
         address buyerAddr = header.buyer.addr;
         address nftContract = header.nftContract;
+        address thisAddr = address(this);
         {
             ReceiptUtil.User memory buyer = header.buyer;
             if (buyer.v != 0) {
                 IERC20PermitUpgradeable(header.paymentToken).permit(
                     buyerAddr,
-                    address(this),
+                    thisAddr,
                     salePrice,
                     buyer.deadline,
                     buyer.v,
@@ -122,7 +121,7 @@ contract Marketplace is
         }
 
         _safeTransferFrom(
-            address(this),
+            thisAddr,
             buyerAddr,
             nftContract,
             tokenId,
@@ -132,7 +131,7 @@ contract Marketplace is
 
         emit ItemRedeemed(
             nftContract,
-            header.buyer.addr,
+            buyerAddr,
             tokenId,
             header.paymentToken,
             salePrice
@@ -166,13 +165,14 @@ contract Marketplace is
         address sellerAddr = seller.addr;
         nonces[sellerAddr].increment();
         address buyerAdrr;
+        address thisAddr = address(this);
         {
             ReceiptUtil.User memory buyer = header.buyer;
             buyerAdrr = buyer.addr;
             if (buyer.v != 0) {
                 IERC20PermitUpgradeable(header.paymentToken).permit(
                     buyerAdrr,
-                    address(this),
+                    thisAddr,
                     salePrice,
                     buyer.deadline,
                     buyer.v,
@@ -195,7 +195,7 @@ contract Marketplace is
         IERC1155Permit(nftContract).permit(
             seller.deadline,
             sellerAddr,
-            address(this),
+            thisAddr,
             seller.v,
             seller.r,
             seller.s
@@ -297,7 +297,7 @@ contract Marketplace is
                     _serviceFee
                 );
                 unchecked {
-                    if (_tokenExists) {
+                    if (!_tokenExists) {
                         bulkToMint.tokenIds[counter] = tokenId;
                         bulkToMint.amounts[counter] = bulk_.amounts[i];
                         bulkToMint.tokenURIs[counter] = bulk_.tokenURIs[i];
@@ -381,12 +381,6 @@ contract Marketplace is
         uint8 serviceFee_,
         uint8 creatorFeeUB_
     ) internal virtual onlyInitializing {
-        // if (serviceFee_ != 0) {
-        //     serviceFee = serviceFee_ % _feeDominator();
-        // }
-        // if (creatorFeeUB_ != 0) {
-        //     creatorFeeUB = creatorFeeUB_ % _feeDominator();
-        // }
         serviceFee = serviceFee_;
         creatorFeeUB = creatorFeeUB_;
         _initialize(admin_);

@@ -94,7 +94,6 @@ library ReceiptUtil {
                 abi.encodePacked(
                     RECEIPT_TYPE_HASH,
                     __hashHeader(receipt_.header),
-                    //__hashPayment(receipt_.payment),
                     __hashItem(receipt_.item),
                     receipt_.nonce,
                     receipt_.deadline
@@ -112,7 +111,6 @@ library ReceiptUtil {
                 abi.encodePacked(
                     BULK_RECEIPT_TYPE_HASH,
                     __hashHeader(receipt_.header),
-                    //__hashPayment(receipt_.payment),
                     __hashBulk(receipt_.bulk),
                     receipt_.nonce,
                     receipt_.deadline
@@ -129,8 +127,6 @@ library ReceiptUtil {
         bytes calldata signature_
     ) internal view {
         _verifyIntegrity(admin_, paymentToken_, total_, deadline_);
-        // console.logBytes(signature_);
-        // console.logBytes32(ECDSA.toEthSignedMessageHash(hashedReceipt_));
         if (
             ECDSA.recover(
                 ECDSA.toEthSignedMessageHash(hashedReceipt_),
@@ -147,14 +143,14 @@ library ReceiptUtil {
         uint256 total_,
         uint256 deadline_
     ) private view {
-        if (block.timestamp > deadline_) {
-            revert RU__Expired();
-        }
         if (total_ != msg.value) {
             revert RU__InsufficientPayment();
         }
         if (!admin_.acceptedPayments(paymentToken_)) {
             revert RU__PaymentUnsuported();
+        }
+        if (block.timestamp > deadline_) {
+            revert RU__Expired();
         }
     }
 
@@ -183,9 +179,6 @@ library ReceiptUtil {
             keccak256(
                 abi.encode(
                     HEADER_TYPE_HASH,
-                    //header_.nonce,
-                    //header_.deadline,
-                    //header_.paymentToken,
                     __hashUser(header_.buyer),
                     __hashUser(header_.seller),
                     header_.nftContract,
@@ -202,7 +195,6 @@ library ReceiptUtil {
                     item_.amount,
                     item_.tokenId,
                     item_.unitPrice,
-                    //item_.nftContract,
                     keccak256(bytes(item_.tokenURI))
                 )
             );
@@ -220,7 +212,6 @@ library ReceiptUtil {
             keccak256(
                 abi.encode(
                     BULK_TYPE_HASH,
-                    //bulk_.nftContract,
                     bulk_.amounts,
                     bulk_.tokenIds,
                     bulk_.unitPrices,

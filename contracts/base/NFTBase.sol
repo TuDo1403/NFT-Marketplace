@@ -15,13 +15,15 @@ abstract contract NFTBase is
     MarketplaceIntegratable
 {
     uint256 public immutable TYPE;
+    address public immutable _factory;
 
     //keccak256("MINTER_ROLE")
     bytes32 internal constant MINTER_ROLE =
         0x9f2df0fed2c77648de5860a4cc508cd0818c85b8b8a1ab4ceeef8d981c8956a6;
 
-    constructor(uint256 type_) {
+    constructor(uint256 type_, address factory_) {
         TYPE = type_;
+        _factory = factory_;
     }
 
     function _initialize(address admin_, address owner_)

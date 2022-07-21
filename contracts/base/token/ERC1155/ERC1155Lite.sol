@@ -71,6 +71,19 @@ abstract contract ERC1155Lite is ERC1155, IERC1155Lite {
         return batchBalances;
     }
 
+    /**
+     * @dev See {IERC1155-isApprovedForAll}.
+     */
+    function isApprovedForAll(address account, address operator)
+        public
+        view
+        virtual
+        override(ERC1155, IERC1155)
+        returns (bool)
+    {
+        return _operatorApprovals[account][operator];
+    }
+
     function supportsInterface(bytes4 interfaceId)
         public
         view
