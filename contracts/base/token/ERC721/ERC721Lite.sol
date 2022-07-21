@@ -154,11 +154,6 @@ abstract contract ERC721Lite is IERC721Lite, ERC721("", "") {
     //     }
     // }
 
-    function _approve(address to, uint256 tokenId) internal virtual override {
-        _tokenApprovals[tokenId] = to;
-        emit Approval(ownerOf(tokenId), to, tokenId);
-    }
-
     function _mint(address to, uint256 tokenId) internal virtual override {
         // require(to != address(0), "ERC721: mint to the zero address");
         // require(!_exists(tokenId), "ERC721: token already minted");
