@@ -1,28 +1,26 @@
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers"
-import { expect } from "chai"
-import { ethers } from "hardhat"
-import { BigNumber } from "ethers"
+import {SignerWithAddress} from "@nomiclabs/hardhat-ethers/signers"
+import {expect} from "chai"
+import {ethers, upgrades} from "hardhat"
+import {BigNumber} from "ethers"
 import {
     Collectible1155,
     Governance,
-    NFTFactory1155,
+    NFTFactory,
     TokenCreator,
 } from "../typechain"
 
 describe("Collectible1155", () => {
     let admin: SignerWithAddress
-    let manager: SignerWithAddress
     let verifier: SignerWithAddress
     let treasury: SignerWithAddress
     let users: SignerWithAddress[]
 
-    let nftFactory1155: NFTFactory1155
+    let nftFactory: NFTFactory
     let collectible1155Base: Collectible1155
     let tokenCreator: TokenCreator
     let governance: Governance
     beforeEach(async () => {
-        ;[admin, manager, verifier, treasury, ...users] =
-            await ethers.getSigners()
+        ;[admin, verifier, treasury, ...users] = await ethers.getSigners()
         const GovernanceFactory = await ethers.getContractFactory(
             "Governance",
             admin
@@ -32,21 +30,25 @@ describe("Collectible1155", () => {
             verifier.address
         )
         await governance.deployed()
-        const NFTFactory1155 = await ethers.getContractFactory(
-            "NFTFactory1155",
+
+        const Collectible1155BaseFactory = await ethers.getContractFactory(
+            "Collectible1155",
             admin
         )
-        nftFactory1155 = await NFTFactory1155.deploy()
-        await nftFactory1155.deployed()
-        await nftFactory1155.initialize(governance.address)
-        // const Collectible1155BaseFactory = await ethers.getContractFactory(
-        //     "Collectible1155",
-        //     m
-        // )
-        // collectible1155Base = await Collectible1155BaseFactory.deploy(
-        //     governance.address
-        // )
-        // await collectible1155Base.deployed()
+        collectible1155Base = await Collectible1155BaseFactory.deploy()
+        await collectible1155Base.deployed()
+
+        const NFTFactoryFactory = await ethers.getContractFactory(
+            "NFTFactory",
+            admin
+        )
+        nftFactory = (await upgrades.deployProxy(
+            NFTFactoryFactory,
+            [governance.address],
+            {initializer: "initialize"}
+        )) as NFTFactory
+        await nftFactory.deployed()
+
         const TokenCreatorFactory = await ethers.getContractFactory(
             "TokenCreator"
         )
@@ -60,19 +62,25 @@ describe("Collectible1155", () => {
             const symbol = "HLC"
             const URI = ""
             const version = ethers.utils.keccak256(
-                ethers.utils.toUtf8Bytes("NFTFactory1155_v1")
+                ethers.utils.toUtf8Bytes("NFTFactory_v1")
             )
-            await nftFactory1155
+            await nftFactory
                 .connect(users[0])
-                .deployCollectible(name, symbol, URI)
+                .deployCollectible(
+                    collectible1155Base.address,
+                    name,
+                    symbol,
+                    URI
+                )
             const salt = ethers.utils.keccak256(
                 ethers.utils.solidityPack(
                     ["bytes32", "string", "string", "string"],
                     [version, name, symbol, URI]
                 )
             )
-            const new1555ContractAddress =
-                await nftFactory1155.deployedContracts(BigNumber.from(salt))
+            const new1555ContractAddress = await nftFactory.deployedContracts(
+                BigNumber.from(salt)
+            )
             const new1155Contract = await ethers.getContractAt(
                 "Collectible1155",
                 new1555ContractAddress
@@ -104,10 +112,15 @@ describe("Collectible1155", () => {
             const URI = ""
 
             await expect(
-                nftFactory1155
+                nftFactory
                     .connect(users[0])
-                    .deployCollectible(name, symbol, URI)
-            ).to.be.revertedWith("ERC1155__StringTooLong")
+                    .deployCollectible(
+                        collectible1155Base.address,
+                        name,
+                        symbol,
+                        URI
+                    )
+            ).to.be.revertedWith("NFT__StringTooLong")
         })
     })
 
@@ -118,19 +131,25 @@ describe("Collectible1155", () => {
             const symbol = "HLC"
             const URI = ""
             const version = ethers.utils.keccak256(
-                ethers.utils.toUtf8Bytes("NFTFactory1155_v1")
+                ethers.utils.toUtf8Bytes("NFTFactory_v1")
             )
-            await nftFactory1155
+            await nftFactory
                 .connect(users[0])
-                .deployCollectible(name, symbol, URI)
+                .deployCollectible(
+                    collectible1155Base.address,
+                    name,
+                    symbol,
+                    URI
+                )
             const salt = ethers.utils.keccak256(
                 ethers.utils.solidityPack(
                     ["bytes32", "string", "string", "string"],
                     [version, name, symbol, URI]
                 )
             )
-            const new1555ContractAddress =
-                await nftFactory1155.deployedContracts(BigNumber.from(salt))
+            const new1555ContractAddress = await nftFactory.deployedContracts(
+                BigNumber.from(salt)
+            )
 
             new1155Contract = await ethers.getContractAt(
                 "Collectible1155",
@@ -156,15 +175,15 @@ describe("Collectible1155", () => {
 
             await new1155Contract
                 .connect(users[0])
-            ["mint(address,uint256,uint256,string)"](
-                users[0].address,
-                tokenId,
-                BigNumber.from(90),
-                "",
-            )
+                ["mint(address,uint256,uint256,string)"](
+                    users[0].address,
+                    tokenId,
+                    BigNumber.from(90),
+                    ""
+                )
             await new1155Contract
                 .connect(users[0])
-            ["mint(uint256,uint256)"](tokenId, BigNumber.from(10))
+                ["mint(uint256,uint256)"](tokenId, BigNumber.from(10))
 
             expect(
                 await new1155Contract.balanceOf(users[0].address, tokenId)

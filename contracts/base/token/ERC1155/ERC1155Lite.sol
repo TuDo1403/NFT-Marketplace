@@ -38,6 +38,10 @@ abstract contract ERC1155Lite is ERC1155, IERC1155Lite {
         _safeBatchTransferFrom(from, to, ids, amounts, data);
     }
 
+    function isApprovedForAll(address account, address operator) public view virtual override(IERC1155, ERC1155) returns (bool) {
+        return _operatorApprovals[account][operator];
+    }
+
     function balanceOf(address account, uint256 id)
         public
         view

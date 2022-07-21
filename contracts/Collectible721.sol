@@ -92,6 +92,24 @@ contract Collectible721 is
         return ERC721URIStorageLite.tokenURI(tokenId);
     }
 
+    function name()
+        public
+        view
+        override(ERC721)
+        returns (string memory)
+    {
+        return _name;
+    }
+
+    function symbol()
+        public
+        view
+        override(ERC721)
+        returns (string memory)
+    {
+        return _symbol;
+    }
+
     function _burn(uint256 tokenId)
         internal
         virtual
