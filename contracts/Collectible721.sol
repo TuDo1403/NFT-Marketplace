@@ -25,7 +25,7 @@ contract Collectible721 is
     string private _symbol;
     string private baseURI;
 
-    constructor(address factory_) NFTBase(721, factory_) {}
+    constructor() NFTBase(721) {}
 
     function initialize(
         address admin_,

@@ -17,6 +17,7 @@ import "./base/MarketplaceIntegratable.sol";
 import "./interfaces/INFT.sol";
 import "./interfaces/ISemiNFT.sol";
 import "./interfaces/IMarketplace.sol";
+import "./base/token/ERC1155/IERC1155Lite.sol";
 import "./base/token/ERC721/extensions/IERC721Permit.sol";
 import "./base/token/ERC1155/extensions/IERC1155Permit.sol";
 
@@ -245,7 +246,7 @@ contract Marketplace is
                 seller_.s
             );
 
-            IERC1155(nftContract_).safeTransferFrom(
+            IERC1155Lite(nftContract_).safeTransferFrom(
                 seller_.addr,
                 buyerAddr_,
                 tokenId_,

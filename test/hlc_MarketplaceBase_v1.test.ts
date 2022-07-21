@@ -1,61 +1,60 @@
-import { expect } from "chai"
-import { ethers, userConfig } from "hardhat"
-import { BigNumber } from "ethers"
-import { TypedDataUtils } from "ethers-eip712"
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers"
+import {expect} from "chai"
+import {ethers, userConfig, upgrades} from "hardhat"
+import {BigNumber} from "ethers"
+import {TypedDataUtils} from "ethers-eip712"
+import {SignerWithAddress} from "@nomiclabs/hardhat-ethers/signers"
 import {
     Governance,
     Marketplace,
     ERC20Test,
     TokenCreator,
     Collectible1155,
-    NFTFactory1155,
+    NFTFactory,
 } from "../typechain"
-
 const typedData = {
     types: {
         EIP712Domain: [
-            { name: "name", type: "string" },
-            { name: "version", type: "string" },
-            { name: "chainId", type: "uint256" },
-            { name: "verifyingContract", type: "address" },
+            {name: "name", type: "string"},
+            {name: "version", type: "string"},
+            {name: "chainId", type: "uint256"},
+            {name: "verifyingContract", type: "address"},
         ],
         User: [
-            { name: "addr", type: "address" },
-            { name: "v", type: "uint8" },
-            { name: "deadline", type: "uint256" },
-            { name: "r", type: "bytes32" },
-            { name: "s", type: "bytes32" },
+            {name: "addr", type: "address"},
+            {name: "v", type: "uint8"},
+            {name: "deadline", type: "uint256"},
+            {name: "r", type: "bytes32"},
+            {name: "s", type: "bytes32"},
         ],
         Header: [
-            { name: "buyer", type: "User" },
-            { name: "seller", type: "User" },
-            { name: "nftContract", type: "address" },
-            { name: "paymentToken", type: "address" },
+            {name: "buyer", type: "User"},
+            {name: "seller", type: "User"},
+            {name: "nftContract", type: "address"},
+            {name: "paymentToken", type: "address"},
         ],
         Item: [
-            { name: "amount", type: "uint256" },
-            { name: "tokenId", type: "uint256" },
-            { name: "unitPrice", type: "uint256" },
-            { name: "tokenURI", type: "string" },
+            {name: "amount", type: "uint256"},
+            {name: "tokenId", type: "uint256"},
+            {name: "unitPrice", type: "uint256"},
+            {name: "tokenURI", type: "string"},
         ],
         Bulk: [
-            { name: "amounts", type: "uint256[]" },
-            { name: "tokenIds", type: "uint256[]" },
-            { name: "unitPrices", type: "uint256[]" },
-            { name: "tokenURIs", type: "string[]" },
+            {name: "amounts", type: "uint256[]"},
+            {name: "tokenIds", type: "uint256[]"},
+            {name: "unitPrices", type: "uint256[]"},
+            {name: "tokenURIs", type: "string[]"},
         ],
         Receipt: [
-            { name: "header", type: "Header" },
-            { name: "item", type: "Item" },
-            { name: "nonce", type: "uint256" },
-            { name: "deadline", type: "uint256" },
+            {name: "header", type: "Header"},
+            {name: "item", type: "Item"},
+            {name: "nonce", type: "uint256"},
+            {name: "deadline", type: "uint256"},
         ],
         BulkReceipt: [
-            { name: "header", type: "Header" },
-            { name: "bulk", type: "Bulk" },
-            { name: "nonce", type: "uint256" },
-            { name: "deadline", type: "uint256" },
+            {name: "header", type: "Header"},
+            {name: "bulk", type: "Bulk"},
+            {name: "nonce", type: "uint256"},
+            {name: "deadline", type: "uint256"},
         ],
     },
     domain: {
@@ -158,31 +157,8 @@ async function signReceipt(
     typedData_.message = message
     typedData_.domain.verifyingContract = verifyingContract
     const digest = TypedDataUtils.encodeDigest(typedData_)
-    // console.log(`digestHex: ${ethers.utils.hexlify(digest)}`)
-    // console.log("receipt ts", ethers.utils.hexlify(receiptHash))
-    // console.log(`signature: ${signature}`)
-    // console.log(`signature: ${await verifier.signMessage(digest)}`)
     return [message, await verifier.signMessage(digest)]
-    // return [message, signature]
-
 }
-
-// async function buyerSign(
-//     buyer: SignerWithAddress,
-//     owner: string,
-//     spender: string,
-//     value: BigNumber,
-//     nonce: BigNumber,
-//     deadline: BigNumber
-// ): Promise<[string, string, number]> {
-//     const message = ethers.utils.solidityKeccak256(
-//         ["address", "address", "uint256", "uint256", "uint256"],
-//         [owner, spender, value, nonce, deadline]
-//     )
-//     const signature = await buyer.signMessage(ethers.utils.arrayify(message))
-//     const {r, s, v} = ethers.utils.splitSignature(signature)
-//     return [r, s, v]
-// }
 
 async function erc20PermitSignature(
     buyer: SignerWithAddress,
@@ -231,102 +207,46 @@ async function erc20PermitSignature(
             deadline,
         }
     )
-    // console.log("owner address: ", buyer.address)
-    // console.log("spender address: ", spender)
-    // console.log("value: ", value)
-    const { r, s, v } = ethers.utils.splitSignature(signature)
-    // console.log("r: ", r)
-    // console.log("s: ", s)
-    // console.log("v: ", v)
+    const {r, s, v} = ethers.utils.splitSignature(signature)
     return [r, s, v]
 }
-
-// async function sellerSign(
-//     seller: SignerWithAddress,
-//     owner: string,
-//     spender: string,
-//     nonce: BigNumber,
-//     deadline: BigNumber
-// ): Promise<[string, string, number]> {
-//     const message = ethers.utils.solidityKeccak256(
-//         ["address", "address", "uint256", "uint256"],
-//         [owner, spender, nonce, deadline]
-//     )
-//     const signature = await seller.signMessage(ethers.utils.arrayify(message))
-//     const { r, s, v } = ethers.utils.splitSignature(signature)
-//     return [r, s, v]
-// }
 
 async function erc1155PermitSignature(
     seller: SignerWithAddress,
     spender: string,
     nonce: BigNumber,
     deadline: BigNumber,
-    verifyingContract: string
+    verifyingContract: string,
+    domainName: string
 ): Promise<[string, string, number]> {
-    // const signature = await seller._signTypedData(
-    //     {
-    //         name: "Triton",
-    //         version: "Collectible1155_v1",
-    //         chainId: 31337,
-    //         verifyingContract: verifyingContract,
-    //     },
-    //     {
-    //         Permit: [
-    //             {
-    //                 name: "owner",
-    //                 type: "address",
-    //             },
-    //             {
-    //                 name: "spender",
-    //                 type: "address",
-    //             },
-    //             {
-    //                 name: "nonce",
-    //                 type: "uint256",
-    //             },
-    //             {
-    //                 name: "deadline",
-    //                 type: "uint256",
-    //             },
-    //         ],
-    //     },
-    //     {
-    //         owner: seller.address,
-    //         spender,
-    //         nonce,
-    //         deadline,
-    //     }
-    // )
-
     const typedData = {
         types: {
             EIP712Domain: [
-                { name: "name", type: "string" },
-                { name: "version", type: "string" },
-                { name: "chainId", type: "uint256" },
-                { name: "verifyingContract", type: "address" },
+                {name: "name", type: "string"},
+                {name: "version", type: "string"},
+                {name: "chainId", type: "uint256"},
+                {name: "verifyingContract", type: "address"},
             ],
             Permit: [
-                { name: "owner", type: "address" },
-                { name: "spender", type: "address" },
-                { name: "nonce", type: "uint256" },
-                { name: "deadline", type: "uint256" },
+                {name: "owner", type: "address"},
+                {name: "spender", type: "address"},
+                {name: "nonce", type: "uint256"},
+                {name: "deadline", type: "uint256"},
             ],
         },
         primaryType: "Permit" as const,
         domain: {
-            name: "Triton",
-            version: "Collectible1155_v1",
+            name: domainName,
+            version: "v1",
             chainId: 31337,
-            verifyingContract: "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC",
+            verifyingContract: verifyingContract,
         },
         message: {
             owner: "",
             spender: "",
             nonce: BigNumber.from(0),
             deadline: BigNumber.from(0),
-        }
+        },
     }
     let message = Object.assign({}, typedData.message)
     message = {
@@ -337,27 +257,9 @@ async function erc1155PermitSignature(
     }
     let typedData_ = JSON.parse(JSON.stringify(typedData))
     typedData_.message = message
-    typedData_.domain.verifyingContract = verifyingContract
     const digest = TypedDataUtils.encodeDigest(typedData_)
-    const encodeType = TypedDataUtils.encodeType(typedData.types, "Permit")
-    console.log(`owner address: ${seller.address}`)
-    console.log(`spender address: ${spender}`)
-    console.log(`nonce: ${nonce}`)
-    console.log(`deadline: ${deadline}`)
-    console.log('PermitHash: ', ethers.utils.keccak256(ethers.utils.toUtf8Bytes(encodeType)))
-    console.log(`digestHex: ${ethers.utils.hexlify(digest)}`)
-    // const signature = await seller._signTypedData(typedData.domain, { Permit: typedData.types.Permit }, typedData.message)
     const signature = await seller.signMessage(digest)
-    // console.log(`hashed name: ${ethers.utils.keccak256(ethers.utils.toUtf8Bytes("Triton"))}`)
-    // console.log(`hashed version: ${ethers.utils.keccak256(ethers.utils.toUtf8Bytes("1"))}`)
-    // console.log("owner address: ", seller.address)
-    // console.log("spender address: ", spender)
-    // console.log("typehash: ", ethers.utils.keccak256(ethers.utils.toUtf8Bytes("Permit(address owner,address spender,uint256 nonce,uint256 deadline)")))
-    // console.log("value: ", value)
-    const { r, s, v } = ethers.utils.splitSignature(signature)
-    // console.log("r: ", r)
-    // console.log("s: ", s)
-    // console.log("v: ", v)
+    const {r, s, v} = ethers.utils.splitSignature(signature)
     return [r, s, v]
 }
 
@@ -369,8 +271,8 @@ describe("MarketplaceBase", () => {
 
     let governance: Governance
     let paymentToken: ERC20Test
-    let nftFactory1155: NFTFactory1155
-    let collectible1155: Collectible1155
+    let nftFactory: NFTFactory
+    let collectible1155Base: Collectible1155
     let cloneNft1155: Collectible1155
     let marketplace: Marketplace
     let tokenCreator: TokenCreator
@@ -381,10 +283,9 @@ describe("MarketplaceBase", () => {
     let creator: SignerWithAddress
 
     beforeEach(async () => {
-        ;[admin, verifier, treasury, ...users] =
-            await ethers.getSigners()
-        ;[buyer, creator, ] = users
-
+        ;[admin, verifier, treasury, ...users] = await ethers.getSigners()
+        buyer = users[0]
+        creator = users[1]
         const ERC20TestFactory = await ethers.getContractFactory(
             "ERC20Test",
             admin
@@ -404,27 +305,29 @@ describe("MarketplaceBase", () => {
         await governance.deployed()
         await governance.connect(admin).registerToken(paymentToken.address)
 
-        const Collectible1155Factory = await ethers.getContractFactory(
+        const Collectible1155BaseFactory = await ethers.getContractFactory(
             "Collectible1155",
             admin
         )
+        collectible1155Base = await Collectible1155BaseFactory.deploy()
+        await collectible1155Base.deployed()
 
-        collectible1155 = await Collectible1155Factory.deploy()
-        await collectible1155.deployed()
-
-        const NFTFactory1155Factory = await ethers.getContractFactory(
-            "NFTFactory1155",
+        const NFTFactoryFactory = await ethers.getContractFactory(
+            "NFTFactory",
             admin
         )
-        nftFactory1155 = await NFTFactory1155Factory.deploy()
-        await nftFactory1155.deployed()
-        await nftFactory1155.initialize(governance.address)
-        
-        await nftFactory1155
+        nftFactory = (await upgrades.deployProxy(
+            NFTFactoryFactory,
+            [governance.address],
+            {initializer: "initialize"}
+        )) as NFTFactory
+        await nftFactory.deployed()
+
+        await nftFactory
             .connect(creator)
-            .deployCollectible(collectible1155.address, "Triton", "TNT", "")
+            .deployCollectible(collectible1155Base.address, "Triton", "TNT", "")
         const version = ethers.utils.keccak256(
-            ethers.utils.toUtf8Bytes("NFTFactory1155_v1")
+            ethers.utils.toUtf8Bytes("NFTFactory_v1")
         )
         const salt = ethers.utils.keccak256(
             ethers.utils.solidityPack(
@@ -432,7 +335,7 @@ describe("MarketplaceBase", () => {
                 [version, "Triton", "TNT", ""]
             )
         )
-        const cloneNft1155Address = await nftFactory1155.deployedContracts(
+        const cloneNft1155Address = await nftFactory.deployedContracts(
             BigNumber.from(salt)
         )
         cloneNft1155 = await ethers.getContractAt(
@@ -484,50 +387,50 @@ describe("MarketplaceBase", () => {
         let rBuyer: string
         let sBuyer: string
         let vBuyer: number
-            ;[rBuyer, sBuyer, vBuyer] = await erc20PermitSignature(
-                buyer,
-                marketplace.address,
-                BigNumber.from(salePrice),
-                BigNumber.from(buyerNonce),
-                BigNumber.from(deadline),
-                paymentToken.address
-            )
+        ;[rBuyer, sBuyer, vBuyer] = await erc20PermitSignature(
+            buyer,
+            marketplace.address,
+            BigNumber.from(salePrice),
+            BigNumber.from(buyerNonce),
+            BigNumber.from(deadline),
+            paymentToken.address
+        )
 
         //Seller sign signature to permit marketplace to transfer nft when buyer buy nft
         let rSeller: string
         let sSeller: string
         let vSeller: number
         const sellerNonce = await cloneNft1155.nonces(creator.address)
-            ;[rSeller, sSeller, vSeller] = await erc1155PermitSignature(
-                creator,
-                marketplace.address,
-                BigNumber.from(sellerNonce),
-                BigNumber.from(deadline),
-                nftFactory1155.address,
-            )
-        console.log("nft1155 address: ", cloneNft1155.address)
-            ;[receipt, signature] = await signReceipt(
-                buyer.address,
-                BigNumber.from(vBuyer),
-                BigNumber.from(deadline),
-                rBuyer,
-                sBuyer,
-                creator.address,
-                BigNumber.from(vSeller),
-                BigNumber.from(deadline),
-                rSeller,
-                sSeller,
-                cloneNft1155.address,
-                paymentToken.address,
-                BigNumber.from(amount),
-                BigNumber.from(tokenId),
-                BigNumber.from(unitPrice),
-                tokenURI,
-                nonce,
-                BigNumber.from(deadline),
-                marketplace.address,
-                verifier
-            )
+        ;[rSeller, sSeller, vSeller] = await erc1155PermitSignature(
+            creator,
+            marketplace.address,
+            BigNumber.from(sellerNonce),
+            BigNumber.from(deadline),
+            cloneNft1155.address,
+            "Collectible1155"
+        )
+        ;[receipt, signature] = await signReceipt(
+            buyer.address,
+            BigNumber.from(vBuyer),
+            BigNumber.from(deadline),
+            rBuyer,
+            sBuyer,
+            creator.address,
+            BigNumber.from(vSeller),
+            BigNumber.from(deadline),
+            rSeller,
+            sSeller,
+            cloneNft1155.address,
+            paymentToken.address,
+            BigNumber.from(amount),
+            BigNumber.from(tokenId),
+            BigNumber.from(unitPrice),
+            tokenURI,
+            nonce,
+            BigNumber.from(deadline),
+            marketplace.address,
+            verifier
+        )
 
         // console.log(`signature: ${signature}`)
         // console.log(`verifier address: ${verifier.address}`)
@@ -539,12 +442,15 @@ describe("MarketplaceBase", () => {
         // console.log(
         //     ethers.utils.keccak256(ethers.utils.toUtf8Bytes(enodeType2))
         // )
-
+        console.log(creator.address)
+        console.log(marketplace.address)
         console.log("----------------------------------------------------")
         // await paymentToken.connect(buyer).approve(marketplace.address, totalPay)
-        const tx = await marketplace
-            .connect(buyer)
-            .redeem(receipt, signature, { value: salePrice })
-        console.log(tx)
+
+        await expect(
+            marketplace
+                .connect(buyer)
+                .redeem(receipt, signature, {value: salePrice})
+        ).to.emit(marketplace, "ItemRedeemed")
     })
 })
