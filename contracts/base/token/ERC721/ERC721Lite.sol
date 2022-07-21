@@ -206,6 +206,11 @@ abstract contract ERC721Lite is IERC721Lite, ERC721("", "") {
         _afterTokenTransfer(from, to, tokenId);
     }
 
+    function _approve(address to, uint256 tokenId) internal virtual override {
+        _tokenApprovals[tokenId] = to;
+        emit Approval(ownerOf(tokenId), to, tokenId);
+    }
+
     function _setApprovalForAll(
         address owner,
         address operator,
@@ -266,13 +271,7 @@ abstract contract ERC721Lite is IERC721Lite, ERC721("", "") {
         }
     }
 
-    function _exists(uint256 tokenId)
-        internal
-        view
-        virtual
-        override
-        returns (bool)
-    {
+    function _exists(uint256 tokenId) internal view override returns (bool) {
         return _owners[tokenId] != address(0);
     }
 

@@ -9,6 +9,7 @@ import {
     ERC20Test,
     TokenCreator,
     Collectible1155,
+    Collectible721,
     NFTFactory,
 } from "../typechain"
 const typedData = {
@@ -263,6 +264,54 @@ async function erc1155PermitSignature(
     return [r, s, v]
 }
 
+async function erc721PermitSignature(
+    seller: SignerWithAddress,
+    spender: string,
+    tokenId: BigNumber,
+    nonce: BigNumber,
+    deadline: BigNumber,
+    verifyingContract: string,
+    domainName: string
+): Promise<[string, string, number]> {
+    const typedData = {
+        types: {
+            EIP712Domain: [
+                {name: "name", type: "string"},
+                {name: "version", type: "string"},
+                {name: "chainId", type: "uint256"},
+                {name: "verifyingContract", type: "address"},
+            ],
+            Permit: [
+                {name: "spender", type: "address"},
+                {name: "tokenId", type: "uint256"},
+                {name: "nonce", type: "uint256"},
+                {name: "deadline", type: "uint256"},
+            ],
+        },
+        primaryType: "Permit" as const,
+        domain: {
+            name: domainName,
+            version: "v1",
+            chainId: 31337,
+            verifyingContract: verifyingContract,
+        },
+        message: {
+            spender,
+            tokenId,
+            nonce,
+            deadline,
+        },
+    }
+    let typeData_ = JSON.parse(JSON.stringify(typedData))
+    const digest = TypedDataUtils.encodeDigest(typeData_)
+    const signature = await seller.signMessage(digest)
+    const {r, s, v} = ethers.utils.splitSignature(signature)
+    console.log(`tokenId: ${tokenId}`)
+    console.log(`deadline: ${deadline}`)
+    console.log(`spender: ${spender}`)
+    return [r, s, v]
+}
+
 describe("MarketplaceBase", () => {
     let admin: SignerWithAddress
     let users: SignerWithAddress[]
@@ -273,16 +322,19 @@ describe("MarketplaceBase", () => {
     let paymentToken: ERC20Test
     let nftFactory: NFTFactory
     let collectible1155Base: Collectible1155
+    let collectible721Base: Collectible721
     let cloneNft1155: Collectible1155
+    let cloneNft721: Collectible721
     let marketplace: Marketplace
     let tokenCreator: TokenCreator
     let serviceFee: number
     const balance = 1e5
-    const tokenURI = "https://triton.com/token"
+    const tokenURI1155 = "https://triton.com/token"
+    const tokenURI721 = "https://vaicoin.com/token"
     let buyer: SignerWithAddress
     let creator: SignerWithAddress
 
-    beforeEach(async () => {
+    before(async () => {
         ;[admin, verifier, treasury, ...users] = await ethers.getSigners()
         buyer = users[0]
         creator = users[1]
@@ -305,44 +357,44 @@ describe("MarketplaceBase", () => {
         await governance.deployed()
         await governance.connect(admin).registerToken(paymentToken.address)
 
-        const Collectible1155BaseFactory = await ethers.getContractFactory(
-            "Collectible1155",
-            admin
-        )
-        collectible1155Base = await Collectible1155BaseFactory.deploy()
-        await collectible1155Base.deployed()
+        // const Collectible1155BaseFactory = await ethers.getContractFactory(
+        //     "Collectible1155",
+        //     admin
+        // )
+        // collectible1155Base = await Collectible1155BaseFactory.deploy()
+        // await collectible1155Base.deployed()
 
-        const NFTFactoryFactory = await ethers.getContractFactory(
-            "NFTFactory",
-            admin
-        )
-        nftFactory = (await upgrades.deployProxy(
-            NFTFactoryFactory,
-            [governance.address],
-            {initializer: "initialize"}
-        )) as NFTFactory
-        await nftFactory.deployed()
+        // const NFTFactoryFactory = await ethers.getContractFactory(
+        //     "NFTFactory",
+        //     admin
+        // )
+        // nftFactory = (await upgrades.deployProxy(
+        //     NFTFactoryFactory,
+        //     [governance.address],
+        //     {initializer: "initialize"}
+        // )) as NFTFactory
+        // await nftFactory.deployed()
 
-        await nftFactory
-            .connect(creator)
-            .deployCollectible(collectible1155Base.address, "Triton", "TNT", "")
-        const version = ethers.utils.keccak256(
-            ethers.utils.toUtf8Bytes("NFTFactory_v1")
-        )
-        const salt = ethers.utils.keccak256(
-            ethers.utils.solidityPack(
-                ["bytes32", "string", "string", "string"],
-                [version, "Triton", "TNT", ""]
-            )
-        )
-        const cloneNft1155Address = await nftFactory.deployedContracts(
-            BigNumber.from(salt)
-        )
-        cloneNft1155 = await ethers.getContractAt(
-            "Collectible1155",
-            cloneNft1155Address,
-            admin
-        )
+        // await nftFactory
+        //     .connect(creator)
+        //     .deployCollectible(collectible1155Base.address, "Triton", "TNT", "")
+        // const version = ethers.utils.keccak256(
+        //     ethers.utils.toUtf8Bytes("NFTFactory_v1")
+        // )
+        // const salt = ethers.utils.keccak256(
+        //     ethers.utils.solidityPack(
+        //         ["bytes32", "string", "string", "string"],
+        //         [version, "Triton", "TNT", ""]
+        //     )
+        // )
+        // const cloneNft1155Address = await nftFactory.deployedContracts(
+        //     BigNumber.from(salt)
+        // )
+        // cloneNft1155 = await ethers.getContractAt(
+        //     "Collectible1155",
+        //     cloneNft1155Address,
+        //     admin
+        // )
 
         serviceFee = 250
         const MarketplaceBaseFactory = await ethers.getContractFactory(
@@ -353,7 +405,7 @@ describe("MarketplaceBase", () => {
         await marketplace.deployed()
         await marketplace.initialize(governance.address, serviceFee, 250)
         await governance.connect(admin).updateMarketplace(marketplace.address)
-
+        console.log("marketplace address: ", await governance.marketplace())
         const TokenCreatorFactory = await ethers.getContractFactory(
             "TokenCreator",
             admin
@@ -362,95 +414,257 @@ describe("MarketplaceBase", () => {
         await tokenCreator.deployed()
     })
 
-    it("should let user redeem with valid receipt", async () => {
-        const now = (await ethers.provider.getBlock("latest")).timestamp
+    describe("NFT 1155", async () => {
+        beforeEach(async () => {
+            const Collectible1155BaseFactory = await ethers.getContractFactory(
+                "Collectible1155",
+                admin
+            )
+            collectible1155Base = await Collectible1155BaseFactory.deploy()
+            await collectible1155Base.deployed()
 
-        const nonce = await marketplace.nonces(marketplace.address)
-        const creatorFee = 250
-        const tokenId = await tokenCreator.createTokenId(
-            creatorFee,
-            1155,
-            2e5,
-            0,
-            creator.address
-        )
-        let amount = 12
-        let unitPrice = 500
-        const salePrice = amount * unitPrice
-        // const servicePay = (totalPay * serviceFee) / 1e4
-        const deadline = now + 60 * 1000
-        let receipt: any
-        let signature: string
+            const NFTFactoryFactory = await ethers.getContractFactory(
+                "NFTFactory",
+                admin
+            )
+            nftFactory = (await upgrades.deployProxy(
+                NFTFactoryFactory,
+                [governance.address],
+                {initializer: "initialize"}
+            )) as NFTFactory
+            await nftFactory.deployed()
 
-        //Buyer sign signature to permit marketplace to use totalPay to buy nft
-        const buyerNonce = await paymentToken.nonces(buyer.address)
-        let rBuyer: string
-        let sBuyer: string
-        let vBuyer: number
-        ;[rBuyer, sBuyer, vBuyer] = await erc20PermitSignature(
-            buyer,
-            marketplace.address,
-            BigNumber.from(salePrice),
-            BigNumber.from(buyerNonce),
-            BigNumber.from(deadline),
-            paymentToken.address
-        )
+            await nftFactory
+                .connect(creator)
+                .deployCollectible(
+                    collectible1155Base.address,
+                    "Triton",
+                    "TNT",
+                    ""
+                )
+            const version = ethers.utils.keccak256(
+                ethers.utils.toUtf8Bytes("NFTFactory_v1")
+            )
+            const salt = ethers.utils.keccak256(
+                ethers.utils.solidityPack(
+                    ["bytes32", "string", "string", "string"],
+                    [version, "Triton", "TNT", ""]
+                )
+            )
+            const cloneNft1155Address = await nftFactory.deployedContracts(
+                BigNumber.from(salt)
+            )
+            cloneNft1155 = await ethers.getContractAt(
+                "Collectible1155",
+                cloneNft1155Address,
+                creator
+            )
+        })
+        it("should let user redeem with valid receipt", async () => {
+            const now = (await ethers.provider.getBlock("latest")).timestamp
 
-        //Seller sign signature to permit marketplace to transfer nft when buyer buy nft
-        let rSeller: string
-        let sSeller: string
-        let vSeller: number
-        const sellerNonce = await cloneNft1155.nonces(creator.address)
-        ;[rSeller, sSeller, vSeller] = await erc1155PermitSignature(
-            creator,
-            marketplace.address,
-            BigNumber.from(sellerNonce),
-            BigNumber.from(deadline),
-            cloneNft1155.address,
-            "Collectible1155"
-        )
-        ;[receipt, signature] = await signReceipt(
-            buyer.address,
-            BigNumber.from(vBuyer),
-            BigNumber.from(deadline),
-            rBuyer,
-            sBuyer,
-            creator.address,
-            BigNumber.from(vSeller),
-            BigNumber.from(deadline),
-            rSeller,
-            sSeller,
-            cloneNft1155.address,
-            paymentToken.address,
-            BigNumber.from(amount),
-            BigNumber.from(tokenId),
-            BigNumber.from(unitPrice),
-            tokenURI,
-            nonce,
-            BigNumber.from(deadline),
-            marketplace.address,
-            verifier
-        )
+            const nonce = await marketplace.nonces(marketplace.address)
+            const creatorFee = 250
+            const tokenId = await tokenCreator.createTokenId(
+                creatorFee,
+                1155,
+                2e5,
+                0,
+                creator.address
+            )
+            let amount = 12
+            let unitPrice = 500
+            const salePrice = amount * unitPrice
+            // const servicePay = (totalPay * serviceFee) / 1e4
+            const deadline = now + 60 * 1000
+            let receipt: any
+            let signature: string
 
-        // console.log(`signature: ${signature}`)
-        // console.log(`verifier address: ${verifier.address}`)
-        // const enodeType2 = TypedDataUtils.encodeType(
-        //     typedData.types,
-        //     "BulkReceipt"
-        // )
-        // console.log(enodeType2)
-        // console.log(
-        //     ethers.utils.keccak256(ethers.utils.toUtf8Bytes(enodeType2))
-        // )
-        console.log(creator.address)
-        console.log(marketplace.address)
-        console.log("----------------------------------------------------")
-        // await paymentToken.connect(buyer).approve(marketplace.address, totalPay)
+            //Buyer sign signature to permit marketplace to use totalPay to buy nft
+            const buyerNonce = await paymentToken.nonces(buyer.address)
+            let rBuyer: string
+            let sBuyer: string
+            let vBuyer: number
+            ;[rBuyer, sBuyer, vBuyer] = await erc20PermitSignature(
+                buyer,
+                marketplace.address,
+                BigNumber.from(salePrice),
+                BigNumber.from(buyerNonce),
+                BigNumber.from(deadline),
+                paymentToken.address
+            )
 
-        await expect(
-            marketplace
-                .connect(buyer)
-                .redeem(receipt, signature, {value: salePrice})
-        ).to.emit(marketplace, "ItemRedeemed")
+            //Seller sign signature to permit marketplace to transfer nft when buyer buy nft
+            let rSeller: string
+            let sSeller: string
+            let vSeller: number
+            const sellerNonce = await cloneNft1155.nonces(creator.address)
+            ;[rSeller, sSeller, vSeller] = await erc1155PermitSignature(
+                creator,
+                marketplace.address,
+                BigNumber.from(sellerNonce),
+                BigNumber.from(deadline),
+                cloneNft1155.address,
+                "Collectible1155"
+            )
+            ;[receipt, signature] = await signReceipt(
+                buyer.address,
+                BigNumber.from(vBuyer),
+                BigNumber.from(deadline),
+                rBuyer,
+                sBuyer,
+                creator.address,
+                BigNumber.from(vSeller),
+                BigNumber.from(deadline),
+                rSeller,
+                sSeller,
+                cloneNft1155.address,
+                paymentToken.address,
+                BigNumber.from(amount),
+                BigNumber.from(tokenId),
+                BigNumber.from(unitPrice),
+                tokenURI1155,
+                nonce,
+                BigNumber.from(deadline),
+                marketplace.address,
+                verifier
+            )
+
+            // console.log(`signature: ${signature}`)
+            // console.log(`verifier address: ${verifier.address}`)
+            // const enodeType2 = TypedDataUtils.encodeType(
+            //     typedData.types,
+            //     "BulkReceipt"
+            // )
+            // console.log(enodeType2)
+            // console.log(
+            //     ethers.utils.keccak256(ethers.utils.toUtf8Bytes(enodeType2))
+            // )
+            console.log(creator.address)
+            console.log(marketplace.address)
+            console.log("----------------------------------------------------")
+            // await paymentToken.connect(buyer).approve(marketplace.address, totalPay)
+
+            await expect(
+                marketplace
+                    .connect(buyer)
+                    .redeem(receipt, signature, {value: salePrice})
+            ).to.emit(marketplace, "ItemRedeemed")
+        })
+    })
+
+    describe("NFT 721", async () => {
+        beforeEach(async () => {
+            const Collectible721Factory = await ethers.getContractFactory(
+                "Collectible721",
+                admin
+            )
+            collectible721Base = await Collectible721Factory.deploy()
+            await collectible721Base.deployed()
+
+            creator = users[2]
+            buyer = users[3]
+            await nftFactory
+                .connect(creator)
+                .deployCollectible(
+                    collectible721Base.address,
+                    "VaiCoin",
+                    "VC",
+                    ""
+                )
+
+            const version = ethers.utils.keccak256(
+                ethers.utils.toUtf8Bytes("NFTFactory_v1")
+            )
+            const salt = ethers.utils.solidityKeccak256(
+                ["bytes32", "string", "string", "string"],
+                [version, "VaiCoin", "VC", ""]
+            )
+
+            const cloneNft721Address = await nftFactory.deployedContracts(salt)
+            cloneNft721 = await ethers.getContractAt(
+                "Collectible721",
+                cloneNft721Address,
+                creator
+            )
+        })
+
+        it("should let user redeem with valid receipt", async () => {
+            const now = (await ethers.provider.getBlock("latest")).timestamp
+            const nonce = await marketplace.nonces(marketplace.address)
+            const creatorFee = 300
+            const tokenId = await tokenCreator.createTokenId(
+                creatorFee,
+                721,
+                1,
+                1,
+                creator.address
+            )
+
+            const salePrice = 500
+            const deadline = now + 60 * 1000
+            let receipt: any
+            let signature: string
+
+            const buyerNonce = await paymentToken.nonces(buyer.address)
+            let rBuyer: string
+            let sBuyer: string
+            let vBuyer: number
+            ;[rBuyer, sBuyer, vBuyer] = await erc20PermitSignature(
+                buyer,
+                marketplace.address,
+                BigNumber.from(salePrice),
+                BigNumber.from(buyerNonce),
+                BigNumber.from(deadline),
+                paymentToken.address
+            )
+
+            let rSeller: string
+            let sSeller: string
+            let vSeller: number
+            const sellerNonce = await cloneNft1155.nonces(creator.address)
+            ;[rSeller, sSeller, vSeller] = await erc721PermitSignature(
+                creator,
+                marketplace.address,
+                tokenId,
+                sellerNonce,
+                BigNumber.from(deadline),
+                cloneNft721.address,
+                "Collectible721"
+            )
+            ;[receipt, signature] = await signReceipt(
+                buyer.address,
+                BigNumber.from(vBuyer),
+                BigNumber.from(deadline),
+                rBuyer,
+                sBuyer,
+                creator.address,
+                BigNumber.from(vSeller),
+                BigNumber.from(deadline),
+                rSeller,
+                sSeller,
+                cloneNft721.address,
+                paymentToken.address,
+                BigNumber.from(1),
+                BigNumber.from(tokenId),
+                BigNumber.from(salePrice),
+                tokenURI721,
+                nonce,
+                BigNumber.from(deadline),
+                marketplace.address,
+                verifier
+            )
+
+            console.log(`buyer address: ${buyer.address}`)
+            console.log(`marketplace address: ${marketplace.address}`)
+            console.log(
+                "----------------------------------------------------------------"
+            )
+            await expect(
+                marketplace
+                    .connect(buyer)
+                    .redeem(receipt, signature, {value: salePrice})
+            ).to.emit(marketplace, "ItemRedeemed")
+        })
     })
 })

@@ -6,7 +6,7 @@ import "./base/token/ERC721/extensions/ERC721Permit.sol";
 import "./base/token/ERC721/extensions/ERC721Royalty.sol";
 import "./base/token/ERC721/extensions/ERC721BurnableLite.sol";
 import "./base/token/ERC721/extensions/ERC721URIStorageLite.sol";
-
+import "hardhat/console.sol";
 import "./interfaces/INFT.sol";
 
 contract Collectible721 is
@@ -60,10 +60,11 @@ contract Collectible721 is
         string memory tokenURI_
     ) external override {
         address sender = _msgSender();
+
         if (sender != admin.marketplace()) {
             _checkRole(MINTER_ROLE, sender);
         }
-        if (amount_ != 0) {
+        if (amount_ != 1) {
             revert ERC721__InvalidInput();
         }
         _safeMint(to_, tokenId_);

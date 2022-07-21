@@ -13,11 +13,13 @@ import "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/draft-IERC20P
 
 import "./base/NFTBase.sol";
 import "./base/MarketplaceIntegratable.sol";
-
+import "hardhat/console.sol";
 import "./interfaces/INFT.sol";
 import "./interfaces/ISemiNFT.sol";
 import "./interfaces/IMarketplace.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
+import "./base/token/ERC1155/IERC1155Lite.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "./base/token/ERC721/extensions/IERC721Permit.sol";
 import "./base/token/ERC1155/extensions/IERC1155Permit.sol";
 
@@ -350,13 +352,12 @@ contract Marketplace is
                 salePrice_ - royaltyAmount - serviceAmount
             );
         }
-
         return royaltyAmount != 0;
     }
 
-    function _feeDenominator() internal pure virtual returns (uint16) {
-        return 1e4;
-    }
+    // function _feeDenominator() internal pure virtual returns (uint16) {
+    //     return 1e4;
+    // }
 
     function _transact(
         address paymentToken_,

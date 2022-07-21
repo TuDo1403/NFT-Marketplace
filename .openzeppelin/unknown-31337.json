@@ -156,8 +156,18 @@
       "kind": "transparent"
     },
     {
+      "address": "0x5f3f1dBD7B74C6B46e8c44f98792A1dAf8d69154",
+      "txHash": "0x643cb3e6c277d441d9eeca9fa320e279f4faba1eee3178429ce23b33b1740abf",
+      "kind": "transparent"
+    },
+    {
       "address": "0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44",
       "txHash": "0xf19c4250928e16d1a8ed1a402760e0577ceefe9d8bab0a1480aca1f2e88aa285",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x09635F643e140090A9A8Dcd712eD6285858ceBef",
+      "txHash": "0x930eaeb40c57e11c17c91ff5ce7bc3e309a80637db2ab5cf276181e5c9f5b0c9",
       "kind": "transparent"
     }
   ],
