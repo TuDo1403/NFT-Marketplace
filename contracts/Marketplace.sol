@@ -13,11 +13,12 @@ import "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/draft-IERC20P
 
 import "./base/NFTBase.sol";
 import "./base/MarketplaceIntegratable.sol";
-
+import "hardhat/console.sol";
 import "./interfaces/INFT.sol";
 import "./interfaces/ISemiNFT.sol";
 import "./interfaces/IMarketplace.sol";
 import "./base/token/ERC1155/IERC1155Lite.sol";
+import "./base/token/ERC721/IERC721Lite.sol";
 import "./base/token/ERC721/extensions/IERC721Permit.sol";
 import "./base/token/ERC1155/extensions/IERC1155Permit.sol";
 
@@ -263,7 +264,7 @@ contract Marketplace is
                 seller_.s
             );
 
-            IERC721(nftContract_).safeTransferFrom(
+            IERC721Lite(nftContract_).safeTransferFrom(
                 seller_.addr,
                 buyerAddr_,
                 tokenId_,
@@ -338,15 +339,17 @@ contract Marketplace is
         _transact(paymentToken_, buyerAddr_, receiver, royaltyAmount);
         //}
         //{
-        uint256 serviceAmount = (serviceFraction_ * salePrice_) /
-            _feeDominator();
-        _transact(paymentToken_, buyerAddr_, treasury_, serviceAmount);
-        _transact(
-            paymentToken_,
-            buyerAddr_,
-            sellerAddr_,
-            salePrice_ - royaltyAmount - serviceAmount
-        );
+        unchecked {
+            uint256 serviceAmount = serviceFraction_ *
+                (salePrice_ / _feeDominator());
+            _transact(paymentToken_, buyerAddr_, treasury_, serviceAmount);
+            _transact(
+                paymentToken_,
+                buyerAddr_,
+                sellerAddr_,
+                salePrice_ - royaltyAmount - serviceAmount
+            );
+        }
         //}
         //}
         return royaltyAmount != 0;

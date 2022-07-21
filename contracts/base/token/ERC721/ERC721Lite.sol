@@ -67,7 +67,7 @@ abstract contract ERC721Lite is IERC721Lite, ERC721("", "") {
         virtual
         override(ERC721, IERC721)
     {
-        address owner = ERC721.ownerOf(tokenId);
+        address owner = ownerOf(tokenId);
         // require(to != owner, "ERC721: approval to current owner");
         _nonSelfApproving(to, owner);
 
@@ -191,7 +191,7 @@ abstract contract ERC721Lite is IERC721Lite, ERC721("", "") {
         //     ERC721.ownerOf(tokenId) == from,
         //     "ERC721: transfer from incorrect owner"
         // );
-        if (ERC721.ownerOf(tokenId) != from) {
+        if (ownerOf(tokenId) != from) {
             revert ERC721__Unauthorized();
         }
         _nonZeroAddress(to);
@@ -213,7 +213,7 @@ abstract contract ERC721Lite is IERC721Lite, ERC721("", "") {
 
     function _approve(address to, uint256 tokenId) internal virtual override {
         _tokenApprovals[tokenId] = to;
-        emit Approval(ERC721Lite.ownerOf(tokenId), to, tokenId);
+        emit Approval(ownerOf(tokenId), to, tokenId);
     }
 
     function _setApprovalForAll(
@@ -266,13 +266,7 @@ abstract contract ERC721Lite is IERC721Lite, ERC721("", "") {
         }
     }
 
-    function _exists(uint256 tokenId)
-        internal
-        view
-        virtual
-        override
-        returns (bool)
-    {
+    function _exists(uint256 tokenId) internal view override returns (bool) {
         return _owners[tokenId] != address(0);
     }
 
@@ -284,7 +278,7 @@ abstract contract ERC721Lite is IERC721Lite, ERC721("", "") {
         //address owner = ERC721.ownerOf(tokenId);
         bool isApprovedOrOwner = (_isApprovedOrOwner(
             spender,
-            ERC721.ownerOf(tokenId)
+            ownerOf(tokenId)
         ) || getApproved(tokenId) == spender);
         if (!isApprovedOrOwner) {
             revert ERC721__Unauthorized();

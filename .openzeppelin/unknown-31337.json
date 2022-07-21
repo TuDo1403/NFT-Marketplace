@@ -1,8 +1,8 @@
 {
   "manifestVersion": "3.2",
   "admin": {
-    "address": "0x4ed7c70F96B99c776995fB64377f0d4aB3B0e1C1",
-    "txHash": "0xba775195249382f4402764ebc1ee4bb4d3365b36f79b1004ea9bf717852dc801"
+    "address": "0x7a2088a1bFc9d81c55368AE168C2C02570cB814F",
+    "txHash": "0xad6539fe1ae203a29cd4deea759de17f2ee474ad2cdcaa707d00d9fb8c3881e6"
   },
   "proxies": [
     {
@@ -156,15 +156,25 @@
       "kind": "transparent"
     },
     {
+      "address": "0x5f3f1dBD7B74C6B46e8c44f98792A1dAf8d69154",
+      "txHash": "0x643cb3e6c277d441d9eeca9fa320e279f4faba1eee3178429ce23b33b1740abf",
+      "kind": "transparent"
+    },
+    {
       "address": "0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44",
       "txHash": "0x37405fb1aebe0e5e9d2325ffd3231eba03425a3793359601dbc28edf0e370f3d",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x09635F643e140090A9A8Dcd712eD6285858ceBef",
+      "txHash": "0x930eaeb40c57e11c17c91ff5ce7bc3e309a80637db2ab5cf276181e5c9f5b0c9",
       "kind": "transparent"
     }
   ],
   "impls": {
     "de2db5f35ed143e8a2a93ef68496e7fba96ae3fe49e159ef64bef74c6ec5595e": {
-      "address": "0x59b670e9fA9D0A427751Af201D676719a970857b",
-      "txHash": "0x17d6742b711e0c514294a19265036ce980a8e9282a3df3a1203ecd2afa7c4293",
+      "address": "0x4A679253410272dd5232B3Ff7cF5dbB88f295319",
+      "txHash": "0x7214e14bc8c78ca0924c000e64de7bd9f583aa7d8c0aa41c8f079ecfb96b502a",
       "layout": {
         "storage": [
           {
@@ -188,7 +198,7 @@
             "label": "admin",
             "offset": 2,
             "slot": "0",
-            "type": "t_contract(IGovernance)12695",
+            "type": "t_contract(IGovernance)12717",
             "contract": "MarketplaceIntegratable",
             "src": "contracts/base/MarketplaceIntegratable.sol:12"
           },
@@ -222,7 +232,7 @@
             "label": "bool",
             "numberOfBytes": "1"
           },
-          "t_contract(IGovernance)12695": {
+          "t_contract(IGovernance)12717": {
             "label": "contract IGovernance",
             "numberOfBytes": "20"
           },

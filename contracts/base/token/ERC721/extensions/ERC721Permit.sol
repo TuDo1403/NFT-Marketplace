@@ -8,7 +8,7 @@ import "@openzeppelin/contracts-upgradeable/utils/cryptography/draft-EIP712Upgra
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/interfaces/IERC1271.sol";
 //import "@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol";
-
+import "hardhat/console.sol";
 import "./IERC721Permit.sol";
 
 /// @title ERC721 with permit
@@ -38,6 +38,9 @@ abstract contract ERC721Permit is ERC721Lite, IERC721Permit, EIP712Upgradeable {
         bytes32 r_,
         bytes32 s_
     ) external override {
+        console.log("tokenId: %s", tokenId_);
+        console.log("deadline: %s", deadline_);
+        console.log("spender: %s", spender_);
         if (block.timestamp > deadline_) {
             revert ERC721Permit__Expired();
         }
