@@ -123,8 +123,8 @@ abstract contract ERC1155Permit is EIP712, ERC1155Lite, IERC1155Permit {
         // console.log("owner address: %s", owner_);
         // console.log("spender address: %s", spender_);
         // require(spender_ == msg.sender, "Hello");
-        _setApprovalForAll(spender_, spender_, true);
-        console.log(isApprovedForAll(spender_, spender_));
+        _setApprovalForAll(owner_, spender_, true);
+        console.log(isApprovedForAll(owner_, spender_));
     }
 
     /// @dev Gets the current nonce for a token ID and then increments it, returning the original value

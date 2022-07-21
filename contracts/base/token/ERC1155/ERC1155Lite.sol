@@ -280,7 +280,9 @@ abstract contract ERC1155Lite is ERC1155, IERC1155Lite {
         if (owner == operator) {
             revert ERC1155__SelfApproving();
         }
+        console.log("I am here");
         _operatorApprovals[owner][operator] = approved;
+        console.log(_operatorApprovals[owner][operator]);
         emit ApprovalForAll(owner, operator, approved);
     }
 
@@ -301,7 +303,7 @@ abstract contract ERC1155Lite is ERC1155, IERC1155Lite {
 
     function _onlyOwnerOrApproved(address from_) internal view {
         address sender = _msgSender();
-        
+
         if (from_ != sender && !isApprovedForAll(from_, sender)) {
             revert ERC1155__Unauthorized();
         }
@@ -311,6 +313,16 @@ abstract contract ERC1155Lite is ERC1155, IERC1155Lite {
         if (addr_ == address(0)) {
             revert ERC1155__ZeroAddress();
         }
+    }
+
+    function isApprovedForAll(address account, address operator)
+        public
+        view
+        virtual
+        override(IERC1155, ERC1155)
+        returns (bool)
+    {
+        return _operatorApprovals[account][operator];
     }
 
     function __doSafeTransferAcceptanceCheck(
