@@ -38,7 +38,11 @@ abstract contract ERC1155SupplyLite is ERC1155Lite {
         super._beforeTokenTransfer(operator, from, to, ids, amounts, data);
         //uint256 length = ids.length;
         if (from == address(0)) {
-            uint256 MAX_SUPPLY = 2**TokenIdGenerator.SUPPLY_BIT - 1;
+            uint256 MAX_SUPPLY;
+            unchecked {
+                MAX_SUPPLY = 2**TokenIdGenerator.SUPPLY_BIT - 1;
+            }
+            
             for (uint256 i; i < ids.length; ) {
                 uint256 tokenId = ids[i];
                 uint256 amount = amounts[i];

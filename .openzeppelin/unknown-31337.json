@@ -2,7 +2,7 @@
   "manifestVersion": "3.2",
   "admin": {
     "address": "0x4ed7c70F96B99c776995fB64377f0d4aB3B0e1C1",
-    "txHash": "0xba775195249382f4402764ebc1ee4bb4d3365b36f79b1004ea9bf717852dc801"
+    "txHash": "0x824b590758caf656d31e59fb7eb9ea25fa0905f668d56751554e8bd4a4cef31f"
   },
   "proxies": [
     {
@@ -157,14 +157,14 @@
     },
     {
       "address": "0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44",
-      "txHash": "0x37405fb1aebe0e5e9d2325ffd3231eba03425a3793359601dbc28edf0e370f3d",
+      "txHash": "0xf19c4250928e16d1a8ed1a402760e0577ceefe9d8bab0a1480aca1f2e88aa285",
       "kind": "transparent"
     }
   ],
   "impls": {
-    "de2db5f35ed143e8a2a93ef68496e7fba96ae3fe49e159ef64bef74c6ec5595e": {
+    "f9499f80b19610e857cdd0fc812de5e5e39fbf7558a0300fc801742895ddbc6d": {
       "address": "0x59b670e9fA9D0A427751Af201D676719a970857b",
-      "txHash": "0x17d6742b711e0c514294a19265036ce980a8e9282a3df3a1203ecd2afa7c4293",
+      "txHash": "0x041beab4cee31884be655767f22306fb20ccc84d40c9ae25a7c7f9632216230a",
       "layout": {
         "storage": [
           {
@@ -185,14 +185,6 @@
             "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
           },
           {
-            "label": "admin",
-            "offset": 2,
-            "slot": "0",
-            "type": "t_contract(IGovernance)12695",
-            "contract": "MarketplaceIntegratable",
-            "src": "contracts/base/MarketplaceIntegratable.sol:12"
-          },
-          {
             "label": "__gap",
             "offset": 0,
             "slot": "1",
@@ -201,9 +193,17 @@
             "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
           },
           {
-            "label": "deployedContracts",
+            "label": "admin",
             "offset": 0,
             "slot": "51",
+            "type": "t_contract(IGovernance)12728",
+            "contract": "MarketplaceIntegratable",
+            "src": "contracts/base/MarketplaceIntegratable.sol:12"
+          },
+          {
+            "label": "deployedContracts",
+            "offset": 0,
+            "slot": "52",
             "type": "t_mapping(t_uint256,t_address)",
             "contract": "NFTFactory",
             "src": "contracts/NFTFactory.sol:24"
@@ -222,7 +222,7 @@
             "label": "bool",
             "numberOfBytes": "1"
           },
-          "t_contract(IGovernance)12695": {
+          "t_contract(IGovernance)12728": {
             "label": "contract IGovernance",
             "numberOfBytes": "20"
           },

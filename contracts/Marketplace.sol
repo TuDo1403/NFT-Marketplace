@@ -17,7 +17,7 @@ import "./base/MarketplaceIntegratable.sol";
 import "./interfaces/INFT.sol";
 import "./interfaces/ISemiNFT.sol";
 import "./interfaces/IMarketplace.sol";
-import "./base/token/ERC1155/IERC1155Lite.sol";
+import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import "./base/token/ERC721/extensions/IERC721Permit.sol";
 import "./base/token/ERC1155/extensions/IERC1155Permit.sol";
 
@@ -86,13 +86,13 @@ contract Marketplace is
         uint256 tokenId = item.tokenId;
         address buyerAddr = header.buyer.addr;
         address nftContract = header.nftContract;
-        address thisAddr = address(this);
+        //address paymentToken = header.paymentToken;
         {
             ReceiptUtil.User memory buyer = header.buyer;
             if (buyer.v != 0) {
                 IERC20PermitUpgradeable(header.paymentToken).permit(
                     buyerAddr,
-                    thisAddr,
+                    address(this),
                     salePrice,
                     buyer.deadline,
                     buyer.v,
@@ -122,8 +122,9 @@ contract Marketplace is
         }
 
         _safeTransferFrom(
-            thisAddr,
+            address(this),
             buyerAddr,
+            sellerAddr,
             nftContract,
             tokenId,
             item.amount,
@@ -231,6 +232,7 @@ contract Marketplace is
     function _safeTransferFrom(
         address spender_,
         address buyerAddr_,
+        address sellerAddr_,
         address nftContract_,
         uint256 tokenId_,
         uint256 amount_,
@@ -239,15 +241,15 @@ contract Marketplace is
         if (INFTBase(nftContract_).TYPE() != 721) {
             IERC1155Permit(nftContract_).permit(
                 seller_.deadline,
-                seller_.addr,
+                sellerAddr_,
                 spender_,
                 seller_.v,
                 seller_.r,
                 seller_.s
             );
 
-            IERC1155Lite(nftContract_).safeTransferFrom(
-                seller_.addr,
+            IERC1155(nftContract_).safeTransferFrom(
+                sellerAddr_,
                 buyerAddr_,
                 tokenId_,
                 amount_,
@@ -264,7 +266,7 @@ contract Marketplace is
             );
 
             IERC721(nftContract_).safeTransferFrom(
-                seller_.addr,
+                sellerAddr_,
                 buyerAddr_,
                 tokenId_,
                 ""
@@ -330,29 +332,29 @@ contract Marketplace is
         uint256 serviceFraction_
     ) internal virtual returns (bool) {
         uint256 royaltyAmount;
-        //{
-        //{
-        address receiver;
-        (receiver, royaltyAmount) = IERC2981Upgradeable(nftContract_)
-            .royaltyInfo(tokenId_, salePrice_);
-        _transact(paymentToken_, buyerAddr_, receiver, royaltyAmount);
-        //}
-        //{
-        uint256 serviceAmount = (serviceFraction_ * salePrice_) /
-            _feeDominator();
-        _transact(paymentToken_, buyerAddr_, treasury_, serviceAmount);
-        _transact(
-            paymentToken_,
-            buyerAddr_,
-            sellerAddr_,
-            salePrice_ - royaltyAmount - serviceAmount
-        );
-        //}
-        //}
+        {
+            address receiver;
+            (receiver, royaltyAmount) = IERC2981Upgradeable(nftContract_)
+                .royaltyInfo(tokenId_, salePrice_);
+            _transact(paymentToken_, buyerAddr_, receiver, royaltyAmount);
+        }
+
+        unchecked {
+            uint256 serviceAmount = serviceFraction_ *
+                (salePrice_ >> 8);
+            _transact(paymentToken_, buyerAddr_, treasury_, serviceAmount);
+            _transact(
+                paymentToken_,
+                buyerAddr_,
+                sellerAddr_,
+                salePrice_ - royaltyAmount - serviceAmount
+            );
+        }
+
         return royaltyAmount != 0;
     }
 
-    function _feeDominator() internal pure virtual returns (uint16) {
+    function _feeDenominator() internal pure virtual returns (uint16) {
         return 1e4;
     }
 
@@ -388,6 +390,6 @@ contract Marketplace is
 
         __Pausable_init();
         __ReentrancyGuard_init();
-        __EIP712_init("Marketplace", "v1");
+        __EIP712_init(type(Marketplace).name, "v1");
     }
 }

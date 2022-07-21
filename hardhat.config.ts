@@ -46,7 +46,7 @@ const config: HardhatUserConfig = {
     gasReporter: {
         enabled: process.env.REPORT_GAS ? true : false,
         currency: "USD",
-        token: "BNB",
+        token: "ETH",
         noColors: true,
         // gasPrice: 21,
         coinmarketcap: process.env.CMC_API_KEY,
@@ -54,7 +54,7 @@ const config: HardhatUserConfig = {
         outputFile: `./logs/gas-cost.log`,
         // gasPriceApi: `https://api.etherscan.io/api?module=proxy&action=eth_gasPrice`,
         // gasPriceApi: `https://api-moonbeam.moonscan.io/api?module=proxy&action=eth_gasPrice&apikey=${process.env.GLMR_API_KEY}`,
-        gasPriceApi: `https://api.bscscan.com/api?module=proxy&action=eth_gasPrice&apikey=${process.env.BNB_API_KEY}`,
+        // gasPriceApi: `https://api.bscscan.com/api?module=proxy&action=eth_gasPrice&apikey=${process.env.BNB_API_KEY}`,
     },
     contractSizer: {
         alphaSort: true,

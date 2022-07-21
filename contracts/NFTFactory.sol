@@ -23,9 +23,9 @@ contract NFTFactory is
 
     mapping(uint256 => address) public deployedContracts;
 
-    constructor(address admin_) initializer {
-        _initialize(admin_);
-    }
+    // constructor(address admin_) initializer {
+    //     _initialize(admin_);
+    // }
 
     function initialize(address admin_) external initializer {
         _initialize(admin_);
