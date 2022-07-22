@@ -25,13 +25,15 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 
 const config: HardhatUserConfig = {
     solidity: {
-        version: "0.8.15",
+        version: "0.8.13",
         settings: {
             optimizer: {
                 enabled: true,
                 runs: 200,
             },
+            evmVersion: "berlin"
         },
+        
     },
 
     networks: {
@@ -51,7 +53,7 @@ const config: HardhatUserConfig = {
         // gasPrice: 21,
         coinmarketcap: process.env.CMC_API_KEY,
         //outputFile: `./logs/gas-cost-${Date.now()}.log`,
-        outputFile: `./logs/gas-cost-${Date.now()}.log`,
+        //outputFile: `./logs/gas-cost-${Date.now()}.log`,
         gasPriceApi: `https://api.etherscan.io/api?module=proxy&action=eth_gasPrice`,
         // gasPriceApi: `https://api-moonbeam.moonscan.io/api?module=proxy&action=eth_gasPrice&apikey=${process.env.GLMR_API_KEY}`,
         // gasPriceApi: `https://api.bscscan.com/api?module=proxy&action=eth_gasPrice&apikey=${process.env.BNB_API_KEY}`,

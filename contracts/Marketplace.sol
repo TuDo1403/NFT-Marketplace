@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Unlicensed
-pragma solidity 0.8.15;
+pragma solidity ^0.8.13;
 
 import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/interfaces/IERC2981Upgradeable.sol";
@@ -110,8 +110,7 @@ contract Marketplace is
                 nftContract,
                 header.paymentToken,
                 tokenId,
-                salePrice,
-                serviceFee
+                salePrice
             );
             if (!tokenExists) {
                 INFT(nftContract).mint(
@@ -145,7 +144,7 @@ contract Marketplace is
     function redeemBulk(
         ReceiptUtil.BulkReceipt calldata receipt_,
         bytes calldata signature_
-    ) external payable whenNotPaused nonReentrant {
+    ) external payable override whenNotPaused nonReentrant {
         uint256 salePrice;
         ReceiptUtil.Bulk memory bulk = receipt_.bulk;
         for (uint256 i; i < bulk.amounts.length; ) {
@@ -288,7 +287,6 @@ contract Marketplace is
         uint256 counter;
         ReceiptUtil.Bulk memory bulkToMint;
         {
-            uint256 _serviceFee = serviceFee;
             for (uint256 i; i < bulk_.amounts.length; ) {
                 uint256 tokenId = bulk_.tokenIds[i];
                 bool _tokenExists = _pay(
@@ -298,8 +296,7 @@ contract Marketplace is
                     nftContract_,
                     paymentToken_,
                     tokenId,
-                    salePrice_,
-                    _serviceFee
+                    salePrice_
                 );
                 unchecked {
                     if (!_tokenExists) {
@@ -330,8 +327,7 @@ contract Marketplace is
         address nftContract_,
         address paymentToken_,
         uint256 tokenId_,
-        uint256 salePrice_,
-        uint256 serviceFraction_
+        uint256 salePrice_
     ) internal virtual returns (bool) {
         uint256 royaltyAmount;
         {
@@ -341,9 +337,17 @@ contract Marketplace is
             _transact(paymentToken_, buyerAddr_, receiver, royaltyAmount);
         }
 
+        // uint256 serviceAmount;
+        // assembly {
+        //     //serviceAmount := mul(serviceFraction_, div(salePrice_, 1000))
+        //     serviceAmount := shr(salePrice_, 3)
+        // }
+
         unchecked {
-            uint256 serviceAmount = serviceFraction_ *
-                (salePrice_ >> 8);
+            uint256 serviceAmount = (serviceFee *
+                salePrice_) / 1e4;
+
+            //uint256 serviceAmount = salePrice_ >> 3;
             _transact(paymentToken_, buyerAddr_, treasury_, serviceAmount);
             _transact(
                 paymentToken_,
@@ -355,9 +359,9 @@ contract Marketplace is
         return royaltyAmount != 0;
     }
 
-    // function _feeDenominator() internal pure virtual returns (uint16) {
-    //     return 1e4;
-    // }
+    function _feeDenominator() internal pure virtual returns (uint16) {
+        return 1e4;
+    }
 
     function _transact(
         address paymentToken_,

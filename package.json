@@ -63,5 +63,5 @@
   "repository": "git@gitlab.com:triton2/blockchain/triton-smart-contract.git",
   "author": "Tu Do <tudm@inspirelab.io>",
   "license": "MIT",
-  "packageManager": "yarn@3.2.1"
+  "packageManager": "yarn@3.2.2"
 }
