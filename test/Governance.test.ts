@@ -1,7 +1,7 @@
 import {SignerWithAddress} from "@nomiclabs/hardhat-ethers/signers"
 import {expect} from "chai"
 import {ethers} from "hardhat"
-import {Governance} from "../typechain"
+import {Governance} from "../typechain-types"
 
 describe("Governance", () => {
     let manager: SignerWithAddress

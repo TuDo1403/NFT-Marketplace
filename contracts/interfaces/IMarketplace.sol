@@ -28,6 +28,9 @@ interface IMarketplace is IPausable {
         uint256 total
     );
 
+    function initialize(address admin_, uint256 serviceFeeRightShiftBit_)
+        external;
+
     function redeem(
         ReceiptUtil.Receipt calldata receipt_,
         bytes calldata signature_

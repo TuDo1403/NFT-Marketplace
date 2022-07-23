@@ -1,8 +1,8 @@
-import { expect } from "chai"
-import { ethers } from "hardhat"
-import { Governance } from "../typechain"
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers"
-import { BigNumber } from "ethers"
+import {expect} from "chai"
+import {ethers} from "hardhat"
+import {Governance} from "../typechain-types"
+import {SignerWithAddress} from "@nomiclabs/hardhat-ethers/signers"
+import {BigNumber} from "ethers"
 
 const GLMR = "0x017bE64db48dfc962221c984b9A6937A5d09E81A"
 
@@ -14,10 +14,7 @@ describe("Governance", () => {
     let users: SignerWithAddress[]
     let governance: Governance
     beforeEach(async () => {
-        ;[admin, treasury, verifier, ...users] =
-            await ethers.getSigners()
-        
-        
+        ;[admin, treasury, verifier, ...users] = await ethers.getSigners()
     })
 
     describe("constructor", () => {
@@ -56,8 +53,7 @@ describe("Governance", () => {
             await expect(
                 GovernanceFactory.deploy(
                     verifier.address,
-                    ethers.constants.AddressZero,
-
+                    ethers.constants.AddressZero
                 )
             ).to.be.revertedWith("Governance__InvalidAddress")
         })

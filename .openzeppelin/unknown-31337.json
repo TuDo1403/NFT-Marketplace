@@ -2,7 +2,7 @@
   "manifestVersion": "3.2",
   "admin": {
     "address": "0x7a2088a1bFc9d81c55368AE168C2C02570cB814F",
-    "txHash": "0x467b48a15e39614687e82ea3df7a758eea139fb00f2563a7bc88ea94dafedbab"
+    "txHash": "0xc88a9bd47b9770437eefefc1cd35a965e634a5021ab8e5db68add7b04602a312"
   },
   "proxies": [
     {
@@ -18,11 +18,6 @@
     {
       "address": "0x68B1D87F95878fE05B998F19b66F4baba5De1aed",
       "txHash": "0xd2b9d1a275e6a25d9ebae50e7af4d8478d1df8e132699affbc48b1c6b2ed047c",
-      "kind": "transparent"
-    },
-    {
-      "address": "0x59b670e9fA9D0A427751Af201D676719a970857b",
-      "txHash": "0x7ba9bd477663c60398d182a25a63222d03df521cbe999d49cd1b9f145730df67",
       "kind": "transparent"
     },
     {
@@ -166,15 +161,25 @@
       "kind": "transparent"
     },
     {
+      "address": "0x3Aa5ebB10DC797CAC828524e59A333d0A371443c",
+      "txHash": "0x917dc6c11eba83501733e96895593721bd1a2566a1f6e095642f0e2d821fd4a5",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x59b670e9fA9D0A427751Af201D676719a970857b",
+      "txHash": "0xbea38db6efed1218ac812e85848e51faefc2b0215c50fba47388508e1107ca57",
+      "kind": "transparent"
+    },
+    {
       "address": "0x09635F643e140090A9A8Dcd712eD6285858ceBef",
-      "txHash": "0xfe136c373f81a0475c81bb942759e54bb7d376fd68c4a9ab12ab8796c09fcbd3",
+      "txHash": "0xbc22a36019adba5eb19881de0b22b5eb9f804618fd2939457b9d18ea59d4f5d9",
       "kind": "transparent"
     }
   ],
   "impls": {
     "f9499f80b19610e857cdd0fc812de5e5e39fbf7558a0300fc801742895ddbc6d": {
       "address": "0x4A679253410272dd5232B3Ff7cF5dbB88f295319",
-      "txHash": "0x9301830f9165df9a634ce5420efeffb0989d771e51e34af529a2d8b5670a7889",
+      "txHash": "0xb09c9ea3b22818ca7d53ab666d0fc25e6a638c35a56ca31e4a1c2e15edb69722",
       "layout": {
         "storage": [
           {
@@ -206,7 +211,7 @@
             "label": "admin",
             "offset": 0,
             "slot": "51",
-            "type": "t_contract(IGovernance)12747",
+            "type": "t_contract(IGovernance)12742",
             "contract": "MarketplaceIntegratable",
             "src": "contracts/base/MarketplaceIntegratable.sol:12"
           },
@@ -232,13 +237,534 @@
             "label": "bool",
             "numberOfBytes": "1"
           },
-          "t_contract(IGovernance)12747": {
+          "t_contract(IGovernance)12742": {
             "label": "contract IGovernance",
             "numberOfBytes": "20"
           },
           "t_mapping(t_uint256,t_address)": {
             "label": "mapping(uint256 => address)",
             "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "09868212d9fd269249afbca927c6c4e85633bb1ca546eedc7649ba975ec77ded": {
+      "address": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+      "txHash": "0x501359a274fca412542c7bfca506807dfcdd1a4a26cef1be25c9edcf73dbd81e",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "_HASHED_NAME",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_bytes32",
+            "contract": "EIP712Upgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/cryptography/draft-EIP712Upgradeable.sol:32"
+          },
+          {
+            "label": "_HASHED_VERSION",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_bytes32",
+            "contract": "EIP712Upgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/cryptography/draft-EIP712Upgradeable.sol:33"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "EIP712Upgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/cryptography/draft-EIP712Upgradeable.sol:120"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "53",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_paused",
+            "offset": 0,
+            "slot": "103",
+            "type": "t_bool",
+            "contract": "PausableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol:29"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "104",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "PausableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol:116"
+          },
+          {
+            "label": "admin",
+            "offset": 0,
+            "slot": "153",
+            "type": "t_contract(IGovernance)12734",
+            "contract": "MarketplaceIntegratable",
+            "src": "contracts/base/MarketplaceIntegratable.sol:12"
+          },
+          {
+            "label": "_status",
+            "offset": 0,
+            "slot": "154",
+            "type": "t_uint256",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:38"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "155",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:74"
+          },
+          {
+            "label": "serviceFee",
+            "offset": 0,
+            "slot": "204",
+            "type": "t_uint8",
+            "contract": "Marketplace",
+            "src": "contracts/Marketplace.sol:44"
+          },
+          {
+            "label": "creatorFeeUB",
+            "offset": 1,
+            "slot": "204",
+            "type": "t_uint8",
+            "contract": "Marketplace",
+            "src": "contracts/Marketplace.sol:45"
+          },
+          {
+            "label": "nonces",
+            "offset": 0,
+            "slot": "205",
+            "type": "t_mapping(t_address,t_struct(Counter)1121_storage)",
+            "contract": "Marketplace",
+            "src": "contracts/Marketplace.sol:47"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_contract(IGovernance)12734": {
+            "label": "contract IGovernance",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_address,t_struct(Counter)1121_storage)": {
+            "label": "mapping(address => struct CountersUpgradeable.Counter)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Counter)1121_storage": {
+            "label": "struct CountersUpgradeable.Counter",
+            "members": [
+              {
+                "label": "_value",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "5c53239ecb5df7f49e2c9254007cd735ea4c036b338f35561468b4ddb5cf48f0": {
+      "address": "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853",
+      "txHash": "0x3f429965aea86ebcd974410330092e05c036fd1fce4cbfbdccd72014de9fbda6",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "_HASHED_NAME",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_bytes32",
+            "contract": "EIP712Upgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/cryptography/draft-EIP712Upgradeable.sol:32"
+          },
+          {
+            "label": "_HASHED_VERSION",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_bytes32",
+            "contract": "EIP712Upgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/cryptography/draft-EIP712Upgradeable.sol:33"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "EIP712Upgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/cryptography/draft-EIP712Upgradeable.sol:120"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "53",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_paused",
+            "offset": 0,
+            "slot": "103",
+            "type": "t_bool",
+            "contract": "PausableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol:29"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "104",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "PausableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol:116"
+          },
+          {
+            "label": "admin",
+            "offset": 0,
+            "slot": "153",
+            "type": "t_contract(IGovernance)12752",
+            "contract": "MarketplaceIntegratable",
+            "src": "contracts/base/MarketplaceIntegratable.sol:12"
+          },
+          {
+            "label": "_status",
+            "offset": 0,
+            "slot": "154",
+            "type": "t_uint256",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:38"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "155",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:74"
+          },
+          {
+            "label": "creatorFeeUB",
+            "offset": 0,
+            "slot": "204",
+            "type": "t_uint16",
+            "contract": "Marketplace",
+            "src": "contracts/Marketplace.sol:46"
+          },
+          {
+            "label": "serviceFeeRightShiftBit",
+            "offset": 2,
+            "slot": "204",
+            "type": "t_uint8",
+            "contract": "Marketplace",
+            "src": "contracts/Marketplace.sol:47"
+          },
+          {
+            "label": "nonces",
+            "offset": 0,
+            "slot": "205",
+            "type": "t_mapping(t_address,t_struct(Counter)1121_storage)",
+            "contract": "Marketplace",
+            "src": "contracts/Marketplace.sol:50"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_contract(IGovernance)12752": {
+            "label": "contract IGovernance",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_address,t_struct(Counter)1121_storage)": {
+            "label": "mapping(address => struct CountersUpgradeable.Counter)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Counter)1121_storage": {
+            "label": "struct CountersUpgradeable.Counter",
+            "members": [
+              {
+                "label": "_value",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint16": {
+            "label": "uint16",
+            "numberOfBytes": "2"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "d5ea5af332b9e332c5aa7bba0d1a9b4bfdc3536b71254cd9bb73e30ac2a90b5a": {
+      "address": "0x9A9f2CCfdE556A7E9Ff0848998Aa4a0CFD8863AE",
+      "txHash": "0x1414ba2e1849e81298f2668370a8137edb6f32813d1a12ddffd5411737301e13",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "_HASHED_NAME",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_bytes32",
+            "contract": "EIP712Upgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/cryptography/draft-EIP712Upgradeable.sol:32"
+          },
+          {
+            "label": "_HASHED_VERSION",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_bytes32",
+            "contract": "EIP712Upgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/cryptography/draft-EIP712Upgradeable.sol:33"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "EIP712Upgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/cryptography/draft-EIP712Upgradeable.sol:120"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "53",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_paused",
+            "offset": 0,
+            "slot": "103",
+            "type": "t_bool",
+            "contract": "PausableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol:29"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "104",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "PausableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol:116"
+          },
+          {
+            "label": "admin",
+            "offset": 0,
+            "slot": "153",
+            "type": "t_contract(IGovernance)12752",
+            "contract": "MarketplaceIntegratable",
+            "src": "contracts/base/MarketplaceIntegratable.sol:12"
+          },
+          {
+            "label": "_status",
+            "offset": 0,
+            "slot": "154",
+            "type": "t_uint256",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:38"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "155",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:74"
+          },
+          {
+            "label": "creatorFeeUB",
+            "offset": 0,
+            "slot": "204",
+            "type": "t_uint16",
+            "contract": "Marketplace",
+            "src": "contracts/Marketplace.sol:46"
+          },
+          {
+            "label": "serviceFeeRightShiftBit",
+            "offset": 2,
+            "slot": "204",
+            "type": "t_uint8",
+            "contract": "Marketplace",
+            "src": "contracts/Marketplace.sol:47"
+          },
+          {
+            "label": "nonces",
+            "offset": 0,
+            "slot": "205",
+            "type": "t_mapping(t_address,t_struct(Counter)1121_storage)",
+            "contract": "Marketplace",
+            "src": "contracts/Marketplace.sol:50"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_contract(IGovernance)12752": {
+            "label": "contract IGovernance",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_address,t_struct(Counter)1121_storage)": {
+            "label": "mapping(address => struct CountersUpgradeable.Counter)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Counter)1121_storage": {
+            "label": "struct CountersUpgradeable.Counter",
+            "members": [
+              {
+                "label": "_value",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint16": {
+            "label": "uint16",
+            "numberOfBytes": "2"
           },
           "t_uint256": {
             "label": "uint256",

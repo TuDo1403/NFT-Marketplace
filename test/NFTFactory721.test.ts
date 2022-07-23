@@ -2,7 +2,7 @@ import {SignerWithAddress} from "@nomiclabs/hardhat-ethers/signers"
 import {expect, use} from "chai"
 import {BigNumber} from "ethers"
 import {ethers} from "hardhat"
-import {Collectible721, Governance, NFTFactory721, TokenId} from "../typechain"
+import {Collectible721, Governance, NFTFactory721, TokenId} from "../typechain-types"
 
 describe("Collectible721", () => {
     let governance: Governance

@@ -1,7 +1,7 @@
 import {expect} from "chai"
 import {ethers, upgrades} from "hardhat"
 import * as crypto from "crypto"
-import {Collectible721, Governance, NFTFactory} from "../typechain"
+import {Collectible721, Governance, NFTFactory} from "../typechain-types"
 import {SignerWithAddress} from "@nomiclabs/hardhat-ethers/signers"
 import {BigNumber} from "ethers"
 

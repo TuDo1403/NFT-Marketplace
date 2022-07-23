@@ -7,7 +7,7 @@ import {
     Governance,
     NFTFactory1155,
     TokenCreator,
-} from "../typechain"
+} from "../typechain-types"
 
 describe("NFTFactory721", () => {
     let manager: SignerWithAddress

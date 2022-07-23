@@ -7,7 +7,7 @@ import {
     Collectible721,
     TokenCreator,
     ERC721,
-} from "../typechain"
+} from "../typechain-types"
 import {BigNumber} from "ethers"
 
 describe("Collectible721", () => {

@@ -1,7 +1,7 @@
 import {expect} from "chai"
 import {ethers, upgrades} from "hardhat"
 import * as crypto from "crypto"
-import {Collectible1155, Governance, NFTFactory} from "../typechain"
+import {Collectible1155, Governance, NFTFactory} from "../typechain-types"
 import {SignerWithAddress} from "@nomiclabs/hardhat-ethers/signers"
 import {BigNumber} from "ethers"
 
@@ -38,7 +38,7 @@ describe("NFTFactory1155", () => {
     })
 
     describe("constructor", () => {
-        it("should initialize the governace address", async () => {
+        it("should initialize the governance address", async () => {
             const NFTFactoryFactory = await ethers.getContractFactory(
                 "NFTFactory",
                 admin

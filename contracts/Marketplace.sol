@@ -13,14 +13,16 @@ import "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/draft-IERC20P
 
 import "./base/NFTBase.sol";
 import "./base/MarketplaceIntegratable.sol";
-import "hardhat/console.sol";
+
 import "./interfaces/INFT.sol";
 import "./interfaces/ISemiNFT.sol";
 import "./interfaces/IMarketplace.sol";
-import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
+
 import "./base/token/ERC1155/IERC1155Lite.sol";
+
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "./base/token/ERC721/extensions/IERC721Permit.sol";
+import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import "./base/token/ERC1155/extensions/IERC1155Permit.sol";
 
 import "./libraries/ReceiptUtil.sol";
@@ -41,18 +43,16 @@ contract Marketplace is
     bytes32 public constant VERSION =
         0x58166ef1331604f9d1096f21021b62681af867d090bf7bef436de91286e1ed67;
 
-    uint8 public serviceFee;
-    uint8 public creatorFeeUB; // creator fee upper bound
+    uint256 public serviceFeeNumerator;
 
     mapping(address => CountersUpgradeable.Counter) public nonces;
 
     // 2521470
-    function initialize(
-        address admin_,
-        uint8 serviceFee_,
-        uint8 creatorFeeUB_ // Pausable() // ReentrancyGuard()
-    ) external initializer {
-        _initialize(admin_, serviceFee_, creatorFeeUB_);
+    function initialize(address admin_, uint256 serviceFeeRightShiftBit_)
+        external
+        initializer
+    {
+        _initialize(admin_, serviceFeeRightShiftBit_);
     }
 
     // receive() external payable {
@@ -109,6 +109,7 @@ contract Marketplace is
                 sellerAddr,
                 nftContract,
                 header.paymentToken,
+                serviceFeeNumerator,
                 tokenId,
                 salePrice
             );
@@ -287,6 +288,7 @@ contract Marketplace is
         uint256 counter;
         ReceiptUtil.Bulk memory bulkToMint;
         {
+            uint256 _serviceFeeNumerator = serviceFeeNumerator;
             for (uint256 i; i < bulk_.amounts.length; ) {
                 uint256 tokenId = bulk_.tokenIds[i];
                 bool _tokenExists = _pay(
@@ -295,6 +297,7 @@ contract Marketplace is
                     sellerAddr_,
                     nftContract_,
                     paymentToken_,
+                    _serviceFeeNumerator,
                     tokenId,
                     salePrice_
                 );
@@ -326,6 +329,7 @@ contract Marketplace is
         address sellerAddr_,
         address nftContract_,
         address paymentToken_,
+        uint256 serviceFeeNumerator_,
         uint256 tokenId_,
         uint256 salePrice_
     ) internal virtual returns (bool) {
@@ -336,18 +340,16 @@ contract Marketplace is
                 .royaltyInfo(tokenId_, salePrice_);
             _transact(paymentToken_, buyerAddr_, receiver, royaltyAmount);
         }
-
+        // uint256 serviceAmount = salePrice_ >> serviceFeeRightShiftBit_;
+        //console.log(serviceFeeRightShiftBit_);
         // uint256 serviceAmount;
         // assembly {
-        //     //serviceAmount := mul(serviceFraction_, div(salePrice_, 1000))
-        //     serviceAmount := shr(salePrice_, 3)
+        //     serviceAmount := shr(serviceFeeRightShiftBit_, salePrice_)
         // }
 
         unchecked {
-            uint256 serviceAmount = (serviceFee *
-                salePrice_) / 1e4;
-
-            //uint256 serviceAmount = salePrice_ >> 3;
+            // uint256 serviceAmount = salePrice_ >> serviceFeeNumerator_;
+            uint256 serviceAmount = (serviceFeeNumerator_ * salePrice_) / _feeDenominator();
             _transact(paymentToken_, buyerAddr_, treasury_, serviceAmount);
             _transact(
                 paymentToken_,
@@ -356,10 +358,11 @@ contract Marketplace is
                 salePrice_ - royaltyAmount - serviceAmount
             );
         }
+
         return royaltyAmount != 0;
     }
 
-    function _feeDenominator() internal pure virtual returns (uint16) {
+    function _feeDenominator() internal pure returns (uint16) {
         return 1e4;
     }
 
@@ -384,13 +387,12 @@ contract Marketplace is
         }
     }
 
-    function _initialize(
-        address admin_,
-        uint8 serviceFee_,
-        uint8 creatorFeeUB_
-    ) internal virtual onlyInitializing {
-        serviceFee = serviceFee_;
-        creatorFeeUB = creatorFeeUB_;
+    function _initialize(address admin_, uint256 serviceFeeNumerator_)
+        internal
+        virtual
+        onlyInitializing
+    {
+        serviceFeeNumerator = serviceFeeNumerator_ % 1e3;
         _initialize(admin_);
 
         __Pausable_init();

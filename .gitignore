@@ -3,6 +3,7 @@ node_modules
 coverage
 coverage.json
 typechain
+typechain-types
 logs
 contracts/external
 tmp
@@ -10,3 +11,4 @@ tmp
 #Hardhat files
 cache
 artifacts
+.openzeppelin

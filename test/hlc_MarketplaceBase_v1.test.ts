@@ -11,7 +11,7 @@ import {
     Collectible1155,
     Collectible721,
     NFTFactory,
-} from "../typechain"
+} from "../typechain-types"
 const typedData = {
     types: {
         EIP712Domain: [
@@ -328,7 +328,7 @@ describe("MarketplaceBase", () => {
     let marketplace: Marketplace
     let tokenCreator: TokenCreator
     let serviceFee: number
-    const balance = 1e5
+    const balance = ethers.utils.parseEther("100000")
     const tokenURI1155 = "https://triton.com/token"
     const tokenURI721 = "https://vaicoin.com/token"
     let buyer: SignerWithAddress
@@ -342,7 +342,7 @@ describe("MarketplaceBase", () => {
             "ERC20Test",
             admin
         )
-        paymentToken = await ERC20TestFactory.deploy("PaymentToken", "PMT")
+        paymentToken = (await ERC20TestFactory.deploy("PaymentToken", "PMT") as ERC20Test)
         await paymentToken.deployed()
         for (const u of users) await paymentToken.mint(u.address, balance)
 
@@ -350,10 +350,10 @@ describe("MarketplaceBase", () => {
             "Governance",
             admin
         )
-        governance = await GovernanceFactory.deploy(
+        governance = (await GovernanceFactory.deploy(
             treasury.address,
             verifier.address
-        )
+        ) as Governance)
         await governance.deployed()
         await governance.connect(admin).registerToken(paymentToken.address)
 
@@ -396,21 +396,21 @@ describe("MarketplaceBase", () => {
         //     admin
         // )
 
-        serviceFee = 250
+        serviceFee = 5
         const MarketplaceBaseFactory = await ethers.getContractFactory(
             "Marketplace",
             admin
         )
-        marketplace = await MarketplaceBaseFactory.deploy()
+        marketplace = (await MarketplaceBaseFactory.deploy() as Marketplace)
         await marketplace.deployed()
-        await marketplace.initialize(governance.address, serviceFee, 250)
+        await marketplace.initialize(governance.address, serviceFee)
         await governance.connect(admin).updateMarketplace(marketplace.address)
         console.log("marketplace address: ", await governance.marketplace())
         const TokenCreatorFactory = await ethers.getContractFactory(
             "TokenCreator",
             admin
         )
-        tokenCreator = await TokenCreatorFactory.deploy()
+        tokenCreator = (await TokenCreatorFactory.deploy() as TokenCreator)
         await tokenCreator.deployed()
     })
 
@@ -420,7 +420,7 @@ describe("MarketplaceBase", () => {
                 "Collectible1155",
                 admin
             )
-            collectible1155Base = await Collectible1155BaseFactory.deploy()
+            collectible1155Base = (await Collectible1155BaseFactory.deploy() as Collectible1155)
             await collectible1155Base.deployed()
 
             const NFTFactoryFactory = await ethers.getContractFactory(
@@ -454,11 +454,11 @@ describe("MarketplaceBase", () => {
             const cloneNft1155Address = await nftFactory.deployedContracts(
                 BigNumber.from(salt)
             )
-            cloneNft1155 = await ethers.getContractAt(
+            cloneNft1155 = (await ethers.getContractAt(
                 "Collectible1155",
                 cloneNft1155Address,
                 creator
-            )
+            ) as Collectible1155)
         })
         it("should let user redeem with valid receipt", async () => {
             const now = (await ethers.provider.getBlock("latest")).timestamp
@@ -473,8 +473,8 @@ describe("MarketplaceBase", () => {
                 creator.address
             )
             let amount = 12
-            let unitPrice = 500
-            const salePrice = amount * unitPrice
+            let unitPrice = 20
+            const salePrice = unitPrice * amount
             // const servicePay = (totalPay * serviceFee) / 1e4
             const deadline = now + 60 * 1000
             let receipt: any
@@ -488,7 +488,7 @@ describe("MarketplaceBase", () => {
             ;[rBuyer, sBuyer, vBuyer] = await erc20PermitSignature(
                 buyer,
                 marketplace.address,
-                BigNumber.from(salePrice),
+                ethers.utils.parseEther(salePrice.toString()),
                 BigNumber.from(buyerNonce),
                 BigNumber.from(deadline),
                 paymentToken.address
@@ -522,7 +522,7 @@ describe("MarketplaceBase", () => {
                 paymentToken.address,
                 BigNumber.from(amount),
                 BigNumber.from(tokenId),
-                BigNumber.from(unitPrice),
+                ethers.utils.parseEther(unitPrice.toString()),
                 tokenURI1155,
                 nonce,
                 BigNumber.from(deadline),
@@ -548,7 +548,7 @@ describe("MarketplaceBase", () => {
             await expect(
                 marketplace
                     .connect(buyer)
-                    .redeem(receipt, signature, {value: salePrice})
+                    .redeem(receipt, signature, {value: ethers.utils.parseEther(salePrice.toString())})
             ).to.emit(marketplace, "ItemRedeemed")
         })
     })
@@ -559,7 +559,7 @@ describe("MarketplaceBase", () => {
                 "Collectible721",
                 admin
             )
-            collectible721Base = await Collectible721Factory.deploy()
+            collectible721Base = (await Collectible721Factory.deploy() as Collectible721)
             await collectible721Base.deployed()
 
             creator = users[2]
@@ -582,11 +582,11 @@ describe("MarketplaceBase", () => {
             )
 
             const cloneNft721Address = await nftFactory.deployedContracts(salt)
-            cloneNft721 = await ethers.getContractAt(
+            cloneNft721 = (await ethers.getContractAt(
                 "Collectible721",
                 cloneNft721Address,
                 creator
-            )
+            ) as Collectible721)
         })
 
         it("should let user redeem with valid receipt", async () => {

@@ -75,11 +75,6 @@ library ReceiptUtil {
     bytes32 private constant BULK_TYPE_HASH =
         0x97a8084b05295a1a0b029b05bda73d5917d940d10e22aa7b9d94f19a379e7bf8;
 
-    // bytes32 private constant PAYMENT_TYPE_HASH =
-    //     keccak256(
-    //         "Payment(uint256 subTotal,uint256 creatorPayout,uint256 servicePayout,uint256 total)"
-    //     );
-
     ///@dev value is equal to keccak256("Receipt(Header header,Item item,uint256 nonce,uint256 deadline)Header(User buyer,User seller,address nftContract,address paymentToken)User(address addr,uint8 v,uint256 deadline,bytes32 r,bytes32 s)Item(uint256 amount,uint256 tokenId,uint256 unitPrice,string tokenURI)")
     bytes32 private constant RECEIPT_TYPE_HASH =
         0xe12da5126137442eee6aa47b09af013f90ebdd5c92e75d9a3badef17abb89d34;
