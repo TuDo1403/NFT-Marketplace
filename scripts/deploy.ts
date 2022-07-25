@@ -10,7 +10,7 @@ import {Marketplace, NFTFactory} from "../typechain-types"
 
 const TREASURY = process.env.TREASURY || ""
 const VERIFIER = process.env.VERIFIER || ""
-const SERVICE_FEE_RIGHT_SHIFT_BIT = 6
+const SERVICE_FEE = 200
 
 async function main() {
     // Hardhat always runs the compile task when running scripts with its command
@@ -47,7 +47,7 @@ async function main() {
     const MarketplaceFactory = await ethers.getContractFactory("Marketplace")
     const marketplace = (await upgrades.deployProxy(
         MarketplaceFactory,
-        [governance.address, SERVICE_FEE_RIGHT_SHIFT_BIT],
+        [governance.address, SERVICE_FEE],
         {initializer: "initialize"}
     )) as Marketplace
     await marketplace.deployed()

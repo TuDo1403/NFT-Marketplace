@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Unlicensed
-pragma solidity ^0.8.13;
+pragma solidity 0.8.15;
 
 contract TokenCreator {
     // TOKEN ID = ADDRESS + SUPPLY + TYPE + FEE + ID

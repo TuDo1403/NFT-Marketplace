@@ -5,6 +5,7 @@
     "size": "npx hardhat size-contracts",
     "compile": "npx hardhat compile",
     "deploy": "npx hardhat run --network localhost scripts/deploy.ts",
+    "deploy:moonbase": "npx hardhat run --network moonbase scripts/deploy.ts",
     "deploy:rinkeby": "npx hardhat run --network rinkeby scripts/deploy.ts",
     "deploy:bsctest": "npx hardhat run --network testnet scripts/deploy.ts",
     "deploy:bscmain": "npx hardhat run --network mainnet scripts/deploy.ts",

@@ -1,15 +1,8 @@
 // SPDX-License-Identifier: Unlicensed
-pragma solidity ^0.8.13;
+pragma solidity 0.8.15;
 
 library TokenIdGenerator {
     // TOKEN ID = ADDRESS + SUPPLY + TYPE + FEE + ID
-    // struct Token {
-    //     uint256 _fee;
-    //     uint256 _type;
-    //     uint256 _supply;
-    //     uint256 _index;
-    //     address _creator;
-    // }
 
     uint256 public constant FEE_BIT = 16; // creator fee
     uint256 public constant TYPE_BIT = 16;

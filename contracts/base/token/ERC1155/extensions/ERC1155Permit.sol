@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts (last updated v4.6.0) (token/ERC1155/extensions/draft-ERC1155Permit.sol)
 
-pragma solidity ^0.8.13;
+pragma solidity 0.8.15;
 
 //import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 //import "./external/contracts/proxy/utils/Initializable.sol";
