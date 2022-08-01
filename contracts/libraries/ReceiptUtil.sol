@@ -2,11 +2,9 @@
 pragma solidity 0.8.15;
 
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
-//import "../external/contracts/utils/cryptography/ECDSA.sol";
 
 import "../interfaces/IGovernance.sol";
 import "./TokenIdGenerator.sol";
-import "hardhat/console.sol";
 
 library ReceiptUtil {
     error RU__Expired();
@@ -116,15 +114,15 @@ library ReceiptUtil {
     function verifyReceipt(
         IGovernance admin_,
         address paymentToken_,
-        uint256 total_,
+        uint256 salePrice_,
         uint256 deadline_,
         bytes32 hashedReceipt_,
         bytes calldata signature_
     ) internal view {
-        _verifyIntegrity(admin_, paymentToken_, total_, deadline_);
+        _verifyIntegrity(admin_, paymentToken_, salePrice_, deadline_);
         if (
             ECDSA.recover(
-                ECDSA.toEthSignedMessageHash(hashedReceipt_),
+                hashedReceipt_,
                 signature_
             ) != admin_.verifier()
         ) {
@@ -196,8 +194,10 @@ library ReceiptUtil {
     }
 
     function __hashBulk(Bulk memory bulk_) private pure returns (bytes32) {
-        bytes32[] memory _tokenURIs = new bytes32[](bulk_.tokenURIs.length);
-        for (uint256 i; i < _tokenURIs.length; ) {
+        uint256 length = bulk_.tokenURIs.length;
+        bytes32[] memory _tokenURIs = new bytes32[](length);
+
+        for (uint256 i; i < length; ) {
             _tokenURIs[i] = keccak256(bytes(bulk_.tokenURIs[i]));
             unchecked {
                 ++i;

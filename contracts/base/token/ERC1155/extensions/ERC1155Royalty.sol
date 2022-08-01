@@ -28,10 +28,11 @@ abstract contract ERC1155Royalty is ERC2981, ERC1155Lite {
         bytes memory data
     ) internal virtual override {
         super._afterTokenTransfer(operator, from, to, ids, amounts, data);
-        //uint256 length = ids.length;
+        uint256 length = ids.length;
+        uint256 tokenId;
         if (from == address(0)) {
-            for (uint256 i; i < ids.length; ) {
-                uint256 tokenId = ids[i];
+            for (uint256 i; i < length; ) {
+                tokenId = ids[i];
                 _setTokenRoyalty(tokenId, to, uint96(tokenId.getCreatorFee()));
                 unchecked {
                     ++i;
@@ -39,7 +40,7 @@ abstract contract ERC1155Royalty is ERC2981, ERC1155Lite {
             }
         }
         if (to == address(0)) {
-            for (uint256 i; i < ids.length; ) {
+            for (uint256 i; i < length; ) {
                 _resetTokenRoyalty(ids[i]);
                 unchecked {
                     ++i;

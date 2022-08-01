@@ -2,7 +2,7 @@
   "manifestVersion": "3.2",
   "admin": {
     "address": "0x7a2088a1bFc9d81c55368AE168C2C02570cB814F",
-    "txHash": "0xc163b6e589bff29bd5d812fbd6086a21604643653016f3e85be873bf4785dc15"
+    "txHash": "0xd34c33c8ccb81189c0b738c7f908cdfeb83a638197867aab131b887354f4db93"
   },
   "proxies": [
     {
@@ -172,14 +172,14 @@
     },
     {
       "address": "0x09635F643e140090A9A8Dcd712eD6285858ceBef",
-      "txHash": "0x0d7b7cf16d8aa236a3275ccc9bd0f618446a3c24658bcf57131a982979aed241",
+      "txHash": "0xc93e74d1a2a39cde88a4d513b892f7ba62ba15fe05de422106567a1867b1589e",
       "kind": "transparent"
     }
   ],
   "impls": {
     "f9499f80b19610e857cdd0fc812de5e5e39fbf7558a0300fc801742895ddbc6d": {
       "address": "0x4A679253410272dd5232B3Ff7cF5dbB88f295319",
-      "txHash": "0x27da90cfe604131c069856fac3e782cca84cfb18f53ca9ff0b6d73773968caeb",
+      "txHash": "0x421df855149e58a64c521f4e755a0e1e687acb61fd20d26c138067e4bfd848cb",
       "layout": {
         "storage": [
           {
@@ -211,7 +211,7 @@
             "label": "admin",
             "offset": 0,
             "slot": "51",
-            "type": "t_contract(IGovernance)12746",
+            "type": "t_contract(IGovernance)12795",
             "contract": "MarketplaceIntegratable",
             "src": "contracts/base/MarketplaceIntegratable.sol:12"
           },
@@ -237,7 +237,7 @@
             "label": "bool",
             "numberOfBytes": "1"
           },
-          "t_contract(IGovernance)12746": {
+          "t_contract(IGovernance)12795": {
             "label": "contract IGovernance",
             "numberOfBytes": "20"
           },

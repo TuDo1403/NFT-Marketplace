@@ -3,12 +3,9 @@ pragma solidity 0.8.15;
 
 import "../ERC721Lite.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
-//import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts-upgradeable/utils/cryptography/draft-EIP712Upgradeable.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/interfaces/IERC1271.sol";
-//import "@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol";
-import "hardhat/console.sol";
 import "./IERC721Permit.sol";
 
 /// @title ERC721 with permit
@@ -38,23 +35,18 @@ abstract contract ERC721Permit is ERC721Lite, IERC721Permit, EIP712Upgradeable {
         bytes32 r_,
         bytes32 s_
     ) external override {
-        console.log("tokenId: %s", tokenId_);
-        console.log("deadline: %s", deadline_);
-        console.log("spender: %s", spender_);
         if (block.timestamp > deadline_) {
             revert ERC721Permit__Expired();
         }
 
-        bytes32 digest = ECDSA.toEthSignedMessageHash(
-            _hashTypedDataV4(
-                keccak256(
-                    abi.encode(
-                        _PERMIT_TYPEHASH,
-                        spender_,
-                        tokenId_,
-                        _useNonce(tokenId_),
-                        deadline_
-                    )
+        bytes32 digest = _hashTypedDataV4(
+            keccak256(
+                abi.encode(
+                    _PERMIT_TYPEHASH,
+                    spender_,
+                    tokenId_,
+                    _useNonce(tokenId_),
+                    deadline_
                 )
             )
         );

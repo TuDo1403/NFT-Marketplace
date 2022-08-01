@@ -1,20 +1,12 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: Unlicensed
 // OpenZeppelin Contracts (last updated v4.6.0) (token/ERC1155/extensions/draft-ERC1155Permit.sol)
 
 pragma solidity 0.8.15;
 
-//import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
-//import "./external/contracts/proxy/utils/Initializable.sol";
-
 import "../ERC1155Lite.sol";
-//import "./external/contracts/token/ERC1155/ERC1155.sol";
-//import "./external/contracts/utils/cryptography/draft-EIP712.sol";
-// import "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol";
 import "@openzeppelin/contracts-upgradeable/utils/cryptography/draft-EIP712Upgradeable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
-//import "@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
-//import "./external/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/interfaces/IERC1271.sol";
 
 import "./IERC1155Permit.sol";
@@ -68,16 +60,14 @@ abstract contract ERC1155Permit is
             revert ERC1155Permit__Expired();
         }
 
-        bytes32 digest = ECDSA.toEthSignedMessageHash(
-            _hashTypedDataV4(
-                keccak256(
-                    abi.encode(
-                        _PERMIT_TYPEHASH,
-                        owner_,
-                        spender_,
-                        _useNonce(owner_),
-                        deadline_
-                    )
+        bytes32 digest = _hashTypedDataV4(
+            keccak256(
+                abi.encode(
+                    _PERMIT_TYPEHASH,
+                    owner_,
+                    spender_,
+                    _useNonce(owner_),
+                    deadline_
                 )
             )
         );

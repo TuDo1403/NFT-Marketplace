@@ -9,7 +9,6 @@ import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.
 import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/cryptography/draft-EIP712Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/draft-IERC20PermitUpgradeable.sol";
-//import "@openzeppelin/contracts-upgradeable/token/ERC721/IERC721ReceiverUpgradeable.sol";
 
 import "./base/NFTBase.sol";
 import "./base/MarketplaceIntegratable.sol";
@@ -47,23 +46,12 @@ contract Marketplace is
 
     mapping(address => CountersUpgradeable.Counter) public nonces;
 
-    // 2521470
-    function initialize(address admin_, uint256 serviceFeeRightShiftBit_)
+    function initialize(address admin_, uint256 serviceFeeNumerator_)
         external
         initializer
     {
-        _initialize(admin_, serviceFeeRightShiftBit_);
+        _initialize(admin_, serviceFeeNumerator_);
     }
-
-    // receive() external payable {
-    //     emit Received(_msgSender(), msg.value, "Received Token");
-    // }
-
-    //fallback() external payable {}
-
-    // function kill() external onlyManager {
-    //     selfdestruct(payable(IGovernance(admin).treasury()));
-    // }
 
     function redeem(
         ReceiptUtil.Receipt calldata receipt_,
@@ -73,46 +61,45 @@ contract Marketplace is
         ReceiptUtil.Item memory item = receipt_.item;
         uint256 salePrice = item.amount * item.unitPrice;
         ReceiptUtil.Header memory header = receipt_.header;
-        ReceiptUtil.verifyReceipt(
-            _admin,
-            header.paymentToken,
-            salePrice,
-            receipt_.deadline,
-            _hashTypedDataV4(receipt_.hash()),
-            signature_
-        );
+        ReceiptUtil.verifyReceipt({
+            admin_: _admin,
+            paymentToken_: header.paymentToken,
+            salePrice_: salePrice,
+            deadline_: receipt_.deadline,
+            hashedReceipt_: _hashTypedDataV4(receipt_.hash()),
+            signature_: signature_
+        });
 
         address sellerAddr = header.seller.addr;
-        nonces[sellerAddr].increment();
+        _useNonce(sellerAddr);
 
         uint256 tokenId = item.tokenId;
         address buyerAddr = header.buyer.addr;
         address nftContract = header.nftContract;
-        //address paymentToken = header.paymentToken;
         {
             ReceiptUtil.User memory buyer = header.buyer;
             if (buyer.v != 0) {
-                IERC20PermitUpgradeable(header.paymentToken).permit(
-                    buyerAddr,
-                    address(this),
-                    salePrice,
-                    buyer.deadline,
-                    buyer.v,
-                    buyer.r,
-                    buyer.s
-                );
+                IERC20PermitUpgradeable(header.paymentToken).permit({
+                    owner: buyerAddr,
+                    spender: address(this),
+                    value: salePrice,
+                    deadline: buyer.deadline,
+                    v: buyer.v,
+                    r: buyer.r,
+                    s: buyer.s
+                });
             }
 
-            bool tokenExists = _pay(
-                buyerAddr,
-                _admin.treasury(),
-                sellerAddr,
-                nftContract,
-                header.paymentToken,
-                serviceFeeNumerator,
-                tokenId,
-                salePrice
-            );
+            bool tokenExists = _pay({
+                buyerAddr_: buyerAddr,
+                treasury_: _admin.treasury(),
+                sellerAddr_: sellerAddr,
+                nftContract_: nftContract,
+                paymentToken_: header.paymentToken,
+                serviceFeeNumerator_: serviceFeeNumerator,
+                tokenId_: tokenId,
+                salePrice_: salePrice
+            });
             if (!tokenExists) {
                 INFT(nftContract).mint(
                     sellerAddr,
@@ -123,15 +110,15 @@ contract Marketplace is
             }
         }
 
-        _safeTransferFrom(
-            address(this),
-            buyerAddr,
-            sellerAddr,
-            nftContract,
-            tokenId,
-            item.amount,
-            header.seller
-        );
+        _safeTransferFrom({
+            spender_: address(this),
+            buyerAddr_: buyerAddr,
+            sellerAddr_: sellerAddr,
+            nftContract_: nftContract,
+            tokenId_: tokenId,
+            amount_: item.amount,
+            seller_: header.seller
+        });
 
         emit ItemRedeemed(
             nftContract,
@@ -148,10 +135,13 @@ contract Marketplace is
     ) external payable override whenNotPaused nonReentrant {
         uint256 salePrice;
         ReceiptUtil.Bulk memory bulk = receipt_.bulk;
-        for (uint256 i; i < bulk.amounts.length; ) {
-            salePrice += bulk.amounts[i] * bulk.unitPrices[i];
-            unchecked {
-                ++i;
+        {
+            uint256 length = bulk.amounts.length;
+            for (uint256 i; i < length; ) {
+                salePrice += bulk.amounts[i] * bulk.unitPrices[i];
+                unchecked {
+                    ++i;
+                }
             }
         }
 
@@ -167,7 +157,7 @@ contract Marketplace is
         );
         ReceiptUtil.User memory seller = header.seller;
         address sellerAddr = seller.addr;
-        nonces[sellerAddr].increment();
+        _useNonce(sellerAddr);
         address buyerAdrr;
         address thisAddr = address(this);
         {
@@ -289,9 +279,11 @@ contract Marketplace is
         ReceiptUtil.Bulk memory bulkToMint;
         {
             uint256 _serviceFeeNumerator = serviceFeeNumerator;
+            bool _tokenExists;
+            uint256 tokenId;
             for (uint256 i; i < bulk_.amounts.length; ) {
-                uint256 tokenId = bulk_.tokenIds[i];
-                bool _tokenExists = _pay(
+                tokenId = bulk_.tokenIds[i];
+                _tokenExists = _pay(
                     buyerAddr_,
                     treasury_,
                     sellerAddr_,
@@ -340,16 +332,10 @@ contract Marketplace is
                 .royaltyInfo(tokenId_, salePrice_);
             _transact(paymentToken_, buyerAddr_, receiver, royaltyAmount);
         }
-        // uint256 serviceAmount = salePrice_ >> serviceFeeRightShiftBit_;
-        //console.log(serviceFeeRightShiftBit_);
-        // uint256 serviceAmount;
-        // assembly {
-        //     serviceAmount := shr(serviceFeeRightShiftBit_, salePrice_)
-        // }
 
         unchecked {
-            // uint256 serviceAmount = salePrice_ >> serviceFeeNumerator_;
-            uint256 serviceAmount = (serviceFeeNumerator_ * salePrice_) / _feeDenominator();
+            uint256 serviceAmount = (serviceFeeNumerator_ * salePrice_) /
+                _feeDenominator();
             _transact(paymentToken_, buyerAddr_, treasury_, serviceAmount);
             _transact(
                 paymentToken_,
@@ -360,10 +346,6 @@ contract Marketplace is
         }
 
         return royaltyAmount != 0;
-    }
-
-    function _feeDenominator() internal pure returns (uint16) {
-        return 1e4;
     }
 
     function _transact(
@@ -392,11 +374,20 @@ contract Marketplace is
         virtual
         onlyInitializing
     {
-        serviceFeeNumerator = serviceFeeNumerator_ % 1e3;
         _initialize(admin_);
+        serviceFeeNumerator = serviceFeeNumerator_ % 1e3;
 
         __Pausable_init();
         __ReentrancyGuard_init();
         __EIP712_init(type(Marketplace).name, "v1");
+    }
+
+    function _useNonce(address addr_) internal returns (uint256 currentNonce) {
+        currentNonce = nonces[addr_].current();
+        nonces[addr_].increment();
+    }
+
+    function _feeDenominator() internal pure returns (uint16) {
+        return 1e4;
     }
 }

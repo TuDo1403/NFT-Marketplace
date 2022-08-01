@@ -41,7 +41,6 @@ abstract contract ERC721Lite is IERC721Lite, ERC721("", "") {
     {
         address owner = _owners[tokenId];
         _nonZeroAddress(owner);
-        // require(owner != address(0), "ERC721: owner query for nonexistent token");
         return owner;
     }
 
@@ -52,7 +51,6 @@ abstract contract ERC721Lite is IERC721Lite, ERC721("", "") {
         override
         returns (string memory)
     {
-        // require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
         _onlyExists(tokenId);
 
         string memory baseURI = _baseURI();
@@ -68,13 +66,8 @@ abstract contract ERC721Lite is IERC721Lite, ERC721("", "") {
         override(ERC721, IERC721)
     {
         address owner = ownerOf(tokenId);
-        // require(to != owner, "ERC721: approval to current owner");
         _nonSelfApproving(to, owner);
 
-        // require(
-        //     _msgSender() == owner || isApprovedForAll(owner, _msgSender()),
-        //     "ERC721: approve caller is not owner nor approved for all"
-        // );
         if (!_isApprovedOrOwner(_msgSender(), owner)) {
             revert ERC721__Unauthorized();
         }
@@ -89,7 +82,6 @@ abstract contract ERC721Lite is IERC721Lite, ERC721("", "") {
         override(ERC721, IERC721)
         returns (address)
     {
-        // require(_exists(tokenId), "ERC721: approved query for nonexistent token");
         _onlyExists(tokenId);
 
         return _tokenApprovals[tokenId];
@@ -100,11 +92,6 @@ abstract contract ERC721Lite is IERC721Lite, ERC721("", "") {
         address to,
         uint256 tokenId
     ) public virtual override(ERC721, IERC721) {
-        //solhint-disable-next-line max-line-length
-        // require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721: transfer caller is not owner nor approved");
-        // if (!_isApprovedOrOwner(_msgSender(), tokenId)) {
-        //     revert ERC721__Unauthorized();
-        // }
         _onlyOwnerOrApproved(_msgSender(), tokenId);
 
         _transfer(from, to, tokenId);
@@ -116,10 +103,6 @@ abstract contract ERC721Lite is IERC721Lite, ERC721("", "") {
         uint256 tokenId,
         bytes memory _data
     ) public virtual override(ERC721, IERC721) {
-        // require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721: transfer caller is not owner nor approved");
-        // if (!_isApprovedOrOwner(_msgSender(), tokenId)) {
-        //     revert ERC721__Unauthorized();
-        // }
         _onlyOwnerOrApproved(_msgSender(), tokenId);
         _safeTransfer(from, to, tokenId, _data);
     }
@@ -131,7 +114,6 @@ abstract contract ERC721Lite is IERC721Lite, ERC721("", "") {
         bytes memory _data
     ) internal virtual override {
         _transfer(from, to, tokenId);
-        // require(_checkOnERC721Received(from, to, tokenId, _data), "ERC721: transfer to non ERC721Receiver implementer");
         if (!__checkOnERC721Received(from, to, tokenId, _data)) {
             revert ERC721__ERC721ReceiverNotImplemented();
         }
@@ -148,15 +130,7 @@ abstract contract ERC721Lite is IERC721Lite, ERC721("", "") {
         }
     }
 
-    // function _receiverMustImplement(address from, address to, uint256 tokenId, bytes memory _data) internal {
-    //     if (!__checkOnERC721Received(from, to, tokenId, _data)) {
-    //         revert ERC721__ERC721ReceiverNotImplemented();
-    //     }
-    // }
-
     function _mint(address to, uint256 tokenId) internal virtual override {
-        // require(to != address(0), "ERC721: mint to the zero address");
-        // require(!_exists(tokenId), "ERC721: token already minted");
         _nonZeroAddress(to);
         if (_exists(tokenId)) {
             revert ERC721__TokenExisted();
@@ -177,19 +151,13 @@ abstract contract ERC721Lite is IERC721Lite, ERC721("", "") {
         address to,
         uint256 tokenId
     ) internal virtual override {
-        // require(
-        //     ERC721.ownerOf(tokenId) == from,
-        //     "ERC721: transfer from incorrect owner"
-        // );
         if (ownerOf(tokenId) != from) {
             revert ERC721__Unauthorized();
         }
         _nonZeroAddress(to);
-        //require(to != address(0), "ERC721: transfer to the zero address");
 
         _beforeTokenTransfer(from, to, tokenId);
 
-        // Clear approvals from the previous owner
         _approve(address(0), tokenId);
 
         --_balances[from];
@@ -211,7 +179,6 @@ abstract contract ERC721Lite is IERC721Lite, ERC721("", "") {
         address operator,
         bool approved
     ) internal virtual override {
-        //require(owner != operator, "ERC721: approve to caller");
         _nonSelfApproving(owner, operator);
         _operatorApprovals[owner][operator] = approved;
         emit ApprovalForAll(owner, operator, approved);
@@ -245,9 +212,6 @@ abstract contract ERC721Lite is IERC721Lite, ERC721("", "") {
                 return retval == IERC721Receiver.onERC721Received.selector;
             } catch (bytes memory reason) {
                 if (reason.length == 0) {
-                    // revert(
-                    //     "ERC721: transfer to non ERC721Receiver implementer"
-                    // );
                     revert ERC721__ERC721ReceiverNotImplemented();
                 } else {
                     assembly {
@@ -284,20 +248,6 @@ abstract contract ERC721Lite is IERC721Lite, ERC721("", "") {
             revert ERC721__Unauthorized();
         }
     }
-
-    // function _isApprovedOrOwner(address spender, uint256 tokenId)
-    //     internal
-    //     view
-    //     virtual
-    //     override
-    //     returns (bool)
-    // {
-    //     //require(_exists(tokenId), "ERC721: operator query for nonexistent token");
-    //     _onlyExists(tokenId);
-    //     address owner = ERC721.ownerOf(tokenId);
-    //     return (_isApprovedOrOwner(spender, owner) ||
-    //         getApproved(tokenId) == spender);
-    // }
 
     function _isApprovedOrOwner(address spender_, address owner_)
         internal

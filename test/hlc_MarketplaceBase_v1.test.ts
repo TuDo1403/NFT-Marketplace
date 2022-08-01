@@ -1,5 +1,5 @@
 import {expect} from "chai"
-import {ethers, userConfig, upgrades} from "hardhat"
+import {ethers, upgrades} from "hardhat"
 import {BigNumber} from "ethers"
 import {TypedDataUtils} from "ethers-eip712"
 import {SignerWithAddress} from "@nomiclabs/hardhat-ethers/signers"
@@ -12,6 +12,8 @@ import {
     Collectible721,
     NFTFactory,
 } from "../typechain-types"
+
+
 const typedData = {
     types: {
         EIP712Domain: [
@@ -69,15 +71,15 @@ const typedData = {
         header: {
             buyer: {
                 addr: "",
-                v: BigNumber.from(0),
-                deadline: BigNumber.from(0),
+                v: "",
+                deadline: "",
                 r: "",
                 s: "",
             },
             seller: {
                 addr: "",
-                v: BigNumber.from(0),
-                deadline: BigNumber.from(0),
+                v: "",
+                deadline: "",
                 r: "",
                 s: "",
             },
@@ -85,24 +87,14 @@ const typedData = {
             paymentToken: "",
         },
         item: {
-            amount: BigNumber.from(0),
-            tokenId: BigNumber.from(0),
-            unitPrice: BigNumber.from(0),
+            amount: "",
+            tokenId: "",
+            unitPrice: "",
             tokenURI: "",
         },
-        nonce: BigNumber.from(0),
-        deadline: BigNumber.from(0),
+        nonce: "",
+        deadline: "",
     },
-}
-
-async function increaseTime(duration: number): Promise<void> {
-    ethers.provider.send("evm_increaseTime", [duration])
-    ethers.provider.send("evm_mine", [])
-}
-
-async function decreaseTime(duration: number): Promise<void> {
-    ethers.provider.send("evm_increaseTime", [duration * -1])
-    ethers.provider.send("evm_mine", [])
 }
 
 async function signReceipt(
@@ -131,15 +123,15 @@ async function signReceipt(
     message.header = {
         buyer: {
             addr: addrBuyer,
-            v: vBuyer,
-            deadline: deadlineBuyer,
+            v: vBuyer.toString(),
+            deadline: deadlineBuyer.toString(),
             r: rBuyer,
             s: sBuyer,
         },
         seller: {
             addr: addrSeller,
-            v: vSeller,
-            deadline: deadlineSeller,
+            v: vSeller.toString(),
+            deadline: deadlineSeller.toString(),
             r: rSeller,
             s: sSeller,
         },
@@ -147,18 +139,47 @@ async function signReceipt(
         paymentToken: paymentToken,
     }
     message.item = {
-        amount: amount,
-        tokenId: tokenId,
-        unitPrice: unitPrice,
+        amount: amount.toString(),
+        tokenId: tokenId.toString(),
+        unitPrice: unitPrice.toString(),
         tokenURI: tokenURI,
     }
-    message.nonce = nonce
-    message.deadline = deadline
-    let typedData_ = JSON.parse(JSON.stringify(typedData))
+    message.nonce = nonce.toString()
+    message.deadline = deadline.toString()
+    let typedData_ = Object.assign({}, typedData)
     typedData_.message = message
     typedData_.domain.verifyingContract = verifyingContract
-    const digest = TypedDataUtils.encodeDigest(typedData_)
-    return [message, await verifier.signMessage(digest)]
+    //const digest = TypedDataUtils.encodeDigest(typedData_)
+    //const types = typedData_.types
+    //delete types.EIP712Domain
+    // delete types.BulkReceipt
+    // delete types.Bulk
+    //console.log(message)
+    // const sig = await verifier._signTypedData(
+    //     typedData_.domain,
+    //     {
+    //         User: types.User,
+    //         Item: types.Item,
+    //         Header: types.Header,
+    //         Receipt: types.Receipt,
+    //     },
+    //     message
+    // )
+    //console.log("Sig", sig)
+
+    //const sig = await verifier.signMessage(digest)
+    // const sig = await verifier.provider.send("eth_signTypedData_v4", [
+    //     myAccount,
+    //     JSON.stringify(typedData)
+    //   ]);
+    const eip712 = JSON.stringify(typedData_);
+    console.log(eip712)
+    const sig = await ethers.provider.send("eth_signTypedData_v4", [
+        (await verifier.getAddress()).toLowerCase(),
+        eip712
+    ])
+    console.log("Sig", sig)
+    return [message, sig]
 }
 
 async function erc20PermitSignature(
@@ -251,9 +272,9 @@ async function erc1155PermitSignature(
     }
     let message = Object.assign({}, typedData.message)
     message = {
-        owner: seller.address,
-        spender: spender,
         nonce: nonce,
+        spender: spender,
+        owner: seller.address,
         deadline: deadline,
     }
     let typedData_ = JSON.parse(JSON.stringify(typedData))
@@ -342,7 +363,10 @@ describe("MarketplaceBase", () => {
             "ERC20Test",
             admin
         )
-        paymentToken = (await ERC20TestFactory.deploy("PaymentToken", "PMT") as ERC20Test)
+        paymentToken = (await ERC20TestFactory.deploy(
+            "PaymentToken",
+            "PMT"
+        )) as ERC20Test
         await paymentToken.deployed()
         for (const u of users) await paymentToken.mint(u.address, balance)
 
@@ -353,7 +377,7 @@ describe("MarketplaceBase", () => {
         governance = (await GovernanceFactory.deploy(
             treasury.address,
             verifier.address
-        ) as Governance)
+        )) as Governance
         await governance.deployed()
         await governance.connect(admin).registerToken(paymentToken.address)
 
@@ -401,7 +425,7 @@ describe("MarketplaceBase", () => {
             "Marketplace",
             admin
         )
-        marketplace = (await MarketplaceBaseFactory.deploy() as Marketplace)
+        marketplace = (await MarketplaceBaseFactory.deploy()) as Marketplace
         await marketplace.deployed()
         await marketplace.initialize(governance.address, serviceFee)
         await governance.connect(admin).updateMarketplace(marketplace.address)
@@ -410,7 +434,7 @@ describe("MarketplaceBase", () => {
             "TokenCreator",
             admin
         )
-        tokenCreator = (await TokenCreatorFactory.deploy() as TokenCreator)
+        tokenCreator = (await TokenCreatorFactory.deploy()) as TokenCreator
         await tokenCreator.deployed()
     })
 
@@ -420,7 +444,8 @@ describe("MarketplaceBase", () => {
                 "Collectible1155",
                 admin
             )
-            collectible1155Base = (await Collectible1155BaseFactory.deploy() as Collectible1155)
+            collectible1155Base =
+                (await Collectible1155BaseFactory.deploy()) as Collectible1155
             await collectible1155Base.deployed()
 
             const NFTFactoryFactory = await ethers.getContractFactory(
@@ -458,7 +483,7 @@ describe("MarketplaceBase", () => {
                 "Collectible1155",
                 cloneNft1155Address,
                 creator
-            ) as Collectible1155)
+            )) as Collectible1155
         })
         it("should let user redeem with valid receipt", async () => {
             const now = (await ethers.provider.getBlock("latest")).timestamp
@@ -548,7 +573,9 @@ describe("MarketplaceBase", () => {
             await expect(
                 marketplace
                     .connect(buyer)
-                    .redeem(receipt, signature, {value: ethers.utils.parseEther(salePrice.toString())})
+                    .redeem(receipt, signature, {
+                        value: ethers.utils.parseEther(salePrice.toString()),
+                    })
             ).to.emit(marketplace, "ItemRedeemed")
         })
     })
@@ -559,7 +586,8 @@ describe("MarketplaceBase", () => {
                 "Collectible721",
                 admin
             )
-            collectible721Base = (await Collectible721Factory.deploy() as Collectible721)
+            collectible721Base =
+                (await Collectible721Factory.deploy()) as Collectible721
             await collectible721Base.deployed()
 
             creator = users[2]
@@ -586,7 +614,7 @@ describe("MarketplaceBase", () => {
                 "Collectible721",
                 cloneNft721Address,
                 creator
-            ) as Collectible721)
+            )) as Collectible721
         })
 
         it("should let user redeem with valid receipt", async () => {

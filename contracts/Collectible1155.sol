@@ -60,9 +60,6 @@ contract Collectible1155 is
         _notFrozenToken(tokenId_);
         address sender = _msgSender();
         _onlyCreatorOrHasRole(sender, tokenId_, MINTER_ROLE);
-        // if (sender != owner()) {
-        //     revert ERC1155__Unauthorized();
-        // }
         _mint(sender, tokenId_, amount_, "");
     }
 
@@ -73,7 +70,6 @@ contract Collectible1155 is
         string memory tokenURI_
     ) external override {
         _onlyMarketplaceOrMinter();
-        //_onlyUnexists(item_.tokenId);
         _mint(to_, tokenId_, amount_, "");
 
         if (bytes(tokenURI_).length != 0) {
@@ -85,11 +81,12 @@ contract Collectible1155 is
         uint256[] calldata tokenIds_,
         uint256[] calldata amounts_
     ) external override {
-        //uint256 length = amounts_.length;
         address sender = _msgSender();
         _checkRole(MINTER_ROLE, sender);
-        for (uint256 i; i < amounts_.length; ) {
-            uint256 tokenId = tokenIds_[i];
+        uint256 length = amounts_.length;
+        uint256 tokenId;
+        for (uint256 i; i < length; ) {
+            tokenId = tokenIds_[i];
             _onlyExists(tokenId);
             _notFrozenToken(tokenId);
             _onlyCreator(sender, tokenId);
@@ -107,7 +104,8 @@ contract Collectible1155 is
         string[] memory tokenURIs_
     ) external override {
         _onlyMarketplaceOrMinter();
-        for (uint256 i; i < tokenURIs_.length; ) {
+        uint256 length = tokenURIs_.length;
+        for (uint256 i; i < length; ) {
             if (bytes(tokenURIs_[i]).length != 0) {
                 _setURI(tokenIds_[i], tokenURIs_[i]);
             }
@@ -226,12 +224,6 @@ contract Collectible1155 is
             revert ERC1155__Unauthorized();
         }
     }
-
-    // function _onlyUnexists(uint256 tokenId_) internal view virtual {
-    //     if (exists(tokenId_)) {
-    //         revert ERC1155__TokenExisted();
-    //     }
-    // }
 
     function _onlyExists(uint256 tokenId_) internal view virtual {
         if (!exists(tokenId_)) {

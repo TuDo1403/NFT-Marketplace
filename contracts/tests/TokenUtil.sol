@@ -1,21 +1,19 @@
 // SPDX-License-Identifier: Unlicensed
 pragma solidity 0.8.15;
 
-contract TokenCreator {
+library TokenUtil {
     // TOKEN ID = ADDRESS + SUPPLY + TYPE + FEE + ID
-    struct Token {
-        uint256 _fee;
-        uint256 _type;
-        uint256 _supply;
-        uint256 _index;
-        address _creator;
-    }
 
-    uint256 public constant FEE_BIT = 16; // creator fee
+    uint256 public constant FEE_BIT = 16;
     uint256 public constant TYPE_BIT = 16;
     uint256 public constant INDEX_BIT = 32;
-    uint256 public constant SUPPLY_BIT = 32; // max supply
+    uint256 public constant SUPPLY_BIT = 32;
     uint256 public constant ADDRESS_BIT = 160;
+
+    uint256 public constant FEE_MAX = ~uint16(0);
+    uint256 public constant TYPE_MAX = FEE_MAX;
+    uint256 public constant INDEX_MAX = ~uint32(0);
+    uint256 public constant SUPPLY_MAX = INDEX_MAX;
 
     uint256 private constant INDEX_MASK = (1 << INDEX_BIT) - 1;
     uint256 private constant FEE_MASK =
@@ -27,19 +25,19 @@ contract TokenCreator {
             (INDEX_MASK | FEE_MASK | TYPE_MASK);
 
     function createTokenId(
-        uint256 _fee,
-        uint256 _type,
-        uint256 _supply,
-        uint256 _index,
-        address _creator
+        uint256 fee_,
+        uint256 type_,
+        uint256 supply_,
+        uint256 index_,
+        address creator_
     ) external pure returns (uint256) {
         unchecked {
             return
-                _index |
-                (_fee << (INDEX_BIT)) |
-                (_type << (INDEX_BIT + FEE_BIT)) |
-                (_supply << (INDEX_BIT + FEE_BIT + TYPE_BIT)) |
-                (uint256(uint160(_creator)) <<
+                index_ |
+                (fee_ << (INDEX_BIT)) |
+                (type_ << (INDEX_BIT + FEE_BIT)) |
+                (supply_ << (INDEX_BIT + FEE_BIT + TYPE_BIT)) |
+                (uint256(uint160(creator_)) <<
                     (INDEX_BIT + FEE_BIT + TYPE_BIT + SUPPLY_BIT));
         }
     }
@@ -52,7 +50,7 @@ contract TokenCreator {
         unchecked {
             supply =
                 ((id_ & SUPPLY_MASK) >> (INDEX_BIT + FEE_BIT + TYPE_BIT)) %
-                (2**SUPPLY_BIT - 1);
+                SUPPLY_MAX;
         }
     }
 
@@ -62,15 +60,13 @@ contract TokenCreator {
         returns (uint256 tokenType)
     {
         unchecked {
-            tokenType =
-                ((id_ & TYPE_MASK) >> (INDEX_BIT + FEE_BIT)) %
-                (2**TYPE_BIT - 1);
+            tokenType = ((id_ & TYPE_MASK) >> (INDEX_BIT + FEE_BIT)) % TYPE_MAX;
         }
     }
 
     function getTokenIndex(uint256 id) external pure returns (uint256 index) {
         unchecked {
-            index = (id & INDEX_MASK) % (2**INDEX_BIT - 1);
+            index = (id & INDEX_MASK) % INDEX_MAX;
         }
     }
 
@@ -82,9 +78,9 @@ contract TokenCreator {
         }
     }
 
-    function getCreatorFee(uint256 id_) internal pure returns (uint256 fee) {
+    function getCreatorFee(uint256 id_) external pure returns (uint256 fee) {
         unchecked {
-            fee = ((id_ & FEE_MASK) >> INDEX_BIT) % (2**FEE_BIT - 1);
+            fee = ((id_ & FEE_MASK) >> INDEX_BIT) % FEE_MAX;
         }
     }
 }

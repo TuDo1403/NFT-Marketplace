@@ -4,11 +4,16 @@ pragma solidity 0.8.15;
 library TokenIdGenerator {
     // TOKEN ID = ADDRESS + SUPPLY + TYPE + FEE + ID
 
-    uint256 public constant FEE_BIT = 16; // creator fee
+    uint256 public constant FEE_BIT = 16;
     uint256 public constant TYPE_BIT = 16;
     uint256 public constant INDEX_BIT = 32;
-    uint256 public constant SUPPLY_BIT = 32; // max supply
+    uint256 public constant SUPPLY_BIT = 32;
     uint256 public constant ADDRESS_BIT = 160;
+
+    uint256 public constant FEE_MAX = ~uint16(0);
+    uint256 public constant TYPE_MAX = ~uint16(0);
+    uint256 public constant INDEX_MAX = ~uint32(0);
+    uint256 public constant SUPPLY_MAX = ~uint32(0);
 
     uint256 private constant INDEX_MASK = (1 << INDEX_BIT) - 1;
     uint256 private constant FEE_MASK =
@@ -45,7 +50,7 @@ library TokenIdGenerator {
         unchecked {
             supply =
                 ((id_ & SUPPLY_MASK) >> (INDEX_BIT + FEE_BIT + TYPE_BIT)) %
-                (2**SUPPLY_BIT - 1);
+                SUPPLY_MAX;
         }
     }
 
@@ -55,15 +60,13 @@ library TokenIdGenerator {
         returns (uint256 tokenType)
     {
         unchecked {
-            tokenType =
-                ((id_ & TYPE_MASK) >> (INDEX_BIT + FEE_BIT)) %
-                (2**TYPE_BIT - 1);
+            tokenType = ((id_ & TYPE_MASK) >> (INDEX_BIT + FEE_BIT)) % TYPE_MAX;
         }
     }
 
     function getTokenIndex(uint256 id) internal pure returns (uint256 index) {
         unchecked {
-            index = (id & INDEX_MASK) % (2**INDEX_BIT - 1);
+            index = (id & INDEX_MASK) % INDEX_MAX;
         }
     }
 
@@ -77,7 +80,7 @@ library TokenIdGenerator {
 
     function getCreatorFee(uint256 id_) internal pure returns (uint256 fee) {
         unchecked {
-            fee = ((id_ & FEE_MASK) >> INDEX_BIT) % (2**FEE_BIT - 1);
+            fee = ((id_ & FEE_MASK) >> INDEX_BIT) % FEE_MAX;
         }
     }
 }

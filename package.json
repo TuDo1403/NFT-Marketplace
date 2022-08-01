@@ -9,6 +9,7 @@
     "deploy:rinkeby": "npx hardhat run --network rinkeby scripts/deploy.ts",
     "deploy:bsctest": "npx hardhat run --network testnet scripts/deploy.ts",
     "deploy:bscmain": "npx hardhat run --network mainnet scripts/deploy.ts",
+    "new:moonbase": "npx hardhat run --network moonbase scripts/deploy-marketplace.ts",
     "upgrade:bsctest": "npx hardhat run --network testnet scripts/upgradeFactory.ts",
     "upgrade:bscmain": "npx hardhat run --network mainnet scripts/upgradeFactory.ts",
     "test": "npx hardhat test",

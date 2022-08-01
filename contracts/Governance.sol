@@ -19,12 +19,10 @@ contract Governance is IGovernance, Ownable {
         _;
     }
 
-    // 363880
-    constructor(
-        //address manager_,
-        address treasury_,
-        address verifier_
-    ) validAddress(treasury_) validAddress(verifier_) {
+    constructor(address treasury_, address verifier_)
+        validAddress(treasury_)
+        validAddress(verifier_)
+    {
         _transferOwnership(_msgSender());
         treasury = treasury_;
         verifier = verifier_;

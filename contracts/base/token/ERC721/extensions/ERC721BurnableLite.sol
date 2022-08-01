@@ -18,7 +18,7 @@ abstract contract ERC721BurnableLite is Context, ERC721Lite {
      */
     function burn(uint256 tokenId) public virtual {
         //solhint-disable-next-line max-line-length
-        // require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721Burnable: caller is not owner nor approved");
+
         _onlyOwnerOrApproved(_msgSender(), tokenId);
         _burn(tokenId);
     }

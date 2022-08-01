@@ -6,7 +6,7 @@ import "./base/token/ERC721/extensions/ERC721Permit.sol";
 import "./base/token/ERC721/extensions/ERC721Royalty.sol";
 import "./base/token/ERC721/extensions/ERC721BurnableLite.sol";
 import "./base/token/ERC721/extensions/ERC721URIStorageLite.sol";
-import "hardhat/console.sol";
+
 import "./interfaces/INFT.sol";
 
 contract Collectible721 is

@@ -36,21 +36,23 @@ abstract contract ERC1155SupplyLite is ERC1155Lite {
         bytes memory data
     ) internal virtual override {
         super._beforeTokenTransfer(operator, from, to, ids, amounts, data);
-        //uint256 length = ids.length;
+        uint256 length = ids.length;
+        uint256 tokenId;
+        uint256 amount;
         if (from == address(0)) {
-            uint256 MAX_SUPPLY;
-            unchecked {
-                MAX_SUPPLY = 2**TokenIdGenerator.SUPPLY_BIT - 1;
-            }
-            
-            for (uint256 i; i < ids.length; ) {
-                uint256 tokenId = ids[i];
-                uint256 amount = amounts[i];
+            // uint256 MAX_SUPPLY;
+            // unchecked {
+            //     MAX_SUPPLY = 2**TokenIdGenerator.SUPPLY_BIT - 1;
+            // }
+            uint256 maxSupply;
+            for (uint256 i; i < length; ) {
+                tokenId = ids[i];
+                amount = amounts[i];
                 //_supplyCheck(tokenId, amount);
-                if (amount > MAX_SUPPLY) {
+                if (amount > TokenIdGenerator.SUPPLY_MAX) {
                     revert ERC1155__AllocationExceeds();
                 }
-                uint256 maxSupply = tokenId.getTokenMaxSupply();
+                maxSupply = tokenId.getTokenMaxSupply();
                 if (maxSupply != 0) {
                     unchecked {
                         if (amount + totalSupply(tokenId) > maxSupply) {
@@ -64,17 +66,17 @@ abstract contract ERC1155SupplyLite is ERC1155Lite {
                 }
             }
         }
-
+        uint256 supply;
         if (to == address(0)) {
-            for (uint256 i; i < ids.length; ) {
-                uint256 id = ids[i];
-                uint256 amount = amounts[i];
-                uint256 supply = _totalSupply[id];
+            for (uint256 i; i < length; ) {
+                tokenId = ids[i];
+                amount = amounts[i];
+                supply = _totalSupply[tokenId];
                 if (supply < amount) {
                     revert ERC1155__AllocationExceeds();
                 }
                 unchecked {
-                    _totalSupply[id] = supply - amount;
+                    _totalSupply[tokenId] = supply - amount;
                     ++i;
                 }
             }

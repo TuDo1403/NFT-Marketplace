@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: Unlicensed
 // OpenZeppelin Contracts v4.4.1 (token/ERC1155/extensions/draft-IERC1155Permit.sol)
 
 pragma solidity 0.8.15;

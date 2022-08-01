@@ -11,17 +11,6 @@ abstract contract MarketplaceIntegratable is
 {
     IGovernance public admin;
 
-    // function kill() external payable {
-    //     if (msg.sender != admin.owner()) {
-    //         (bool success, ) = payable(admin.treasury()).call{value: msg.value}(
-    //             ""
-    //         );
-    //         assert(success);
-    //     } else {
-    //         selfdestruct(payable(admin.treasury()));
-    //     }
-    // }
-
     function _initialize(address admin_) internal onlyInitializing {
         __nonZeroAddress(admin_);
         admin = IGovernance(admin_);
