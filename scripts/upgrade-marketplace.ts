@@ -6,7 +6,7 @@ import { Governance } from '../typechain-types/contracts/Governance';
 
 
 const PRIVATE_KEY = process.env.PRIVATE_KEY || ""
-const GOVERNANCE = process.env.GOVERNANCE || ""
+const GOVERNANCE = process.env.TREASURY || ""
 const SERVICE_FEE = 200
 
 async function main() {
@@ -26,26 +26,18 @@ async function main() {
     // await collectible721Base.deployed()
     // console.log("Collectible721Base deployed to:", collectible721Base.address)
 
-    console.log("Deploying Marketplace contract...")
+    console.log("Upgrading Marketplace contract...")
     const MarketplaceFactory = await ethers.getContractFactory("Marketplace")
-    // const marketplace = (await upgrades.deployProxy(
-    //     MarketplaceFactory,
-    //     [GOVERNANCE, SERVICE_FEE],
-    //     { initializer: "initialize" }
-    // )) as Marketplace
-    // await marketplace.deployed()
-    // console.log("Marketplace deployed to: ", marketplace.address)
+    const marketplace = (await upgrades.upgradeProxy(
+        "0x27363292b64362D5268EEf5f17f534E9A163B976",
+        MarketplaceFactory
+    )) as Marketplace
+    await marketplace.deployed()
+    console.log("Marketplace upgrades to: ", marketplace.address)
 
-
-
-    const marketplace = await ethers.getContractAt("Marketplace", "0x8be5Fbb2a77983be9bB3786669F090421380Cc4b")
-
-    const signer = new ethers.Wallet(PRIVATE_KEY, ethers.provider)
+    // const signer = new ethers.Wallet(PRIVATE_KEY)
     // const governance = (await ethers.getContractAt("Governance", GOVERNANCE)) as Governance
     //     ; (await governance).connect(signer).updateMarketplace(marketplace.address)
-
-    const tx = await marketplace.connect(signer).updateGovernance(GOVERNANCE, {gasLimit: 3000000})
-    await tx.wait()
 }
 
 // We recommend this pattern to be able to use async/await everywhere

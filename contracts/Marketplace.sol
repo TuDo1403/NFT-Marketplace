@@ -61,8 +61,10 @@ contract Marketplace is
         ReceiptUtil.Item memory item = receipt_.item;
         uint256 salePrice = item.amount * item.unitPrice;
         ReceiptUtil.Header memory header = receipt_.header;
+        address buyerAddr = header.buyer.addr;
         ReceiptUtil.verifyReceipt({
             admin_: _admin,
+            buyer_: buyerAddr,
             paymentToken_: header.paymentToken,
             salePrice_: salePrice,
             deadline_: receipt_.deadline,
@@ -74,7 +76,7 @@ contract Marketplace is
         _useNonce(sellerAddr);
 
         uint256 tokenId = item.tokenId;
-        address buyerAddr = header.buyer.addr;
+        
         address nftContract = header.nftContract;
         {
             ReceiptUtil.User memory buyer = header.buyer;
@@ -147,14 +149,16 @@ contract Marketplace is
 
         IGovernance _admin = admin;
         ReceiptUtil.Header memory header = receipt_.header;
-        ReceiptUtil.verifyReceipt(
-            _admin,
-            header.paymentToken,
-            salePrice,
-            receipt_.deadline,
-            _hashTypedDataV4(receipt_.hash()),
-            signature_
-        );
+        address buyerAddr = header.buyer.addr;
+        ReceiptUtil.verifyReceipt({
+            admin_: _admin,
+            buyer_: buyerAddr,
+            paymentToken_: header.paymentToken,
+            salePrice_: salePrice,
+            deadline_: receipt_.deadline,
+            hashedReceipt_: _hashTypedDataV4(receipt_.hash()),
+            signature_: signature_
+        });
         ReceiptUtil.User memory seller = header.seller;
         address sellerAddr = seller.addr;
         _useNonce(sellerAddr);

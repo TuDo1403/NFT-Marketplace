@@ -2,6 +2,7 @@
 pragma solidity 0.8.15;
 
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import "../interfaces/IGovernance.sol";
 import "./TokenIdGenerator.sol";
@@ -73,9 +74,9 @@ library ReceiptUtil {
     bytes32 private constant BULK_TYPE_HASH =
         0x97a8084b05295a1a0b029b05bda73d5917d940d10e22aa7b9d94f19a379e7bf8;
 
-    ///@dev value is equal to keccak256("Receipt(Header header,Item item,uint256 nonce,uint256 deadline)Header(User buyer,User seller,address nftContract,address paymentToken)User(address addr,uint8 v,uint256 deadline,bytes32 r,bytes32 s)Item(uint256 amount,uint256 tokenId,uint256 unitPrice,string tokenURI)")
+    ///@dev value is equal to keccak256("Receipt(Header header,Item item,uint256 nonce,uint256 deadline)Header(User buyer,User seller,address nftContract,address paymentToken)Item(uint256 amount,uint256 tokenId,uint256 unitPrice,string tokenURI)User(address addr,uint8 v,uint256 deadline,bytes32 r,bytes32 s)")
     bytes32 private constant RECEIPT_TYPE_HASH =
-        0xe12da5126137442eee6aa47b09af013f90ebdd5c92e75d9a3badef17abb89d34;
+        0xb78ac395087007e11ad2f992c40597cbf77af4f445ba29e08662c57a5ae685e9;
 
     ///@dev value is equal to keccak256("BulkReceipt(Header header,Bulk bulk,uint256 nonce,uint256 deadline)Bulk(uint256[] amounts,uint256[] tokenIds,uint256[] unitPrices,string[] tokenURIs)Header(User buyer,User seller,address nftContract,address paymentToken)User(address addr,uint8 v,uint256 deadline,bytes32 r,bytes32 s)")
     bytes32 private constant BULK_RECEIPT_TYPE_HASH =
@@ -113,34 +114,37 @@ library ReceiptUtil {
 
     function verifyReceipt(
         IGovernance admin_,
+        address buyer_,
         address paymentToken_,
         uint256 salePrice_,
         uint256 deadline_,
         bytes32 hashedReceipt_,
         bytes calldata signature_
     ) internal view {
-        _verifyIntegrity(admin_, paymentToken_, salePrice_, deadline_);
-        if (
-            ECDSA.recover(
-                hashedReceipt_,
-                signature_
-            ) != admin_.verifier()
-        ) {
+        _verifyIntegrity(admin_, buyer_, paymentToken_, salePrice_, deadline_);
+        address signer = ECDSA.recover(hashedReceipt_, signature_);
+        if (signer != admin_.verifier()) {
             revert RU__InvalidSignature();
         }
     }
 
     function _verifyIntegrity(
         IGovernance admin_,
+        address buyer_,
         address paymentToken_,
         uint256 total_,
         uint256 deadline_
     ) private view {
-        if (total_ != msg.value) {
-            revert RU__InsufficientPayment();
-        }
         if (!admin_.acceptedPayments(paymentToken_)) {
-            revert RU__PaymentUnsuported();
+            if (total_ != msg.value) {
+                revert RU__InsufficientPayment();
+            } else {
+                revert RU__PaymentUnsuported();
+            }
+        } else {
+            if (IERC20(paymentToken_).balanceOf(buyer_) < total_) {
+                revert RU__InsufficientPayment();
+            }
         }
         if (block.timestamp > deadline_) {
             revert RU__Expired();

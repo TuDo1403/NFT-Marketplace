@@ -2,7 +2,7 @@
   "manifestVersion": "3.2",
   "admin": {
     "address": "0x7a2088a1bFc9d81c55368AE168C2C02570cB814F",
-    "txHash": "0xd34c33c8ccb81189c0b738c7f908cdfeb83a638197867aab131b887354f4db93"
+    "txHash": "0x7e15c634e49937cc99c0774549ca810dc8bde33df7cdf03ef485c976f2854285"
   },
   "proxies": [
     {
@@ -63,11 +63,6 @@
     {
       "address": "0xa85233C63b9Ee964Add6F2cffe00Fd84eb32338f",
       "txHash": "0x38e2c8e103bb380dd72c951ba3c3e1d41d154afd6cc8137017a341b69df31a7f",
-      "kind": "transparent"
-    },
-    {
-      "address": "0xc5a5C42992dECbae36851359345FE25997F5C42d",
-      "txHash": "0x5d5118023f9a01a070995caf0d7e2468c65cfd2611e26fb30bb35711494cafe3",
       "kind": "transparent"
     },
     {
@@ -171,15 +166,20 @@
       "kind": "transparent"
     },
     {
+      "address": "0xc5a5C42992dECbae36851359345FE25997F5C42d",
+      "txHash": "0x2c9fcde1fc4dff15e8274107690ec15525f6fa6443723e6ca6fcd83690a968ff",
+      "kind": "transparent"
+    },
+    {
       "address": "0x09635F643e140090A9A8Dcd712eD6285858ceBef",
-      "txHash": "0xc93e74d1a2a39cde88a4d513b892f7ba62ba15fe05de422106567a1867b1589e",
+      "txHash": "0xe7dac4ce1ab0bbd9e5b1bc963b44d3b6a564efbd3272de1ed38b475de6bb3f56",
       "kind": "transparent"
     }
   ],
   "impls": {
     "f9499f80b19610e857cdd0fc812de5e5e39fbf7558a0300fc801742895ddbc6d": {
       "address": "0x4A679253410272dd5232B3Ff7cF5dbB88f295319",
-      "txHash": "0x421df855149e58a64c521f4e755a0e1e687acb61fd20d26c138067e4bfd848cb",
+      "txHash": "0x8bd76d33374ae4d0be38a649409dca848dbb82bbea41124aafbad722ec6e661a",
       "layout": {
         "storage": [
           {
@@ -211,7 +211,7 @@
             "label": "admin",
             "offset": 0,
             "slot": "51",
-            "type": "t_contract(IGovernance)12795",
+            "type": "t_contract(IGovernance)12803",
             "contract": "MarketplaceIntegratable",
             "src": "contracts/base/MarketplaceIntegratable.sol:12"
           },
@@ -237,7 +237,7 @@
             "label": "bool",
             "numberOfBytes": "1"
           },
-          "t_contract(IGovernance)12795": {
+          "t_contract(IGovernance)12803": {
             "label": "contract IGovernance",
             "numberOfBytes": "20"
           },
