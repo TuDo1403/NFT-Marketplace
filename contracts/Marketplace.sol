@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Unlicensed
-pragma solidity 0.8.15;
+pragma solidity 0.8.16;
 
 import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/interfaces/IERC2981Upgradeable.sol";
@@ -76,7 +76,7 @@ contract Marketplace is
         _useNonce(sellerAddr);
 
         uint256 tokenId = item.tokenId;
-        
+
         address nftContract = header.nftContract;
         {
             ReceiptUtil.User memory buyer = header.buyer;
@@ -163,21 +163,19 @@ contract Marketplace is
         address sellerAddr = seller.addr;
         _useNonce(sellerAddr);
         address buyerAdrr;
-        address thisAddr = address(this);
         {
             ReceiptUtil.User memory buyer = header.buyer;
             buyerAdrr = buyer.addr;
-            if (buyer.v != 0) {
+            if (buyer.v != 0)
                 IERC20PermitUpgradeable(header.paymentToken).permit(
                     buyerAdrr,
-                    thisAddr,
+                    address(this),
                     salePrice,
                     buyer.deadline,
                     buyer.v,
                     buyer.r,
                     buyer.s
                 );
-            }
         }
 
         address nftContract = header.nftContract;
@@ -193,7 +191,7 @@ contract Marketplace is
         IERC1155Permit(nftContract).permit(
             seller.deadline,
             sellerAddr,
-            thisAddr,
+            address(this),
             seller.v,
             seller.r,
             seller.s
@@ -215,13 +213,13 @@ contract Marketplace is
         );
     }
 
-    function pause() external override whenNotPaused {
-        _onlyManager();
+    function pause() external override whenNotPaused onlyManager(_msgSender()) {
+        //_onlyManager();
         _pause();
     }
 
-    function unpause() external override whenPaused {
-        _onlyManager();
+    function unpause() external override whenPaused onlyManager(_msgSender()) {
+        //_onlyManager();
         _unpause();
     }
 
@@ -361,16 +359,14 @@ contract Marketplace is
         if (amount_ == 0) return;
         if (paymentToken_ == address(0)) {
             (bool ok, ) = payable(to_).call{value: amount_}("");
-            if (!ok) {
-                revert MP__PaymentFailed();
-            }
-        } else {
+            if (!ok) revert MP__PaymentFailed();
+            emit NativePayment(to_, amount_);
+        } else
             IERC20Upgradeable(paymentToken_).safeTransferFrom(
                 from_,
                 to_,
                 amount_
             );
-        }
     }
 
     function _initialize(address admin_, uint256 serviceFeeNumerator_)

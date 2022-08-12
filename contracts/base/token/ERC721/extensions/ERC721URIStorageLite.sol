@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-pragma solidity 0.8.15;
+pragma solidity 0.8.16;
 
 import "../ERC721Lite.sol";
 
@@ -26,13 +26,11 @@ abstract contract ERC721URIStorageLite is ERC721Lite {
         string memory base = _baseURI();
 
         // If there is no base URI, return the token URI.
-        if (bytes(base).length == 0) {
-            return _tokenURI;
-        }
+        if (bytes(base).length == 0) return _tokenURI;
+
         // If both are set, concatenate the baseURI and tokenURI (via abi.encodePacked).
-        if (bytes(_tokenURI).length > 0) {
+        if (bytes(_tokenURI).length > 0)
             return string(abi.encodePacked(base, _tokenURI));
-        }
 
         return super.tokenURI(tokenId);
     }
@@ -48,7 +46,6 @@ abstract contract ERC721URIStorageLite is ERC721Lite {
         internal
         virtual
     {
-        // require(_exists(tokenId), "ERC721URIStorage: URI set of nonexistent token");
         _onlyExists(tokenId);
         _tokenURIs[tokenId] = _tokenURI;
     }
@@ -66,8 +63,6 @@ abstract contract ERC721URIStorageLite is ERC721Lite {
     function _burn(uint256 tokenId) internal virtual override {
         super._burn(tokenId);
 
-        if (bytes(_tokenURIs[tokenId]).length != 0) {
-            delete _tokenURIs[tokenId];
-        }
+        if (bytes(_tokenURIs[tokenId]).length != 0) delete _tokenURIs[tokenId];
     }
 }

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-pragma solidity 0.8.15;
+pragma solidity 0.8.16;
 
 import "../ERC721Lite.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
@@ -35,9 +35,7 @@ abstract contract ERC721Permit is ERC721Lite, IERC721Permit, EIP712Upgradeable {
         bytes32 r_,
         bytes32 s_
     ) external override {
-        if (block.timestamp > deadline_) {
-            revert ERC721Permit__Expired();
-        }
+        if (block.timestamp > deadline_) revert ERC721Permit__Expired();
 
         bytes32 digest = _hashTypedDataV4(
             keccak256(
@@ -51,28 +49,22 @@ abstract contract ERC721Permit is ERC721Lite, IERC721Permit, EIP712Upgradeable {
             )
         );
         address owner = ownerOf(tokenId_);
-        if (spender_ == owner) {
-            revert ERC721__SelfApproving();
-        }
+        if (spender_ == owner) revert ERC721__SelfApproving();
 
-        if (Address.isContract(owner)) {
+        if (Address.isContract(owner))
             if (
                 IERC1271(owner).isValidSignature(
                     digest,
                     abi.encodePacked(r_, s_, v_)
                 ) != 0x1626ba7e
-            ) {
-                revert ERC721__Unauthorized();
+            ) revert ERC721__Unauthorized();
+            else {
+                address recoveredAddress = ECDSA.recover(digest, v_, r_, s_);
+                if (recoveredAddress == address(0))
+                    revert ERC721Permit__InvalidSignature();
+
+                if (recoveredAddress != owner) revert ERC721__Unauthorized();
             }
-        } else {
-            address recoveredAddress = ECDSA.recover(digest, v_, r_, s_);
-            if (recoveredAddress == address(0)) {
-                revert ERC721Permit__InvalidSignature();
-            }
-            if (recoveredAddress != owner) {
-                revert ERC721__Unauthorized();
-            }
-        }
 
         _approve(spender_, tokenId_);
     }

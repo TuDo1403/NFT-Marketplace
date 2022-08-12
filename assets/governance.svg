@@ -1,0 +1,168 @@
+<?xml version="1.0" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="530pt" height="709pt" viewBox="0.00 0.00 529.84 709.00">
+<g id="graph0" class="graph" transform="translate(4,705) scale(1)" data-name="G">
+
+<polygon fill="#2e3e56" stroke="transparent" points="-4,4 -4,-705 525.84,-705 525.84,4 -4,4" style=""/>
+<g id="clust1" class="cluster" data-name="clusterGovernance">
+
+<path fill="#445773" stroke="#445773" d="M20,-93C20,-93 501.84,-93 501.84,-93 507.84,-93 513.84,-99 513.84,-105 513.84,-105 513.84,-544 513.84,-544 513.84,-550 507.84,-556 501.84,-556 501.84,-556 20,-556 20,-556 14,-556 8,-550 8,-544 8,-544 8,-105 8,-105 8,-99 14,-93 20,-93" style=""/>
+<text text-anchor="middle" x="260.92" y="-539.4" font-family="Times,serif" font-size="14.00" fill="#f0f0f0" style="">Governance</text>
+</g>
+<g id="clust2" class="cluster" data-name="clusterOwnable">
+
+<path fill="#3b4b63" stroke="#e8726d" stroke-dasharray="5,2" d="M332.78,-8C332.78,-8 395.12,-8 395.12,-8 401.12,-8 407.12,-14 407.12,-20 407.12,-20 407.12,-73 407.12,-73 407.12,-79 401.12,-85 395.12,-85 395.12,-85 332.78,-85 332.78,-85 326.78,-85 320.78,-79 320.78,-73 320.78,-73 320.78,-20 320.78,-20 320.78,-14 326.78,-8 332.78,-8" style=""/>
+<text text-anchor="middle" x="363.95" y="-68.4" font-family="Times,serif" font-size="14.00" fill="#f0f0f0" style="">Ownable</text>
+</g>
+<g id="clust3" class="cluster" data-name="cluster_01">
+
+<polygon fill="#2e3e56" stroke="black" points="28.03,-564 28.03,-693 398.95,-693 398.95,-564 28.03,-564" style=""/>
+<text text-anchor="middle" x="213.49" y="-676.4" font-family="Times,serif" font-size="14.00" style="">Legend</text>
+</g>
+<!-- Governance.validAddress -->
+<g id="node1" class="node" pointer-events="visible" data-name="Governance.validAddress">
+
+<polygon fill="#edad56" stroke="#1bc6a6" stroke-width="3" points="168.23,-493.54 168.23,-508.46 128.87,-519 73.2,-519 33.83,-508.46 33.83,-493.54 73.2,-483 128.87,-483 168.23,-493.54" style=""/>
+<polygon fill="none" stroke="#1bc6a6" stroke-width="3" points="172.24,-490.48 172.24,-511.52 129.4,-523 72.67,-523 29.83,-511.52 29.83,-490.48 72.67,-479 129.4,-479 172.24,-490.48" style=""/>
+<text text-anchor="middle" x="101.03" y="-496.8" font-family="Times,serif" font-size="14.00" style="">validAddress</text>
+</g>
+<!-- Governance.Governance__InvalidAddress -->
+<g id="node9" class="node" pointer-events="visible" data-name="Governance.Governance__InvalidAddress">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="363.95" cy="-501" rx="126.19" ry="18" style=""/>
+<text text-anchor="middle" x="363.95" y="-496.8" font-family="Times,serif" font-size="14.00" style="">Governance__InvalidAddress</text>
+</g>
+<!-- Governance.validAddress&#45;&gt;Governance.Governance__InvalidAddress -->
+<g id="edge1" class="edge" data-name="Governance.validAddress-&gt;Governance.Governance__InvalidAddress">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M172.3,-501C189.38,-501 208.22,-501 227.22,-501" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="227.46,-504.5 237.46,-501 227.46,-497.5 227.46,-504.5" style=""/>
+</g>
+<!-- Governance.&lt;Constructor&gt; -->
+<g id="node2" class="node" pointer-events="visible" data-name="Governance.&lt;Constructor&gt;">
+
+<ellipse fill="#ff9797" stroke="brown" stroke-width="3" cx="101.03" cy="-443" rx="67.55" ry="18" style=""/>
+<text text-anchor="middle" x="101.03" y="-438.8" font-family="Times,serif" font-size="14.00" style="">&lt;Constructor&gt;</text>
+</g>
+<!-- Governance.updateTreasury -->
+<g id="node3" class="node" pointer-events="visible" data-name="Governance.updateTreasury">
+
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="101.03" cy="-389" rx="71.19" ry="18" style=""/>
+<text text-anchor="middle" x="101.03" y="-384.8" font-family="Times,serif" font-size="14.00" style="">updateTreasury</text>
+</g>
+<!-- Governance.TreasuryUpdated -->
+<g id="node10" class="node" pointer-events="visible" data-name="Governance.TreasuryUpdated">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="363.95" cy="-389" rx="78.14" ry="18" style=""/>
+<text text-anchor="middle" x="363.95" y="-384.8" font-family="Times,serif" font-size="14.00" style="">TreasuryUpdated</text>
+</g>
+<!-- Governance.updateTreasury&#45;&gt;Governance.TreasuryUpdated -->
+<g id="edge2" class="edge" data-name="Governance.updateTreasury-&gt;Governance.TreasuryUpdated">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M172.3,-389C204.03,-389 241.85,-389 275.41,-389" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="275.68,-392.5 285.68,-389 275.68,-385.5 275.68,-392.5" style=""/>
+</g>
+<!-- Governance.updateVerifier -->
+<g id="node4" class="node" pointer-events="visible" data-name="Governance.updateVerifier">
+
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="101.03" cy="-335" rx="67.17" ry="18" style=""/>
+<text text-anchor="middle" x="101.03" y="-330.8" font-family="Times,serif" font-size="14.00" style="">updateVerifier</text>
+</g>
+<!-- Governance.updateMarketplace -->
+<g id="node5" class="node" pointer-events="visible" data-name="Governance.updateMarketplace">
+
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="101.03" cy="-281" rx="85.07" ry="18" style=""/>
+<text text-anchor="middle" x="101.03" y="-276.8" font-family="Times,serif" font-size="14.00" style="">updateMarketplace</text>
+</g>
+<!-- Governance.registerToken -->
+<g id="node6" class="node" pointer-events="visible" data-name="Governance.registerToken">
+
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="101.03" cy="-227" rx="64.83" ry="18" style=""/>
+<text text-anchor="middle" x="101.03" y="-222.8" font-family="Times,serif" font-size="14.00" style="">registerToken</text>
+</g>
+<!-- Governance.PaymentUpdated -->
+<g id="node11" class="node" pointer-events="visible" data-name="Governance.PaymentUpdated">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="363.95" cy="-227" rx="77.59" ry="18" style=""/>
+<text text-anchor="middle" x="363.95" y="-222.8" font-family="Times,serif" font-size="14.00" style="">PaymentUpdated</text>
+</g>
+<!-- Governance.registerToken&#45;&gt;Governance.PaymentUpdated -->
+<g id="edge3" class="edge" data-name="Governance.registerToken-&gt;Governance.PaymentUpdated">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M165.86,-227C199.1,-227 240.22,-227 276.29,-227" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="276.32,-230.5 286.32,-227 276.32,-223.5 276.32,-230.5" style=""/>
+</g>
+<!-- Governance.unregisterToken -->
+<g id="node7" class="node" pointer-events="visible" data-name="Governance.unregisterToken">
+
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="101.03" cy="-173" rx="74.14" ry="18" style=""/>
+<text text-anchor="middle" x="101.03" y="-168.8" font-family="Times,serif" font-size="14.00" style="">unregisterToken</text>
+</g>
+<!-- Governance.unregisterToken&#45;&gt;Governance.PaymentUpdated -->
+<g id="edge5" class="edge" data-name="Governance.unregisterToken-&gt;Governance.PaymentUpdated">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M155.43,-185.4C176.2,-190.12 200.22,-195.45 222.07,-200 245.01,-204.78 270.11,-209.69 292.69,-213.99" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="292.06,-217.43 302.54,-215.86 293.37,-210.56 292.06,-217.43" style=""/>
+</g>
+<!-- Governance.Governance__UnregisteredToken -->
+<g id="node12" class="node" pointer-events="visible" data-name="Governance.Governance__UnregisteredToken">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="363.95" cy="-173" rx="141.77" ry="18" style=""/>
+<text text-anchor="middle" x="363.95" y="-168.8" font-family="Times,serif" font-size="14.00" style="">Governance__UnregisteredToken</text>
+</g>
+<!-- Governance.unregisterToken&#45;&gt;Governance.Governance__UnregisteredToken -->
+<g id="edge4" class="edge" data-name="Governance.unregisterToken-&gt;Governance.Governance__UnregisteredToken">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M175.41,-173C186.95,-173 199.22,-173 211.77,-173" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="211.87,-176.5 221.87,-173 211.87,-169.5 211.87,-176.5" style=""/>
+</g>
+<!-- Governance.owner -->
+<g id="node8" class="node" pointer-events="visible" data-name="Governance.owner">
+
+<ellipse fill="#ff9797" stroke="#ff9797" stroke-width="3" cx="101.03" cy="-119" rx="35.34" ry="18" style=""/>
+<text text-anchor="middle" x="101.03" y="-114.8" font-family="Times,serif" font-size="14.00" style="">owner</text>
+</g>
+<!-- Ownable.owner -->
+<g id="node13" class="node" pointer-events="visible" data-name="Ownable.owner">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="363.95" cy="-34" rx="35.34" ry="18" style=""/>
+<text text-anchor="middle" x="363.95" y="-29.8" font-family="Times,serif" font-size="14.00" style="">owner</text>
+</g>
+<!-- Governance.owner&#45;&gt;Ownable.owner -->
+<g id="edge6" class="edge" data-name="Governance.owner-&gt;Ownable.owner">
+
+<path fill="none" stroke="white" stroke-width="2" d="M131.21,-109.5C178.43,-94.11 271.63,-63.75 324.31,-46.59" style=""/>
+<polygon fill="white" stroke="white" stroke-width="2" points="325.55,-49.87 333.97,-43.44 323.38,-43.21 325.55,-49.87" style=""/>
+</g>
+<!-- key -->
+<g id="node14" class="node" pointer-events="visible" data-name="key">
+
+<polygon fill="#edad56" stroke="transparent" stroke-width="3" points="166.03,-660 36.03,-660 36.03,-572 166.03,-572 166.03,-660" style=""/>
+<text text-anchor="start" x="85.67" y="-641.4" font-family="Times,serif" font-size="14.00" style="">Internal Call</text>
+<text text-anchor="start" x="81.78" y="-621.4" font-family="Times,serif" font-size="14.00" style="">External Call</text>
+<text text-anchor="start" x="59.24" y="-601.4" font-family="Times,serif" font-size="14.00" style="">Defined Contract</text>
+<text text-anchor="start" x="45.64" y="-581.4" font-family="Times,serif" font-size="14.00" style="">Undefined Contract</text>
+</g>
+<!-- key2 -->
+<g id="node15" class="node" pointer-events="visible" data-name="key2">
+
+<polygon fill="#edad56" stroke="transparent" stroke-width="3" points="390.95,-660 336.95,-660 336.95,-572 390.95,-572 390.95,-660" style=""/>
+<text text-anchor="start" x="353.95" y="-641.4" font-family="Times,serif" font-size="14.00" style="">   </text>
+<text text-anchor="start" x="353.95" y="-621.4" font-family="Times,serif" font-size="14.00" style="">   </text>
+<polygon fill="#445773" stroke="transparent" points="351.95,-596 351.95,-616 376.95,-616 376.95,-596 351.95,-596" style=""/>
+<text text-anchor="start" x="353.95" y="-601.4" font-family="Times,serif" font-size="14.00" style="">   </text>
+<polygon fill="none" stroke="#e8726d" points="353.95,-578 353.95,-594 374.95,-594 374.95,-578 353.95,-578" style=""/>
+</g>
+<!-- key&#45;&gt;key2 -->
+<g id="edge7" class="edge" data-name="key-&gt;key2">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M159.03,-646C240.83,-646 263.8,-646 340.77,-646" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="340.95,-649.5 350.95,-646 340.95,-642.5 340.95,-649.5" style=""/>
+</g>
+<!-- key&#45;&gt;key2 -->
+<g id="edge8" class="edge" data-name="key-&gt;key2">
+
+<path fill="none" stroke="white" stroke-width="2" d="M159.03,-626C240.83,-626 263.8,-626 340.77,-626" style=""/>
+<polygon fill="white" stroke="white" stroke-width="2" points="340.95,-629.5 350.95,-626 340.95,-622.5 340.95,-629.5" style=""/>
+</g>
+</g>
+</svg>

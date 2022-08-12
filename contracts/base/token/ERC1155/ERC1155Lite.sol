@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Unlicensed
-pragma solidity 0.8.15;
+pragma solidity 0.8.16;
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 
@@ -290,9 +290,8 @@ abstract contract ERC1155Lite is ERC1155, IERC1155Lite {
         address operator,
         bool approved
     ) internal virtual override {
-        if (owner == operator) {
-            revert ERC1155__SelfApproving();
-        }
+        if (owner == operator) revert ERC1155__SelfApproving();
+
         _operatorApprovals[owner][operator] = approved;
         emit ApprovalForAll(owner, operator, approved);
     }
@@ -301,28 +300,21 @@ abstract contract ERC1155Lite is ERC1155, IERC1155Lite {
         internal
         pure
     {
-        if (fromBalance_ < amount_) {
-            revert ERC1155__InsufficientBalance();
-        }
+        if (amount_ > fromBalance_) revert ERC1155__InsufficientBalance();
     }
 
     function _lengthMustMatch(uint256 a, uint256 b) internal pure {
-        if (a != b) {
-            revert ERC1155__LengthMismatch();
-        }
+        if (a != b) revert ERC1155__LengthMismatch();
     }
 
     function _onlyOwnerOrApproved(address from_) internal view {
         address sender = _msgSender();
-        if (from_ != sender && !isApprovedForAll(from_, sender)) {
+        if (from_ != sender && !isApprovedForAll(from_, sender))
             revert ERC1155__Unauthorized();
-        }
     }
 
     function _nonZeroAddress(address addr_) internal pure {
-        if (addr_ == address(0)) {
-            revert ERC1155__ZeroAddress();
-        }
+        if (addr_ == address(0)) revert ERC1155__ZeroAddress();
     }
 
     function __doSafeTransferAcceptanceCheck(
@@ -343,9 +335,8 @@ abstract contract ERC1155Lite is ERC1155, IERC1155Lite {
                     data
                 )
             returns (bytes4 response) {
-                if (response != IERC1155Receiver.onERC1155Received.selector) {
+                if (response != IERC1155Receiver.onERC1155Received.selector)
                     revert ERC1155__TokenRejected();
-                }
             } catch Error(string memory reason) {
                 revert(reason);
             } catch {
@@ -374,9 +365,7 @@ abstract contract ERC1155Lite is ERC1155, IERC1155Lite {
             returns (bytes4 response) {
                 if (
                     response != IERC1155Receiver.onERC1155BatchReceived.selector
-                ) {
-                    revert ERC1155__TokenRejected();
-                }
+                ) revert ERC1155__TokenRejected();
             } catch Error(string memory reason) {
                 revert(reason);
             } catch {

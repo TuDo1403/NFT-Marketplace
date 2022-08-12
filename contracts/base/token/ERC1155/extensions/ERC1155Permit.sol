@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Unlicensed
 // OpenZeppelin Contracts (last updated v4.6.0) (token/ERC1155/extensions/draft-ERC1155Permit.sol)
 
-pragma solidity 0.8.15;
+pragma solidity 0.8.16;
 
 import "../ERC1155Lite.sol";
 import "@openzeppelin/contracts-upgradeable/utils/cryptography/draft-EIP712Upgradeable.sol";
@@ -56,9 +56,7 @@ abstract contract ERC1155Permit is
         bytes32 r_,
         bytes32 s_
     ) external override {
-        if (block.timestamp > deadline_) {
-            revert ERC1155Permit__Expired();
-        }
+        if (block.timestamp > deadline_) revert ERC1155Permit__Expired();
 
         bytes32 digest = _hashTypedDataV4(
             keccak256(
@@ -83,12 +81,10 @@ abstract contract ERC1155Permit is
             }
         } else {
             address recoveredAddress = ECDSA.recover(digest, v_, r_, s_);
-            if (recoveredAddress == address(0)) {
+            if (recoveredAddress == address(0))
                 revert ERC1155Permit__InvalidSignature();
-            }
-            if (recoveredAddress != owner_) {
-                revert ERC1155__Unauthorized();
-            }
+
+            if (recoveredAddress != owner_) revert ERC1155__Unauthorized();
         }
 
         _setApprovalForAll(owner_, spender_, true);

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Unlicensed
-pragma solidity 0.8.15;
+pragma solidity 0.8.16;
 
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -122,10 +122,8 @@ library ReceiptUtil {
         bytes calldata signature_
     ) internal view {
         _verifyIntegrity(admin_, buyer_, paymentToken_, salePrice_, deadline_);
-        address signer = ECDSA.recover(hashedReceipt_, signature_);
-        if (signer != admin_.verifier()) {
+        if (ECDSA.recover(hashedReceipt_, signature_) != admin_.verifier())
             revert RU__InvalidSignature();
-        }
     }
 
     function _verifyIntegrity(
@@ -135,34 +133,25 @@ library ReceiptUtil {
         uint256 total_,
         uint256 deadline_
     ) private view {
-        if (!admin_.acceptedPayments(paymentToken_)) {
-            if (total_ != msg.value) {
-                revert RU__InsufficientPayment();
-            } else {
-                revert RU__PaymentUnsuported();
-            }
-        } else {
-            if (IERC20(paymentToken_).balanceOf(buyer_) < total_) {
-                revert RU__InsufficientPayment();
-            }
-        }
-        if (block.timestamp > deadline_) {
-            revert RU__Expired();
-        }
+        if (block.timestamp > deadline_) revert RU__Expired();
+
+        if (!admin_.acceptedPayments(paymentToken_))
+            if (total_ != msg.value) revert RU__InsufficientPayment();
+            else revert RU__PaymentUnsuported();
+        else if (total_ > IERC20(paymentToken_).balanceOf(buyer_))
+            revert RU__InsufficientPayment();
     }
 
     function __hashUser(User memory user_) private pure returns (bytes32) {
         return
             keccak256(
-                (
-                    abi.encode(
-                        USER_TYPE_HASH,
-                        user_.addr,
-                        user_.v,
-                        user_.deadline,
-                        user_.r,
-                        user_.s
-                    )
+                abi.encode(
+                    USER_TYPE_HASH,
+                    user_.addr,
+                    user_.v,
+                    user_.deadline,
+                    user_.r,
+                    user_.s
                 )
             );
     }

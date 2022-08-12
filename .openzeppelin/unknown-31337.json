@@ -2,7 +2,7 @@
   "manifestVersion": "3.2",
   "admin": {
     "address": "0x7a2088a1bFc9d81c55368AE168C2C02570cB814F",
-    "txHash": "0x7e15c634e49937cc99c0774549ca810dc8bde33df7cdf03ef485c976f2854285"
+    "txHash": "0x498cbe3cf87d398b850dc5daf76b7a3b942b687f07893ce45e90b66feab94f45"
   },
   "proxies": [
     {
@@ -172,90 +172,11 @@
     },
     {
       "address": "0x09635F643e140090A9A8Dcd712eD6285858ceBef",
-      "txHash": "0xe7dac4ce1ab0bbd9e5b1bc963b44d3b6a564efbd3272de1ed38b475de6bb3f56",
+      "txHash": "0xbe99cf3819580902482a1f725e4d332da0aeaa6ed6eaa794272e0e6480bb3a83",
       "kind": "transparent"
     }
   ],
   "impls": {
-    "f9499f80b19610e857cdd0fc812de5e5e39fbf7558a0300fc801742895ddbc6d": {
-      "address": "0x4A679253410272dd5232B3Ff7cF5dbB88f295319",
-      "txHash": "0x8bd76d33374ae4d0be38a649409dca848dbb82bbea41124aafbad722ec6e661a",
-      "layout": {
-        "storage": [
-          {
-            "label": "_initialized",
-            "offset": 0,
-            "slot": "0",
-            "type": "t_uint8",
-            "contract": "Initializable",
-            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
-            "retypedFrom": "bool"
-          },
-          {
-            "label": "_initializing",
-            "offset": 1,
-            "slot": "0",
-            "type": "t_bool",
-            "contract": "Initializable",
-            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
-          },
-          {
-            "label": "__gap",
-            "offset": 0,
-            "slot": "1",
-            "type": "t_array(t_uint256)50_storage",
-            "contract": "ContextUpgradeable",
-            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
-          },
-          {
-            "label": "admin",
-            "offset": 0,
-            "slot": "51",
-            "type": "t_contract(IGovernance)12803",
-            "contract": "MarketplaceIntegratable",
-            "src": "contracts/base/MarketplaceIntegratable.sol:12"
-          },
-          {
-            "label": "deployedContracts",
-            "offset": 0,
-            "slot": "52",
-            "type": "t_mapping(t_uint256,t_address)",
-            "contract": "NFTFactory",
-            "src": "contracts/NFTFactory.sol:24"
-          }
-        ],
-        "types": {
-          "t_address": {
-            "label": "address",
-            "numberOfBytes": "20"
-          },
-          "t_array(t_uint256)50_storage": {
-            "label": "uint256[50]",
-            "numberOfBytes": "1600"
-          },
-          "t_bool": {
-            "label": "bool",
-            "numberOfBytes": "1"
-          },
-          "t_contract(IGovernance)12803": {
-            "label": "contract IGovernance",
-            "numberOfBytes": "20"
-          },
-          "t_mapping(t_uint256,t_address)": {
-            "label": "mapping(uint256 => address)",
-            "numberOfBytes": "32"
-          },
-          "t_uint256": {
-            "label": "uint256",
-            "numberOfBytes": "32"
-          },
-          "t_uint8": {
-            "label": "uint8",
-            "numberOfBytes": "1"
-          }
-        }
-      }
-    },
     "09868212d9fd269249afbca927c6c4e85633bb1ca546eedc7649ba975ec77ded": {
       "address": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
       "txHash": "0x501359a274fca412542c7bfca506807dfcdd1a4a26cef1be25c9edcf73dbd81e",
@@ -765,6 +686,85 @@
           "t_uint16": {
             "label": "uint16",
             "numberOfBytes": "2"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "e98e775820514c874153e367f2be8f2ad94f420f4850e8e5e8506031ced0f68c": {
+      "address": "0x4A679253410272dd5232B3Ff7cF5dbB88f295319",
+      "txHash": "0xea96da4f399422239746f4f0cc1cd10cfa9a7d4076ca6f7e393c89e257f587d6",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "admin",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_contract(IGovernance)12741",
+            "contract": "MarketplaceIntegratable",
+            "src": "contracts/base/MarketplaceIntegratable.sol:12"
+          },
+          {
+            "label": "deployedContracts",
+            "offset": 0,
+            "slot": "52",
+            "type": "t_mapping(t_uint256,t_address)",
+            "contract": "NFTFactory",
+            "src": "contracts/NFTFactory.sol:24"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_contract(IGovernance)12741": {
+            "label": "contract IGovernance",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_uint256,t_address)": {
+            "label": "mapping(uint256 => address)",
+            "numberOfBytes": "32"
           },
           "t_uint256": {
             "label": "uint256",

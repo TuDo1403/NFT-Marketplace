@@ -61,7 +61,8 @@
     "@uniswap/v3-periphery": "^1.4.1",
     "commitlint": "^17.0.3",
     "ethers-eip712": "^0.2.0",
-    "hardhat-contract-sizer": "^2.6.1"
+    "hardhat-contract-sizer": "^2.6.1",
+    "surya": "^0.4.6"
   },
   "version": "1.0.0",
   "main": "index.js",

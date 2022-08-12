@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Unlicensed
-pragma solidity 0.8.15;
+pragma solidity 0.8.16;
 
 import "./base/NFTBase.sol";
 import "./base/TokenFreezable.sol";
@@ -32,7 +32,7 @@ contract Collectible1155 is
     string public name;
     string public symbol;
 
-    constructor() NFTBase(1155) ERC1155Lite("") {}
+    constructor() payable NFTBase(1155) ERC1155Lite("") {}
 
     function initialize(
         address admin_,
@@ -41,9 +41,9 @@ contract Collectible1155 is
         string calldata symbol_,
         string calldata baseURI_
     ) external override initializer {
-        if (bytes(name_).length > 32 || bytes(symbol_).length > 32) {
+        if (bytes(symbol_).length > 32 || bytes(name_).length > 32)
             revert NFT__StringTooLong();
-        }
+
         name = name_;
         symbol = symbol_;
 
@@ -72,9 +72,7 @@ contract Collectible1155 is
         _onlyMarketplaceOrMinter();
         _mint(to_, tokenId_, amount_, "");
 
-        if (bytes(tokenURI_).length != 0) {
-            _setURI(tokenId_, tokenURI_);
-        }
+        if (bytes(tokenURI_).length != 0) _setURI(tokenId_, tokenURI_);
     }
 
     function mintBatch(
@@ -106,9 +104,9 @@ contract Collectible1155 is
         _onlyMarketplaceOrMinter();
         uint256 length = tokenURIs_.length;
         for (uint256 i; i < length; ) {
-            if (bytes(tokenURIs_[i]).length != 0) {
+            if (bytes(tokenURIs_[i]).length != 0)
                 _setURI(tokenIds_[i], tokenURIs_[i]);
-            }
+
             unchecked {
                 ++i;
             }
@@ -220,21 +218,16 @@ contract Collectible1155 is
         uint256 tokenId_,
         bytes32 role_
     ) internal view virtual {
-        if (!_isCreatorOf(sender_, tokenId_) && !hasRole(role_, sender_)) {
+        if (!(_isCreatorOf(sender_, tokenId_) || hasRole(role_, sender_)))
             revert ERC1155__Unauthorized();
-        }
     }
 
     function _onlyExists(uint256 tokenId_) internal view virtual {
-        if (!exists(tokenId_)) {
-            revert ERC1155__TokenUnexisted();
-        }
+        if (!exists(tokenId_)) revert ERC1155__TokenUnexisted();
     }
 
     function _onlyMarketplaceOrMinter() internal view {
         address sender = _msgSender();
-        if (sender != admin.marketplace()) {
-            _checkRole(MINTER_ROLE, sender);
-        }
+        if (sender != admin.marketplace()) _checkRole(MINTER_ROLE, sender);
     }
 }

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Unlicensed
-pragma solidity 0.8.15;
+pragma solidity 0.8.16;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 
@@ -13,17 +13,16 @@ contract Governance is IGovernance, Ownable {
     mapping(address => bool) public acceptedPayments;
 
     modifier validAddress(address addr_) {
-        if (addr_ == address(0)) {
-            revert Governance__InvalidAddress();
-        }
+        if (addr_ == address(0)) revert Governance__InvalidAddress();
         _;
     }
 
     constructor(address treasury_, address verifier_)
+        payable
+        Ownable()
         validAddress(treasury_)
         validAddress(verifier_)
     {
-        _transferOwnership(_msgSender());
         treasury = treasury_;
         verifier = verifier_;
     }
@@ -33,7 +32,8 @@ contract Governance is IGovernance, Ownable {
         onlyOwner
         validAddress(treasury_)
     {
-        emit TreasuryUpdated(treasury, treasury_);
+        address _treasury = treasury;
+        emit TreasuryUpdated(_treasury, treasury_);
         treasury = treasury_;
     }
 
@@ -63,9 +63,8 @@ contract Governance is IGovernance, Ownable {
     }
 
     function unregisterToken(address token_) external onlyOwner {
-        if (!acceptedPayments[token_]) {
-            revert Governance__UnregisteredToken();
-        }
+        if (!acceptedPayments[token_]) revert Governance__UnregisteredToken();
+
         delete acceptedPayments[token_];
         emit PaymentUpdated(token_, false);
     }

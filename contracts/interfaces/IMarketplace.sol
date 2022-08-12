@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Unlicensed
-pragma solidity 0.8.15;
+pragma solidity 0.8.16;
 
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "./IPausable.sol";
@@ -27,6 +27,8 @@ interface IMarketplace is IPausable {
         address paymentToken,
         uint256 total
     );
+
+    event NativePayment(address indexed to, uint256 indexed value);
 
     function initialize(address admin_, uint256 serviceFeeRightShiftBit_)
         external;

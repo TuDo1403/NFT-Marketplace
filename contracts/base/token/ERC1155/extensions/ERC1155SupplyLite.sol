@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Unlicensed
-pragma solidity 0.8.15;
+pragma solidity 0.8.16;
 
 import "../ERC1155Lite.sol";
 
@@ -49,15 +49,14 @@ abstract contract ERC1155SupplyLite is ERC1155Lite {
                 tokenId = ids[i];
                 amount = amounts[i];
                 //_supplyCheck(tokenId, amount);
-                if (amount > TokenIdGenerator.SUPPLY_MAX) {
+                if (amount > TokenIdGenerator.SUPPLY_MAX)
                     revert ERC1155__AllocationExceeds();
-                }
+
                 maxSupply = tokenId.getTokenMaxSupply();
                 if (maxSupply != 0) {
                     unchecked {
-                        if (amount + totalSupply(tokenId) > maxSupply) {
+                        if (amount + totalSupply(tokenId) > maxSupply)
                             revert ERC1155__AllocationExceeds();
-                        }
                     }
                 }
                 unchecked {
@@ -72,9 +71,8 @@ abstract contract ERC1155SupplyLite is ERC1155Lite {
                 tokenId = ids[i];
                 amount = amounts[i];
                 supply = _totalSupply[tokenId];
-                if (supply < amount) {
-                    revert ERC1155__AllocationExceeds();
-                }
+                if (amount < supply) revert ERC1155__AllocationExceeds();
+
                 unchecked {
                     _totalSupply[tokenId] = supply - amount;
                     ++i;

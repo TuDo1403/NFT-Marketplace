@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Unlicensed
-pragma solidity 0.8.15;
+pragma solidity 0.8.16;
 
 import "./base/NFTBase.sol";
 import "./base/token/ERC721/extensions/ERC721Permit.sol";
@@ -25,7 +25,7 @@ contract Collectible721 is
     string private _symbol;
     string private baseURI;
 
-    constructor() NFTBase(721) {}
+    constructor() payable NFTBase(721) {}
 
     function initialize(
         address admin_,
@@ -34,9 +34,9 @@ contract Collectible721 is
         string calldata symbol_,
         string calldata baseURI_
     ) external override initializer {
-        if (bytes(name_).length > 32 || bytes(symbol_).length > 32) {
+        if (bytes(symbol_).length > 32 || bytes(name_).length > 32)
             revert NFT__StringTooLong();
-        }
+
         _name = name_;
         _symbol = symbol_;
         baseURI = baseURI_;
@@ -59,14 +59,10 @@ contract Collectible721 is
         uint256 amount_,
         string memory tokenURI_
     ) external override {
+        if (amount_ != 1) revert ERC721__InvalidInput();
         address sender = _msgSender();
+        if (sender != admin.marketplace()) _checkRole(MINTER_ROLE, sender);
 
-        if (sender != admin.marketplace()) {
-            _checkRole(MINTER_ROLE, sender);
-        }
-        if (amount_ != 1) {
-            revert ERC721__InvalidInput();
-        }
         _safeMint(to_, tokenId_);
         _setTokenURI(tokenId_, tokenURI_);
     }

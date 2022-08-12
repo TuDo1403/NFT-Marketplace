@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-pragma solidity 0.8.15;
+pragma solidity 0.8.16;
 
 import "../ERC721Lite.sol";
 import "@openzeppelin/contracts/token/common/ERC2981.sol";
@@ -38,8 +38,7 @@ abstract contract ERC721Royalty is ERC2981, ERC721Lite {
         address to,
         uint256 tokenId
     ) internal virtual override {
-        if (from == address(0)) {
+        if (from == address(0))
             _setTokenRoyalty(tokenId, to, uint96(tokenId.getCreatorFee()));
-        }
     }
 }

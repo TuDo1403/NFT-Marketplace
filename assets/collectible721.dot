@@ -1,0 +1,110 @@
+digraph G {
+  graph [ ratio = "auto", page = "100", compound =true, bgcolor = "#2e3e56" ];
+  node [ style = "filled", fillcolor = "#edad56", color = "#edad56", penwidth =3 ];
+  edge [ color = "#fcfcfc", penwidth =2, fontname = "helvetica Neue Ultra Light" ];
+subgraph "clusterCollectible721" {
+  graph [ label = "Collectible721", color = "#445773", fontcolor = "#f0f0f0", style = "rounded", bgcolor = "#445773" ];
+  "Collectible721.<Constructor>" [ label = "<Constructor>", color = "brown", fillcolor = "#FF9797" ];
+  "Collectible721.initialize" [ label = "initialize", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+  "Collectible721._beforeTokenTransfer" [ label = "_beforeTokenTransfer", color = "#f2c383", fillcolor = "#f2c383" ];
+  "Collectible721.mint" [ label = "mint", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+  "Collectible721.supportsInterface" [ label = "supportsInterface", color = "#FF9797", fillcolor = "#FF9797" ];
+  "Collectible721.tokenURI" [ label = "tokenURI", color = "#FF9797", fillcolor = "#FF9797" ];
+  "Collectible721.name" [ label = "name", color = "#FF9797", fillcolor = "#FF9797" ];
+  "Collectible721.symbol" [ label = "symbol", color = "#FF9797", fillcolor = "#FF9797" ];
+  "Collectible721._burn" [ label = "_burn", color = "#f2c383", fillcolor = "#f2c383" ];
+  "Collectible721._baseURI" [ label = "_baseURI", color = "#f2c383", fillcolor = "#f2c383" ];
+  "Collectible721.NFT__StringTooLong" [ label = "NFT__StringTooLong" ];
+  "Collectible721._initialize" [ label = "_initialize" ];
+  "Collectible721.__EIP712_init" [ label = "__EIP712_init" ];
+  "Collectible721.type" [ label = "type" ];
+  "Collectible721.ERC721__InvalidInput" [ label = "ERC721__InvalidInput" ];
+  "Collectible721._msgSender" [ label = "_msgSender" ];
+  "Collectible721._checkRole" [ label = "_checkRole" ];
+  "Collectible721._safeMint" [ label = "_safeMint" ];
+  "Collectible721._setTokenURI" [ label = "_setTokenURI" ];
+}
+
+subgraph "clusterERC721Royalty" {
+  graph [ label = "ERC721Royalty", color = "#e8726d", fontcolor = "#f0f0f0", style = "rounded,dashed", bgcolor = "#3b4b63" ];
+  "ERC721Royalty._beforeTokenTransfer" [ label = "_beforeTokenTransfer" ];
+  "ERC721Royalty._burn" [ label = "_burn" ];
+}
+
+subgraph "clusteradmin" {
+  graph [ label = "admin", color = "#e8726d", fontcolor = "#f0f0f0", style = "rounded,dashed", bgcolor = "#3b4b63" ];
+  "admin.marketplace" [ label = "marketplace" ];
+}
+
+subgraph "clusterERC721URIStorageLite" {
+  graph [ label = "ERC721URIStorageLite", color = "#e8726d", fontcolor = "#f0f0f0", style = "rounded,dashed", bgcolor = "#3b4b63" ];
+  "ERC721URIStorageLite.supportsInterface" [ label = "supportsInterface" ];
+  "ERC721URIStorageLite.tokenURI" [ label = "tokenURI" ];
+  "ERC721URIStorageLite._burn" [ label = "_burn" ];
+}
+
+  "Collectible721.initialize";
+  "Collectible721.NFT__StringTooLong";
+  "Collectible721._initialize";
+  "Collectible721.__EIP712_init";
+  "Collectible721.type";
+  "Collectible721._beforeTokenTransfer";
+  "ERC721Royalty._beforeTokenTransfer";
+  "Collectible721.mint";
+  "Collectible721.ERC721__InvalidInput";
+  "Collectible721._msgSender";
+  "admin.marketplace";
+  "Collectible721._checkRole";
+  "Collectible721._safeMint";
+  "Collectible721._setTokenURI";
+  "Collectible721.supportsInterface";
+  "ERC721URIStorageLite.supportsInterface";
+  "Collectible721.tokenURI";
+  "ERC721URIStorageLite.tokenURI";
+  "Collectible721._burn";
+  "ERC721Royalty._burn";
+  "ERC721URIStorageLite._burn";
+  "Collectible721.initialize" -> "Collectible721.NFT__StringTooLong" [ color = "#1bc6a6" ];
+  "Collectible721.initialize" -> "Collectible721._initialize" [ color = "#1bc6a6" ];
+  "Collectible721.initialize" -> "Collectible721.__EIP712_init" [ color = "#1bc6a6" ];
+  "Collectible721.initialize" -> "Collectible721.type" [ color = "#1bc6a6" ];
+  "Collectible721._beforeTokenTransfer" -> "ERC721Royalty._beforeTokenTransfer" [ color = "white" ];
+  "Collectible721.mint" -> "Collectible721.ERC721__InvalidInput" [ color = "#1bc6a6" ];
+  "Collectible721.mint" -> "Collectible721._msgSender" [ color = "#1bc6a6" ];
+  "Collectible721.mint" -> "admin.marketplace" [ color = "white" ];
+  "Collectible721.mint" -> "Collectible721._checkRole" [ color = "#1bc6a6" ];
+  "Collectible721.mint" -> "Collectible721._safeMint" [ color = "#1bc6a6" ];
+  "Collectible721.mint" -> "Collectible721._setTokenURI" [ color = "#1bc6a6" ];
+  "Collectible721.supportsInterface" -> "Collectible721.type" [ color = "#1bc6a6" ];
+  "Collectible721.supportsInterface" -> "ERC721URIStorageLite.supportsInterface" [ color = "white" ];
+  "Collectible721.tokenURI" -> "ERC721URIStorageLite.tokenURI" [ color = "white" ];
+  "Collectible721._burn" -> "ERC721Royalty._burn" [ color = "white" ];
+  "Collectible721._burn" -> "ERC721URIStorageLite._burn" [ color = "white" ];
+
+
+rankdir=LR
+node [shape=plaintext]
+subgraph cluster_01 { 
+label = "Legend";
+key [label=<<table border="0" cellpadding="2" cellspacing="0" cellborder="0">
+  <tr><td align="right" port="i1">Internal Call</td></tr>
+  <tr><td align="right" port="i2">External Call</td></tr>
+  <tr><td align="right" port="i3">Defined Contract</td></tr>
+  <tr><td align="right" port="i4">Undefined Contract</td></tr>
+  </table>>]
+key2 [label=<<table border="0" cellpadding="2" cellspacing="0" cellborder="0">
+  <tr><td port="i1">&nbsp;&nbsp;&nbsp;</td></tr>
+  <tr><td port="i2">&nbsp;&nbsp;&nbsp;</td></tr>
+  <tr><td port="i3" bgcolor="#445773">&nbsp;&nbsp;&nbsp;</td></tr>
+  <tr><td port="i4">
+    <table border="1" cellborder="0" cellspacing="0" cellpadding="7" color="#e8726d">
+      <tr>
+       <td></td>
+      </tr>
+     </table>
+  </td></tr>
+  </table>>]
+key:i1:e -> key2:i1:w [color="#1bc6a6"]
+key:i2:e -> key2:i2:w [color="white"]
+}
+}

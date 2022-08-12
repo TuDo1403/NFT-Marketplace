@@ -1,0 +1,176 @@
+digraph G {
+  graph [ ratio = "auto", page = "100", compound =true, bgcolor = "#2e3e56" ];
+  node [ style = "filled", fillcolor = "#edad56", color = "#edad56", penwidth =3 ];
+  edge [ color = "#fcfcfc", penwidth =2, fontname = "helvetica Neue Ultra Light" ];
+subgraph "clusterMarketplace" {
+  graph [ label = "Marketplace", color = "#445773", fontcolor = "#f0f0f0", style = "rounded", bgcolor = "#445773" ];
+  "Marketplace.initialize" [ label = "initialize", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+  "Marketplace.redeem" [ label = "redeem", color = "brown", fillcolor = "#ffbdb9" ];
+  "Marketplace.redeemBulk" [ label = "redeemBulk", color = "brown", fillcolor = "#ffbdb9" ];
+  "Marketplace.pause" [ label = "pause", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+  "Marketplace.unpause" [ label = "unpause", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+  "Marketplace._safeTransferFrom" [ label = "_safeTransferFrom" ];
+  "Marketplace._batchProcess" [ label = "_batchProcess" ];
+  "Marketplace._pay" [ label = "_pay" ];
+  "Marketplace._transact" [ label = "_transact" ];
+  "Marketplace._initialize" [ label = "_initialize" ];
+  "Marketplace._useNonce" [ label = "_useNonce" ];
+  "Marketplace._feeDenominator" [ label = "_feeDenominator" ];
+  "Marketplace._hashTypedDataV4" [ label = "_hashTypedDataV4" ];
+  "Marketplace.IERC20PermitUpgradeable" [ label = "IERC20PermitUpgradeable" ];
+  "Marketplace.INFT" [ label = "INFT" ];
+  "Marketplace.ItemRedeemed" [ label = "ItemRedeemed" ];
+  "Marketplace.IERC1155Permit" [ label = "IERC1155Permit" ];
+  "Marketplace.IERC1155" [ label = "IERC1155" ];
+  "Marketplace.BulkRedeemed" [ label = "BulkRedeemed" ];
+  "Marketplace._onlyManager" [ label = "_onlyManager" ];
+  "Marketplace._pause" [ label = "_pause" ];
+  "Marketplace._unpause" [ label = "_unpause" ];
+  "Marketplace.INFTBase" [ label = "INFTBase" ];
+  "Marketplace.IERC721Permit" [ label = "IERC721Permit" ];
+  "Marketplace.IERC721" [ label = "IERC721" ];
+  "Marketplace.ISemiNFT" [ label = "ISemiNFT" ];
+  "Marketplace.IERC2981Upgradeable" [ label = "IERC2981Upgradeable" ];
+  "Marketplace.payable" [ label = "payable" ];
+  "Marketplace.MP__PaymentFailed" [ label = "MP__PaymentFailed" ];
+  "Marketplace.NativePayment" [ label = "NativePayment" ];
+  "Marketplace.IERC20Upgradeable" [ label = "IERC20Upgradeable" ];
+  "Marketplace.__Pausable_init" [ label = "__Pausable_init" ];
+  "Marketplace.__ReentrancyGuard_init" [ label = "__ReentrancyGuard_init" ];
+  "Marketplace.__EIP712_init" [ label = "__EIP712_init" ];
+  "Marketplace.type" [ label = "type" ];
+}
+
+subgraph "clusterReceiptUtil" {
+  graph [ label = "ReceiptUtil", color = "#e8726d", fontcolor = "#f0f0f0", style = "rounded,dashed", bgcolor = "#3b4b63" ];
+  "ReceiptUtil.verifyReceipt" [ label = "verifyReceipt" ];
+}
+
+subgraph "clusterReceiptUtil.Receipt" {
+  graph [ label = "ReceiptUtil.Receipt", color = "#e8726d", fontcolor = "#f0f0f0", style = "rounded,dashed", bgcolor = "#3b4b63" ];
+  "ReceiptUtil.Receipt.hash" [ label = "hash" ];
+}
+
+subgraph "clusterIGovernance" {
+  graph [ label = "IGovernance", color = "#e8726d", fontcolor = "#f0f0f0", style = "rounded,dashed", bgcolor = "#3b4b63" ];
+  "IGovernance.treasury" [ label = "treasury" ];
+}
+
+subgraph "clusterReceiptUtil.BulkReceipt" {
+  graph [ label = "ReceiptUtil.BulkReceipt", color = "#e8726d", fontcolor = "#f0f0f0", style = "rounded,dashed", bgcolor = "#3b4b63" ];
+  "ReceiptUtil.BulkReceipt.hash" [ label = "hash" ];
+}
+
+  "Marketplace.initialize";
+  "Marketplace._initialize";
+  "Marketplace.redeem";
+  "ReceiptUtil.verifyReceipt";
+  "Marketplace._hashTypedDataV4";
+  "ReceiptUtil.Receipt.hash";
+  "Marketplace._useNonce";
+  "Marketplace.IERC20PermitUpgradeable";
+  "Marketplace._pay";
+  "IGovernance.treasury";
+  "Marketplace.INFT";
+  "Marketplace._safeTransferFrom";
+  "Marketplace.ItemRedeemed";
+  "Marketplace.redeemBulk";
+  "ReceiptUtil.BulkReceipt.hash";
+  "Marketplace._batchProcess";
+  "Marketplace.IERC1155Permit";
+  "Marketplace.IERC1155";
+  "Marketplace.BulkRedeemed";
+  "Marketplace.pause";
+  "Marketplace._onlyManager";
+  "Marketplace._pause";
+  "Marketplace.unpause";
+  "Marketplace._unpause";
+  "Marketplace.INFTBase";
+  "Marketplace.IERC721Permit";
+  "Marketplace.IERC721";
+  "Marketplace.ISemiNFT";
+  "Marketplace.IERC2981Upgradeable";
+  "Marketplace._transact";
+  "Marketplace._feeDenominator";
+  "Marketplace.payable";
+  "Marketplace.MP__PaymentFailed";
+  "Marketplace.NativePayment";
+  "Marketplace.IERC20Upgradeable";
+  "Marketplace.__Pausable_init";
+  "Marketplace.__ReentrancyGuard_init";
+  "Marketplace.__EIP712_init";
+  "Marketplace.type";
+  "Marketplace.initialize" -> "Marketplace._initialize" [ color = "#1bc6a6" ];
+  "Marketplace.redeem" -> "ReceiptUtil.verifyReceipt" [ color = "white" ];
+  "Marketplace.redeem" -> "Marketplace._hashTypedDataV4" [ color = "#1bc6a6" ];
+  "Marketplace.redeem" -> "ReceiptUtil.Receipt.hash" [ color = "white" ];
+  "Marketplace.redeem" -> "Marketplace._useNonce" [ color = "#1bc6a6" ];
+  "Marketplace.redeem" -> "Marketplace.IERC20PermitUpgradeable" [ color = "#1bc6a6" ];
+  "Marketplace.redeem" -> "Marketplace._pay" [ color = "#1bc6a6" ];
+  "Marketplace.redeem" -> "IGovernance.treasury" [ color = "white" ];
+  "Marketplace.redeem" -> "Marketplace.INFT" [ color = "#1bc6a6" ];
+  "Marketplace.redeem" -> "Marketplace._safeTransferFrom" [ color = "#1bc6a6" ];
+  "Marketplace.redeem" -> "Marketplace.ItemRedeemed" [ color = "#1bc6a6" ];
+  "Marketplace.redeemBulk" -> "ReceiptUtil.verifyReceipt" [ color = "white" ];
+  "Marketplace.redeemBulk" -> "Marketplace._hashTypedDataV4" [ color = "#1bc6a6" ];
+  "Marketplace.redeemBulk" -> "ReceiptUtil.BulkReceipt.hash" [ color = "white" ];
+  "Marketplace.redeemBulk" -> "Marketplace._useNonce" [ color = "#1bc6a6" ];
+  "Marketplace.redeemBulk" -> "Marketplace.IERC20PermitUpgradeable" [ color = "#1bc6a6" ];
+  "Marketplace.redeemBulk" -> "Marketplace._batchProcess" [ color = "#1bc6a6" ];
+  "Marketplace.redeemBulk" -> "IGovernance.treasury" [ color = "white" ];
+  "Marketplace.redeemBulk" -> "Marketplace.IERC1155Permit" [ color = "#1bc6a6" ];
+  "Marketplace.redeemBulk" -> "Marketplace.IERC1155" [ color = "#1bc6a6" ];
+  "Marketplace.redeemBulk" -> "Marketplace.BulkRedeemed" [ color = "#1bc6a6" ];
+  "Marketplace.pause" -> "Marketplace._onlyManager" [ color = "#1bc6a6" ];
+  "Marketplace.pause" -> "Marketplace._pause" [ color = "#1bc6a6" ];
+  "Marketplace.unpause" -> "Marketplace._onlyManager" [ color = "#1bc6a6" ];
+  "Marketplace.unpause" -> "Marketplace._unpause" [ color = "#1bc6a6" ];
+  "Marketplace._safeTransferFrom" -> "Marketplace.INFTBase" [ color = "#1bc6a6" ];
+  "Marketplace._safeTransferFrom" -> "Marketplace.IERC1155Permit" [ color = "#1bc6a6" ];
+  "Marketplace._safeTransferFrom" -> "Marketplace.IERC1155" [ color = "#1bc6a6" ];
+  "Marketplace._safeTransferFrom" -> "Marketplace.IERC721Permit" [ color = "#1bc6a6" ];
+  "Marketplace._safeTransferFrom" -> "Marketplace.IERC721" [ color = "#1bc6a6" ];
+  "Marketplace._batchProcess" -> "Marketplace._pay" [ color = "#1bc6a6" ];
+  "Marketplace._batchProcess" -> "Marketplace.ISemiNFT" [ color = "#1bc6a6" ];
+  "Marketplace._pay" -> "Marketplace.IERC2981Upgradeable" [ color = "#1bc6a6" ];
+  "Marketplace._pay" -> "Marketplace._transact" [ color = "#1bc6a6" ];
+  "Marketplace._pay" -> "Marketplace._feeDenominator" [ color = "#1bc6a6" ];
+  "Marketplace._pay" -> "Marketplace._transact" [ color = "#1bc6a6" ];
+  "Marketplace._pay" -> "Marketplace._transact" [ color = "#1bc6a6" ];
+  "Marketplace._transact" -> "Marketplace.payable" [ color = "#1bc6a6" ];
+  "Marketplace._transact" -> "Marketplace.MP__PaymentFailed" [ color = "#1bc6a6" ];
+  "Marketplace._transact" -> "Marketplace.NativePayment" [ color = "#1bc6a6" ];
+  "Marketplace._transact" -> "Marketplace.IERC20Upgradeable" [ color = "#1bc6a6" ];
+  "Marketplace._initialize" -> "Marketplace._initialize" [ color = "#1bc6a6" ];
+  "Marketplace._initialize" -> "Marketplace.__Pausable_init" [ color = "#1bc6a6" ];
+  "Marketplace._initialize" -> "Marketplace.__ReentrancyGuard_init" [ color = "#1bc6a6" ];
+  "Marketplace._initialize" -> "Marketplace.__EIP712_init" [ color = "#1bc6a6" ];
+  "Marketplace._initialize" -> "Marketplace.type" [ color = "#1bc6a6" ];
+
+
+rankdir=LR
+node [shape=plaintext]
+subgraph cluster_01 { 
+label = "Legend";
+key [label=<<table border="0" cellpadding="2" cellspacing="0" cellborder="0">
+  <tr><td align="right" port="i1">Internal Call</td></tr>
+  <tr><td align="right" port="i2">External Call</td></tr>
+  <tr><td align="right" port="i3">Defined Contract</td></tr>
+  <tr><td align="right" port="i4">Undefined Contract</td></tr>
+  </table>>]
+key2 [label=<<table border="0" cellpadding="2" cellspacing="0" cellborder="0">
+  <tr><td port="i1">&nbsp;&nbsp;&nbsp;</td></tr>
+  <tr><td port="i2">&nbsp;&nbsp;&nbsp;</td></tr>
+  <tr><td port="i3" bgcolor="#445773">&nbsp;&nbsp;&nbsp;</td></tr>
+  <tr><td port="i4">
+    <table border="1" cellborder="0" cellspacing="0" cellpadding="7" color="#e8726d">
+      <tr>
+       <td></td>
+      </tr>
+     </table>
+  </td></tr>
+  </table>>]
+key:i1:e -> key2:i1:w [color="#1bc6a6"]
+key:i2:e -> key2:i2:w [color="white"]
+}
+}

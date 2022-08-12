@@ -1,0 +1,309 @@
+<?xml version="1.0" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="475pt" height="1141pt" viewBox="0.00 0.00 475.20 1141.00">
+<g id="graph0" class="graph" transform="translate(4,1137) scale(1)" data-name="G">
+
+<polygon fill="#2e3e56" stroke="transparent" points="-4,4 -4,-1137 471.2,-1137 471.2,4 -4,4" style=""/>
+<g id="clust1" class="cluster" data-name="clusterCollectible721">
+
+<path fill="#445773" stroke="#445773" d="M20,-425C20,-425 447.2,-425 447.2,-425 453.2,-425 459.2,-431 459.2,-437 459.2,-437 459.2,-976 459.2,-976 459.2,-982 453.2,-988 447.2,-988 447.2,-988 20,-988 20,-988 14,-988 8,-982 8,-976 8,-976 8,-437 8,-437 8,-431 14,-425 20,-425" style=""/>
+<text text-anchor="middle" x="233.6" y="-971.4" font-family="Times,serif" font-size="14.00" fill="#f0f0f0" style="">Collectible721</text>
+</g>
+<g id="clust2" class="cluster" data-name="clusterERC721Royalty">
+
+<path fill="#3b4b63" stroke="#e8726d" stroke-dasharray="5,2" d="M255.6,-286C255.6,-286 443.4,-286 443.4,-286 449.4,-286 455.4,-292 455.4,-298 455.4,-298 455.4,-405 455.4,-405 455.4,-411 449.4,-417 443.4,-417 443.4,-417 255.6,-417 255.6,-417 249.6,-417 243.6,-411 243.6,-405 243.6,-405 243.6,-298 243.6,-298 243.6,-292 249.6,-286 255.6,-286" style=""/>
+<text text-anchor="middle" x="349.5" y="-400.4" font-family="Times,serif" font-size="14.00" fill="#f0f0f0" style="">ERC721Royalty</text>
+</g>
+<g id="clust3" class="cluster" data-name="clusteradmin">
+
+<path fill="#3b4b63" stroke="#e8726d" stroke-dasharray="5,2" d="M295.28,-201C295.28,-201 403.72,-201 403.72,-201 409.72,-201 415.72,-207 415.72,-213 415.72,-213 415.72,-266 415.72,-266 415.72,-272 409.72,-278 403.72,-278 403.72,-278 295.28,-278 295.28,-278 289.28,-278 283.28,-272 283.28,-266 283.28,-266 283.28,-213 283.28,-213 283.28,-207 289.28,-201 295.28,-201" style=""/>
+<text text-anchor="middle" x="349.5" y="-261.4" font-family="Times,serif" font-size="14.00" fill="#f0f0f0" style="">admin</text>
+</g>
+<g id="clust4" class="cluster" data-name="clusterERC721URIStorageLite">
+
+<path fill="#3b4b63" stroke="#e8726d" stroke-dasharray="5,2" d="M275.43,-8C275.43,-8 423.57,-8 423.57,-8 429.57,-8 435.57,-14 435.57,-20 435.57,-20 435.57,-181 435.57,-181 435.57,-187 429.57,-193 423.57,-193 423.57,-193 275.43,-193 275.43,-193 269.43,-193 263.43,-187 263.43,-181 263.43,-181 263.43,-20 263.43,-20 263.43,-14 269.43,-8 275.43,-8" style=""/>
+<text text-anchor="middle" x="349.5" y="-176.4" font-family="Times,serif" font-size="14.00" fill="#f0f0f0" style="">ERC721URIStorageLite</text>
+</g>
+<g id="clust5" class="cluster" data-name="cluster_01">
+
+<polygon fill="#2e3e56" stroke="black" points="40.9,-996 40.9,-1125 384.5,-1125 384.5,-996 40.9,-996" style=""/>
+<text text-anchor="middle" x="212.7" y="-1108.4" font-family="Times,serif" font-size="14.00" style="">Legend</text>
+</g>
+<!-- Collectible721.&lt;Constructor&gt; -->
+<g id="node1" class="node" pointer-events="visible" data-name="Collectible721.&lt;Constructor&gt;">
+
+<ellipse fill="#ff9797" stroke="brown" stroke-width="3" cx="113.9" cy="-937" rx="67.55" ry="18" style=""/>
+<text text-anchor="middle" x="113.9" y="-932.8" font-family="Times,serif" font-size="14.00" style="">&lt;Constructor&gt;</text>
+</g>
+<!-- Collectible721.initialize -->
+<g id="node2" class="node" pointer-events="visible" data-name="Collectible721.initialize">
+
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="113.9" cy="-883" rx="44.64" ry="18" style=""/>
+<text text-anchor="middle" x="113.9" y="-878.8" font-family="Times,serif" font-size="14.00" style="">initialize</text>
+</g>
+<!-- Collectible721.NFT__StringTooLong -->
+<g id="node11" class="node" pointer-events="visible" data-name="Collectible721.NFT__StringTooLong">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="349.5" cy="-883" rx="98.47" ry="18" style=""/>
+<text text-anchor="middle" x="349.5" y="-878.8" font-family="Times,serif" font-size="14.00" style="">NFT__StringTooLong</text>
+</g>
+<!-- Collectible721.initialize&#45;&gt;Collectible721.NFT__StringTooLong -->
+<g id="edge1" class="edge" data-name="Collectible721.initialize-&gt;Collectible721.NFT__StringTooLong">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M158.84,-883C182.01,-883 211.55,-883 240.39,-883" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="240.54,-886.5 250.54,-883 240.54,-879.5 240.54,-886.5" style=""/>
+</g>
+<!-- Collectible721._initialize -->
+<g id="node12" class="node" pointer-events="visible" data-name="Collectible721._initialize">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="349.5" cy="-937" rx="49.8" ry="18" style=""/>
+<text text-anchor="middle" x="349.5" y="-932.8" font-family="Times,serif" font-size="14.00" style="">_initialize</text>
+</g>
+<!-- Collectible721.initialize&#45;&gt;Collectible721._initialize -->
+<g id="edge2" class="edge" data-name="Collectible721.initialize-&gt;Collectible721._initialize">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M153.21,-891.86C192.48,-900.93 253.78,-915.1 297.21,-925.14" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="296.48,-928.57 307.02,-927.41 298.06,-921.75 296.48,-928.57" style=""/>
+</g>
+<!-- Collectible721.__EIP712_init -->
+<g id="node13" class="node" pointer-events="visible" data-name="Collectible721.__EIP712_init">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="349.5" cy="-829" rx="67.24" ry="18" style=""/>
+<text text-anchor="middle" x="349.5" y="-824.8" font-family="Times,serif" font-size="14.00" style="">__EIP712_init</text>
+</g>
+<!-- Collectible721.initialize&#45;&gt;Collectible721.__EIP712_init -->
+<g id="edge3" class="edge" data-name="Collectible721.initialize-&gt;Collectible721.__EIP712_init">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M153.21,-874.14C189.76,-865.69 245.39,-852.83 287.94,-843" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="288.95,-846.36 297.91,-840.7 287.38,-839.54 288.95,-846.36" style=""/>
+</g>
+<!-- Collectible721.type -->
+<g id="node14" class="node" pointer-events="visible" data-name="Collectible721.type">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="349.5" cy="-721" rx="27.83" ry="18" style=""/>
+<text text-anchor="middle" x="349.5" y="-716.8" font-family="Times,serif" font-size="14.00" style="">type</text>
+</g>
+<!-- Collectible721.initialize&#45;&gt;Collectible721.type -->
+<g id="edge4" class="edge" data-name="Collectible721.initialize-&gt;Collectible721.type">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M158.18,-880.19C176.86,-876.86 197.62,-869.97 211.8,-856 247.44,-820.88 207.61,-782.77 243.6,-748 261.58,-730.63 289.18,-724.02 311.55,-721.68" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="312.04,-725.15 321.73,-720.86 311.48,-718.17 312.04,-725.15" style=""/>
+</g>
+<!-- Collectible721._beforeTokenTransfer -->
+<g id="node3" class="node" pointer-events="visible" data-name="Collectible721._beforeTokenTransfer">
+
+<ellipse fill="#f2c383" stroke="#f2c383" stroke-width="3" cx="113.9" cy="-775" rx="97.8" ry="18" style=""/>
+<text text-anchor="middle" x="113.9" y="-770.8" font-family="Times,serif" font-size="14.00" style="">_beforeTokenTransfer</text>
+</g>
+<!-- ERC721Royalty._beforeTokenTransfer -->
+<g id="node20" class="node" pointer-events="visible" data-name="ERC721Royalty._beforeTokenTransfer">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="349.5" cy="-366" rx="97.8" ry="18" style=""/>
+<text text-anchor="middle" x="349.5" y="-361.8" font-family="Times,serif" font-size="14.00" style="">_beforeTokenTransfer</text>
+</g>
+<!-- Collectible721._beforeTokenTransfer&#45;&gt;ERC721Royalty._beforeTokenTransfer -->
+<g id="edge5" class="edge" data-name="Collectible721._beforeTokenTransfer-&gt;ERC721Royalty._beforeTokenTransfer">
+
+<path fill="none" stroke="white" stroke-width="2" d="M191.26,-763.68C199.08,-759.8 206.19,-754.69 211.8,-748 258.73,-692.07 202.83,-481.57 243.6,-421 254.16,-405.31 270.67,-393.8 287.49,-385.48" style=""/>
+<polygon fill="white" stroke="white" stroke-width="2" points="289.21,-388.54 296.84,-381.18 286.29,-382.18 289.21,-388.54" style=""/>
+</g>
+<!-- Collectible721.mint -->
+<g id="node4" class="node" pointer-events="visible" data-name="Collectible721.mint">
+
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="113.9" cy="-829" rx="28.99" ry="18" style=""/>
+<text text-anchor="middle" x="113.9" y="-824.8" font-family="Times,serif" font-size="14.00" style="">mint</text>
+</g>
+<!-- Collectible721.ERC721__InvalidInput -->
+<g id="node15" class="node" pointer-events="visible" data-name="Collectible721.ERC721__InvalidInput">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="349.5" cy="-613" rx="101.9" ry="18" style=""/>
+<text text-anchor="middle" x="349.5" y="-608.8" font-family="Times,serif" font-size="14.00" style="">ERC721__InvalidInput</text>
+</g>
+<!-- Collectible721.mint&#45;&gt;Collectible721.ERC721__InvalidInput -->
+<g id="edge6" class="edge" data-name="Collectible721.mint-&gt;Collectible721.ERC721__InvalidInput">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M142.72,-828.77C164.61,-827.03 194.25,-820.97 211.8,-802 261.63,-748.14 193.25,-693.37 243.6,-640 247.96,-635.38 253,-631.5 258.46,-628.26" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="260.07,-631.37 267.35,-623.68 256.86,-625.15 260.07,-631.37" style=""/>
+</g>
+<!-- Collectible721._msgSender -->
+<g id="node16" class="node" pointer-events="visible" data-name="Collectible721._msgSender">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="349.5" cy="-667" rx="58.56" ry="18" style=""/>
+<text text-anchor="middle" x="349.5" y="-662.8" font-family="Times,serif" font-size="14.00" style="">_msgSender</text>
+</g>
+<!-- Collectible721.mint&#45;&gt;Collectible721._msgSender -->
+<g id="edge7" class="edge" data-name="Collectible721.mint-&gt;Collectible721._msgSender">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M142.7,-828.28C164.28,-826.25 193.52,-820.02 211.8,-802 247.44,-766.88 207.61,-728.77 243.6,-694 254.15,-683.81 268.01,-677.32 282.18,-673.23" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="283.16,-676.59 292.01,-670.76 281.45,-669.8 283.16,-676.59" style=""/>
+</g>
+<!-- Collectible721._checkRole -->
+<g id="node17" class="node" pointer-events="visible" data-name="Collectible721._checkRole">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="349.5" cy="-775" rx="56.74" ry="18" style=""/>
+<text text-anchor="middle" x="349.5" y="-770.8" font-family="Times,serif" font-size="14.00" style="">_checkRole</text>
+</g>
+<!-- Collectible721.mint&#45;&gt;Collectible721._checkRole -->
+<g id="edge9" class="edge" data-name="Collectible721.mint-&gt;Collectible721._checkRole">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M141.24,-822.91C177.89,-814.44 245.16,-798.89 293.12,-787.8" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="294.09,-791.17 303.04,-785.51 292.51,-784.35 294.09,-791.17" style=""/>
+</g>
+<!-- Collectible721._safeMint -->
+<g id="node18" class="node" pointer-events="visible" data-name="Collectible721._safeMint">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="349.5" cy="-505" rx="50.39" ry="18" style=""/>
+<text text-anchor="middle" x="349.5" y="-500.8" font-family="Times,serif" font-size="14.00" style="">_safeMint</text>
+</g>
+<!-- Collectible721.mint&#45;&gt;Collectible721._safeMint -->
+<g id="edge10" class="edge" data-name="Collectible721.mint-&gt;Collectible721._safeMint">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M142.67,-829.15C164.83,-827.67 194.88,-821.77 211.8,-802 290.39,-710.22 164.1,-623 243.6,-532 255.13,-518.8 272.17,-511.63 289.18,-507.85" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="289.96,-511.27 299.15,-506 288.68,-504.39 289.96,-511.27" style=""/>
+</g>
+<!-- Collectible721._setTokenURI -->
+<g id="node19" class="node" pointer-events="visible" data-name="Collectible721._setTokenURI">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="349.5" cy="-559" rx="67.79" ry="18" style=""/>
+<text text-anchor="middle" x="349.5" y="-554.8" font-family="Times,serif" font-size="14.00" style="">_setTokenURI</text>
+</g>
+<!-- Collectible721.mint&#45;&gt;Collectible721._setTokenURI -->
+<g id="edge11" class="edge" data-name="Collectible721.mint-&gt;Collectible721._setTokenURI">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M142.96,-828.99C164.99,-827.38 194.71,-821.39 211.8,-802 275.98,-729.22 178.71,-658.14 243.6,-586 251.71,-576.99 262.38,-570.8 273.81,-566.59" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="275.09,-569.86 283.56,-563.5 272.97,-563.19 275.09,-569.86" style=""/>
+</g>
+<!-- admin.marketplace -->
+<g id="node22" class="node" pointer-events="visible" data-name="admin.marketplace">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="349.5" cy="-227" rx="58.44" ry="18" style=""/>
+<text text-anchor="middle" x="349.5" y="-222.8" font-family="Times,serif" font-size="14.00" style="">marketplace</text>
+</g>
+<!-- Collectible721.mint&#45;&gt;admin.marketplace -->
+<g id="edge8" class="edge" data-name="Collectible721.mint-&gt;admin.marketplace">
+
+<path fill="none" stroke="white" stroke-width="2" d="M142.96,-829.4C165.3,-828.06 195.44,-822.23 211.8,-802 284.61,-711.98 180.69,-379.19 243.6,-282 255.56,-263.53 275.84,-250.89 295.41,-242.44" style=""/>
+<polygon fill="white" stroke="white" stroke-width="2" points="296.94,-245.59 304.91,-238.62 294.33,-239.1 296.94,-245.59" style=""/>
+</g>
+<!-- Collectible721.supportsInterface -->
+<g id="node5" class="node" pointer-events="visible" data-name="Collectible721.supportsInterface">
+
+<ellipse fill="#ff9797" stroke="#ff9797" stroke-width="3" cx="113.9" cy="-721" rx="78.14" ry="18" style=""/>
+<text text-anchor="middle" x="113.9" y="-716.8" font-family="Times,serif" font-size="14.00" style="">supportsInterface</text>
+</g>
+<!-- Collectible721.supportsInterface&#45;&gt;Collectible721.type -->
+<g id="edge12" class="edge" data-name="Collectible721.supportsInterface-&gt;Collectible721.type">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M192.04,-721C232.16,-721 279.36,-721 311.34,-721" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="311.58,-724.5 321.58,-721 311.58,-717.5 311.58,-724.5" style=""/>
+</g>
+<!-- ERC721URIStorageLite.supportsInterface -->
+<g id="node23" class="node" pointer-events="visible" data-name="ERC721URIStorageLite.supportsInterface">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="349.5" cy="-142" rx="78.14" ry="18" style=""/>
+<text text-anchor="middle" x="349.5" y="-137.8" font-family="Times,serif" font-size="14.00" style="">supportsInterface</text>
+</g>
+<!-- Collectible721.supportsInterface&#45;&gt;ERC721URIStorageLite.supportsInterface -->
+<g id="edge13" class="edge" data-name="Collectible721.supportsInterface-&gt;ERC721URIStorageLite.supportsInterface">
+
+<path fill="none" stroke="white" stroke-width="2" d="M184.29,-713.06C194.89,-708.9 204.65,-702.82 211.8,-694 281.52,-608.05 183.33,-289.82 243.6,-197 254.47,-180.26 272.18,-168.3 289.98,-159.91" style=""/>
+<polygon fill="white" stroke="white" stroke-width="2" points="291.51,-163.07 299.26,-155.85 288.7,-156.66 291.51,-163.07" style=""/>
+</g>
+<!-- Collectible721.tokenURI -->
+<g id="node6" class="node" pointer-events="visible" data-name="Collectible721.tokenURI">
+
+<ellipse fill="#ff9797" stroke="#ff9797" stroke-width="3" cx="113.9" cy="-505" rx="49.24" ry="18" style=""/>
+<text text-anchor="middle" x="113.9" y="-500.8" font-family="Times,serif" font-size="14.00" style="">tokenURI</text>
+</g>
+<!-- ERC721URIStorageLite.tokenURI -->
+<g id="node24" class="node" pointer-events="visible" data-name="ERC721URIStorageLite.tokenURI">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="349.5" cy="-34" rx="49.24" ry="18" style=""/>
+<text text-anchor="middle" x="349.5" y="-29.8" font-family="Times,serif" font-size="14.00" style="">tokenURI</text>
+</g>
+<!-- Collectible721.tokenURI&#45;&gt;ERC721URIStorageLite.tokenURI -->
+<g id="edge14" class="edge" data-name="Collectible721.tokenURI-&gt;ERC721URIStorageLite.tokenURI">
+
+<path fill="none" stroke="white" stroke-width="2" d="M162.86,-502.93C180.89,-499.59 199.89,-492.51 211.8,-478 270.79,-406.18 183.91,-132.23 243.6,-61 255.11,-47.26 272.59,-40.01 289.99,-36.32" style=""/>
+<polygon fill="white" stroke="white" stroke-width="2" points="290.94,-39.71 300.19,-34.54 289.74,-32.81 290.94,-39.71" style=""/>
+</g>
+<!-- Collectible721.name -->
+<g id="node7" class="node" pointer-events="visible" data-name="Collectible721.name">
+
+<ellipse fill="#ff9797" stroke="#ff9797" stroke-width="3" cx="113.9" cy="-613" rx="31.9" ry="18" style=""/>
+<text text-anchor="middle" x="113.9" y="-608.8" font-family="Times,serif" font-size="14.00" style="">name</text>
+</g>
+<!-- Collectible721.symbol -->
+<g id="node8" class="node" pointer-events="visible" data-name="Collectible721.symbol">
+
+<ellipse fill="#ff9797" stroke="#ff9797" stroke-width="3" cx="113.9" cy="-559" rx="39.45" ry="18" style=""/>
+<text text-anchor="middle" x="113.9" y="-554.8" font-family="Times,serif" font-size="14.00" style="">symbol</text>
+</g>
+<!-- Collectible721._burn -->
+<g id="node9" class="node" pointer-events="visible" data-name="Collectible721._burn">
+
+<ellipse fill="#f2c383" stroke="#f2c383" stroke-width="3" cx="113.9" cy="-667" rx="33.63" ry="18" style=""/>
+<text text-anchor="middle" x="113.9" y="-662.8" font-family="Times,serif" font-size="14.00" style="">_burn</text>
+</g>
+<!-- ERC721Royalty._burn -->
+<g id="node21" class="node" pointer-events="visible" data-name="ERC721Royalty._burn">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="349.5" cy="-312" rx="33.63" ry="18" style=""/>
+<text text-anchor="middle" x="349.5" y="-307.8" font-family="Times,serif" font-size="14.00" style="">_burn</text>
+</g>
+<!-- Collectible721._burn&#45;&gt;ERC721Royalty._burn -->
+<g id="edge15" class="edge" data-name="Collectible721._burn-&gt;ERC721Royalty._burn">
+
+<path fill="none" stroke="white" stroke-width="2" d="M147.77,-666.81C169.3,-664.81 196.24,-658.4 211.8,-640 298.69,-537.3 155.7,-440.84 243.6,-339 258.77,-321.43 283.7,-314.52 305.45,-312.08" style=""/>
+<polygon fill="white" stroke="white" stroke-width="2" points="305.83,-315.57 315.5,-311.24 305.24,-308.59 305.83,-315.57" style=""/>
+</g>
+<!-- ERC721URIStorageLite._burn -->
+<g id="node25" class="node" pointer-events="visible" data-name="ERC721URIStorageLite._burn">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="349.5" cy="-88" rx="33.63" ry="18" style=""/>
+<text text-anchor="middle" x="349.5" y="-83.8" font-family="Times,serif" font-size="14.00" style="">_burn</text>
+</g>
+<!-- Collectible721._burn&#45;&gt;ERC721URIStorageLite._burn -->
+<g id="edge16" class="edge" data-name="Collectible721._burn-&gt;ERC721URIStorageLite._burn">
+
+<path fill="none" stroke="white" stroke-width="2" d="M147.56,-667.07C169.29,-665.22 196.54,-658.88 211.8,-640 285.28,-549.1 169.23,-205.17 243.6,-115 258.47,-96.97 283.64,-90.08 305.59,-87.77" style=""/>
+<polygon fill="white" stroke="white" stroke-width="2" points="306.03,-91.24 315.73,-86.99 305.49,-84.26 306.03,-91.24" style=""/>
+</g>
+<!-- Collectible721._baseURI -->
+<g id="node10" class="node" pointer-events="visible" data-name="Collectible721._baseURI">
+
+<ellipse fill="#f2c383" stroke="#f2c383" stroke-width="3" cx="113.9" cy="-451" rx="49.81" ry="18" style=""/>
+<text text-anchor="middle" x="113.9" y="-446.8" font-family="Times,serif" font-size="14.00" style="">_baseURI</text>
+</g>
+<!-- key -->
+<g id="node26" class="node" pointer-events="visible" data-name="key">
+
+<polygon fill="#edad56" stroke="transparent" stroke-width="3" points="178.9,-1092 48.9,-1092 48.9,-1004 178.9,-1004 178.9,-1092" style=""/>
+<text text-anchor="start" x="98.54" y="-1073.4" font-family="Times,serif" font-size="14.00" style="">Internal Call</text>
+<text text-anchor="start" x="94.65" y="-1053.4" font-family="Times,serif" font-size="14.00" style="">External Call</text>
+<text text-anchor="start" x="72.1" y="-1033.4" font-family="Times,serif" font-size="14.00" style="">Defined Contract</text>
+<text text-anchor="start" x="58.5" y="-1013.4" font-family="Times,serif" font-size="14.00" style="">Undefined Contract</text>
+</g>
+<!-- key2 -->
+<g id="node27" class="node" pointer-events="visible" data-name="key2">
+
+<polygon fill="#edad56" stroke="transparent" stroke-width="3" points="376.5,-1092 322.5,-1092 322.5,-1004 376.5,-1004 376.5,-1092" style=""/>
+<text text-anchor="start" x="339.5" y="-1073.4" font-family="Times,serif" font-size="14.00" style="">   </text>
+<text text-anchor="start" x="339.5" y="-1053.4" font-family="Times,serif" font-size="14.00" style="">   </text>
+<polygon fill="#445773" stroke="transparent" points="337.5,-1028 337.5,-1048 362.5,-1048 362.5,-1028 337.5,-1028" style=""/>
+<text text-anchor="start" x="339.5" y="-1033.4" font-family="Times,serif" font-size="14.00" style="">   </text>
+<polygon fill="none" stroke="#e8726d" points="339.5,-1010 339.5,-1026 360.5,-1026 360.5,-1010 339.5,-1010" style=""/>
+</g>
+<!-- key&#45;&gt;key2 -->
+<g id="edge17" class="edge" data-name="key-&gt;key2">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M171.9,-1078C241.49,-1078 261.43,-1078 326.16,-1078" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="326.5,-1081.5 336.5,-1078 326.5,-1074.5 326.5,-1081.5" style=""/>
+</g>
+<!-- key&#45;&gt;key2 -->
+<g id="edge18" class="edge" data-name="key-&gt;key2">
+
+<path fill="none" stroke="white" stroke-width="2" d="M171.9,-1058C241.49,-1058 261.43,-1058 326.16,-1058" style=""/>
+<polygon fill="white" stroke="white" stroke-width="2" points="326.5,-1061.5 336.5,-1058 326.5,-1054.5 326.5,-1061.5" style=""/>
+</g>
+</g>
+</svg>

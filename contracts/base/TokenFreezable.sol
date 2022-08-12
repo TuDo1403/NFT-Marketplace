@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Unlicensed
-pragma solidity 0.8.15;
+pragma solidity 0.8.16;
 
 import "./ITokenFreezable.sol";
 
@@ -9,9 +9,7 @@ abstract contract TokenFreezable is ITokenFreezable {
     mapping(uint256 => bool) public frozenTokens;
 
     modifier notFrozenBase() {
-        if (isFrozenBase) {
-            revert TokenFreezable__FrozenBase();
-        }
+        if (isFrozenBase) revert TokenFreezable__FrozenBase();
         _;
     }
 
@@ -39,8 +37,6 @@ abstract contract TokenFreezable is ITokenFreezable {
     }
 
     function _notFrozenToken(uint256 tokenId_) internal view {
-        if (frozenTokens[tokenId_]) {
-            revert TokenFreezable__FrozenToken();
-        }
+        if (frozenTokens[tokenId_]) revert TokenFreezable__FrozenToken();
     }
 }

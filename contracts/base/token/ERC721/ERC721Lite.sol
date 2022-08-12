@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Unlicensed
-pragma solidity 0.8.15;
+pragma solidity 0.8.16;
 
 import "./IERC721Lite.sol";
 
@@ -68,9 +68,8 @@ abstract contract ERC721Lite is IERC721Lite, ERC721("", "") {
         address owner = ownerOf(tokenId);
         _nonSelfApproving(to, owner);
 
-        if (!_isApprovedOrOwner(_msgSender(), owner)) {
+        if (!_isApprovedOrOwner(_msgSender(), owner))
             revert ERC721__Unauthorized();
-        }
 
         _approve(to, tokenId);
     }
@@ -114,9 +113,8 @@ abstract contract ERC721Lite is IERC721Lite, ERC721("", "") {
         bytes memory _data
     ) internal virtual override {
         _transfer(from, to, tokenId);
-        if (!__checkOnERC721Received(from, to, tokenId, _data)) {
+        if (!__checkOnERC721Received(from, to, tokenId, _data))
             revert ERC721__ERC721ReceiverNotImplemented();
-        }
     }
 
     function _safeMint(
@@ -125,20 +123,20 @@ abstract contract ERC721Lite is IERC721Lite, ERC721("", "") {
         bytes memory _data
     ) internal virtual override {
         _mint(to, tokenId);
-        if (!__checkOnERC721Received(address(0), to, tokenId, _data)) {
+        if (!__checkOnERC721Received(address(0), to, tokenId, _data))
             revert ERC721__ERC721ReceiverNotImplemented();
-        }
     }
 
     function _mint(address to, uint256 tokenId) internal virtual override {
         _nonZeroAddress(to);
-        if (_exists(tokenId)) {
-            revert ERC721__TokenExisted();
-        }
+        if (_exists(tokenId)) revert ERC721__TokenExisted();
 
         _beforeTokenTransfer(address(0), to, tokenId);
 
-        ++_balances[to];
+        unchecked {
+            ++_balances[to];
+        }
+
         _owners[tokenId] = to;
 
         emit Transfer(address(0), to, tokenId);
@@ -151,17 +149,18 @@ abstract contract ERC721Lite is IERC721Lite, ERC721("", "") {
         address to,
         uint256 tokenId
     ) internal virtual override {
-        if (ownerOf(tokenId) != from) {
-            revert ERC721__Unauthorized();
-        }
         _nonZeroAddress(to);
+        if (ownerOf(tokenId) != from) revert ERC721__Unauthorized();
 
         _beforeTokenTransfer(from, to, tokenId);
 
         _approve(address(0), tokenId);
 
-        --_balances[from];
-        ++_balances[to];
+        unchecked {
+            --_balances[from];
+            ++_balances[to];
+        }
+
         _owners[tokenId] = to;
 
         emit Transfer(from, to, tokenId);
@@ -211,23 +210,18 @@ abstract contract ERC721Lite is IERC721Lite, ERC721("", "") {
             returns (bytes4 retval) {
                 return retval == IERC721Receiver.onERC721Received.selector;
             } catch (bytes memory reason) {
-                if (reason.length == 0) {
+                if (reason.length == 0)
                     revert ERC721__ERC721ReceiverNotImplemented();
-                } else {
+                else
                     assembly {
                         revert(add(32, reason), mload(reason))
                     }
-                }
             }
-        } else {
-            return true;
-        }
+        } else return true;
     }
 
     function _nonZeroAddress(address addr_) internal pure {
-        if (addr_ == address(0)) {
-            revert ERC721__NonZeroAddress();
-        }
+        if (addr_ == address(0)) revert ERC721__NonZeroAddress();
     }
 
     function _exists(uint256 tokenId) internal view override returns (bool) {
@@ -244,9 +238,7 @@ abstract contract ERC721Lite is IERC721Lite, ERC721("", "") {
             spender,
             ownerOf(tokenId)
         ) || getApproved(tokenId) == spender);
-        if (!isApprovedOrOwner) {
-            revert ERC721__Unauthorized();
-        }
+        if (!isApprovedOrOwner) revert ERC721__Unauthorized();
     }
 
     function _isApprovedOrOwner(address spender_, address owner_)
@@ -258,14 +250,10 @@ abstract contract ERC721Lite is IERC721Lite, ERC721("", "") {
     }
 
     function _nonSelfApproving(address from_, address to_) internal pure {
-        if (from_ == to_) {
-            revert ERC721__SelfApproving();
-        }
+        if (from_ == to_) revert ERC721__SelfApproving();
     }
 
     function _onlyExists(uint256 tokenId_) internal view {
-        if (!_exists(tokenId_)) {
-            revert ERC721__TokenUnexisted();
-        }
+        if (!_exists(tokenId_)) revert ERC721__TokenUnexisted();
     }
 }

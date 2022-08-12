@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Unlicensed
-pragma solidity 0.8.15;
+pragma solidity 0.8.16;
 
 import "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/ClonesUpgradeable.sol";
@@ -23,9 +23,9 @@ contract NFTFactory is
 
     mapping(uint256 => address) public deployedContracts;
 
-    // constructor(address admin_) initializer {
+    // constructor(address admin_) payable initializer {
     //     _initialize(admin_);
-    // }
+    // } 
 
     function initialize(address admin_) external initializer {
         _initialize(admin_);
@@ -37,21 +37,19 @@ contract NFTFactory is
         string calldata symbol_,
         string calldata baseURI_
     ) external override returns (address clone) {
-        address owner = _msgSender();
+        
         bytes32 salt = keccak256(
             abi.encodePacked(VERSION, name_, symbol_, baseURI_)
         );
-
+        address owner = _msgSender();
         clone = implement_.cloneDeterministic(salt);
         (bool ok, ) = clone.call(
-            abi.encodePacked(
-                bytes4(0x3f2f5ee2), // initialize(address,address,string,string,string)
-                abi.encode(address(admin), owner, name_, symbol_, baseURI_)
+            abi.encodeWithSelector(
+                INFT.initialize.selector,
+                address(admin), owner, name_, symbol_, baseURI_
             )
         );
-        if (!ok) {
-            revert Factory__ExecutionFailed();
-        }
+        if (!ok) revert Factory__ExecutionFailed();
 
         deployedContracts[uint256(salt)] = clone;
         emit TokenDeployed(
@@ -62,9 +60,5 @@ contract NFTFactory is
             owner,
             clone
         );
-    }
-
-    function _notMaliciousAddress(address addr_) private view {
-        assert(addr_ != address(this));
     }
 }

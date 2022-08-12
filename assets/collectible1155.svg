@@ -1,0 +1,649 @@
+<?xml version="1.0" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="939pt" height="1426pt" viewBox="0.00 0.00 938.56 1426.00">
+<g id="graph0" class="graph" transform="translate(41.408203125,1240.9443359375) scale(1)" data-name="G">
+
+<polygon fill="#2e3e56" stroke="transparent" points="-4,4 -4,-1422 934.56,-1422 934.56,4 -4,4" style=""/>
+<g id="clust1" class="cluster" data-name="clusterCollectible1155">
+
+<path fill="#445773" stroke="#445773" d="M20,-286C20,-286 760.56,-286 760.56,-286 766.56,-286 772.56,-292 772.56,-298 772.56,-298 772.56,-1261 772.56,-1261 772.56,-1267 766.56,-1273 760.56,-1273 760.56,-1273 20,-1273 20,-1273 14,-1273 8,-1267 8,-1261 8,-1261 8,-298 8,-298 8,-292 14,-286 20,-286" style=""/>
+<text text-anchor="middle" x="390.28" y="-1256.4" font-family="Times,serif" font-size="14.00" fill="#f0f0f0" style="">Collectible1155</text>
+</g>
+<g id="clust2" class="cluster" data-name="clusterERC1155URIStorage">
+
+<path fill="#3b4b63" stroke="#e8726d" stroke-dasharray="5,2" d="M804.56,-286C804.56,-286 918.56,-286 918.56,-286 924.56,-286 930.56,-292 930.56,-298 930.56,-298 930.56,-351 930.56,-351 930.56,-357 924.56,-363 918.56,-363 918.56,-363 804.56,-363 804.56,-363 798.56,-363 792.56,-357 792.56,-351 792.56,-351 792.56,-298 792.56,-298 792.56,-292 798.56,-286 804.56,-286" style=""/>
+<text text-anchor="middle" x="861.56" y="-346.4" font-family="Times,serif" font-size="14.00" fill="#f0f0f0" style="">ERC1155URIStorage</text>
+</g>
+<g id="clust3" class="cluster" data-name="clusterERC1155BurnableLite">
+
+<path fill="#3b4b63" stroke="#e8726d" stroke-dasharray="5,2" d="M567.87,-8C567.87,-8 716.01,-8 716.01,-8 722.01,-8 728.01,-14 728.01,-20 728.01,-20 728.01,-181 728.01,-181 728.01,-187 722.01,-193 716.01,-193 716.01,-193 567.87,-193 567.87,-193 561.87,-193 555.87,-187 555.87,-181 555.87,-181 555.87,-20 555.87,-20 555.87,-14 561.87,-8 567.87,-8" style=""/>
+<text text-anchor="middle" x="641.94" y="-176.4" font-family="Times,serif" font-size="14.00" fill="#f0f0f0" style="">ERC1155BurnableLite</text>
+</g>
+<g id="clust4" class="cluster" data-name="clusterERC1155SupplyLite">
+
+<path fill="#3b4b63" stroke="#e8726d" stroke-dasharray="5,2" d="M271.66,-133C271.66,-133 459.47,-133 459.47,-133 465.47,-133 471.47,-139 471.47,-145 471.47,-145 471.47,-198 471.47,-198 471.47,-204 465.47,-210 459.47,-210 459.47,-210 271.66,-210 271.66,-210 265.66,-210 259.66,-204 259.66,-198 259.66,-198 259.66,-145 259.66,-145 259.66,-139 265.66,-133 271.66,-133" style=""/>
+<text text-anchor="middle" x="365.57" y="-193.4" font-family="Times,serif" font-size="14.00" fill="#f0f0f0" style="">ERC1155SupplyLite</text>
+</g>
+<g id="clust5" class="cluster" data-name="clusterERC1155Royalty">
+
+<path fill="#3b4b63" stroke="#e8726d" stroke-dasharray="5,2" d="M278.64,-48C278.64,-48 452.49,-48 452.49,-48 458.49,-48 464.49,-54 464.49,-60 464.49,-60 464.49,-113 464.49,-113 464.49,-119 458.49,-125 452.49,-125 452.49,-125 278.64,-125 278.64,-125 272.64,-125 266.64,-119 266.64,-113 266.64,-113 266.64,-60 266.64,-60 266.64,-54 272.64,-48 278.64,-48" style=""/>
+<text text-anchor="middle" x="365.57" y="-108.4" font-family="Times,serif" font-size="14.00" fill="#f0f0f0" style="">ERC1155Royalty</text>
+</g>
+<g id="clust6" class="cluster" data-name="clusteradmin">
+
+<path fill="#3b4b63" stroke="#e8726d" stroke-dasharray="5,2" d="M587.73,-201C587.73,-201 696.16,-201 696.16,-201 702.16,-201 708.16,-207 708.16,-213 708.16,-213 708.16,-266 708.16,-266 708.16,-272 702.16,-278 696.16,-278 696.16,-278 587.73,-278 587.73,-278 581.73,-278 575.73,-272 575.73,-266 575.73,-266 575.73,-213 575.73,-213 575.73,-207 581.73,-201 587.73,-201" style=""/>
+<text text-anchor="middle" x="641.94" y="-261.4" font-family="Times,serif" font-size="14.00" fill="#f0f0f0" style="">admin</text>
+</g>
+<g id="clust7" class="cluster" data-name="cluster_01">
+
+<polygon fill="#2e3e56" stroke="black" points="40.9,-1281 40.9,-1410 400.57,-1410 400.57,-1281 40.9,-1281" style=""/>
+<text text-anchor="middle" x="220.73" y="-1393.4" font-family="Times,serif" font-size="14.00" style="">Legend</text>
+</g>
+<!-- Collectible1155.&lt;Constructor&gt; -->
+<g id="node1" class="node" pointer-events="visible" data-name="Collectible1155.&lt;Constructor&gt;">
+
+<ellipse fill="#ff9797" stroke="brown" stroke-width="3" cx="113.9" cy="-1195" rx="67.55" ry="18" style=""/>
+<text text-anchor="middle" x="113.9" y="-1190.8" font-family="Times,serif" font-size="14.00" style="">&lt;Constructor&gt;</text>
+</g>
+<!-- Collectible1155.initialize -->
+<g id="node2" class="node" pointer-events="visible" data-name="Collectible1155.initialize">
+
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="113.9" cy="-1114" rx="44.64" ry="18" style=""/>
+<text text-anchor="middle" x="113.9" y="-1109.8" font-family="Times,serif" font-size="14.00" style="">initialize</text>
+</g>
+<!-- Collectible1155.NFT__StringTooLong -->
+<g id="node18" class="node" pointer-events="visible" data-name="Collectible1155.NFT__StringTooLong">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="365.57" cy="-1060" rx="98.47" ry="18" style=""/>
+<text text-anchor="middle" x="365.57" y="-1055.8" font-family="Times,serif" font-size="14.00" style="">NFT__StringTooLong</text>
+</g>
+<!-- Collectible1155.initialize&#45;&gt;Collectible1155.NFT__StringTooLong -->
+<g id="edge1" class="edge" data-name="Collectible1155.initialize-&gt;Collectible1155.NFT__StringTooLong">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M153.64,-1105.62C190.18,-1097.72 245.92,-1085.66 290.93,-1075.93" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="291.91,-1079.3 300.94,-1073.76 290.43,-1072.46 291.91,-1079.3" style=""/>
+</g>
+<!-- Collectible1155._setBaseURI -->
+<g id="node19" class="node" pointer-events="visible" data-name="Collectible1155._setBaseURI">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="365.57" cy="-1006" rx="61.99" ry="18" style=""/>
+<text text-anchor="middle" x="365.57" y="-1001.8" font-family="Times,serif" font-size="14.00" style="">_setBaseURI</text>
+</g>
+<!-- Collectible1155.initialize&#45;&gt;Collectible1155._setBaseURI -->
+<g id="edge2" class="edge" data-name="Collectible1155.initialize-&gt;Collectible1155._setBaseURI">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M135.87,-1098.27C161.15,-1080.02 205.52,-1050.25 247.8,-1033 264.47,-1026.2 283.21,-1020.91 300.72,-1016.89" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="301.84,-1020.23 310.86,-1014.67 300.34,-1013.39 301.84,-1020.23" style=""/>
+</g>
+<!-- Collectible1155._grantRole -->
+<g id="node20" class="node" pointer-events="visible" data-name="Collectible1155._grantRole">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="365.57" cy="-1114" rx="53.89" ry="18" style=""/>
+<text text-anchor="middle" x="365.57" y="-1109.8" font-family="Times,serif" font-size="14.00" style="">_grantRole</text>
+</g>
+<!-- Collectible1155.initialize&#45;&gt;Collectible1155._grantRole -->
+<g id="edge3" class="edge" data-name="Collectible1155.initialize-&gt;Collectible1155._grantRole">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M156.97,-1108.8C197.28,-1106.99 258.55,-1106.77 304.09,-1108.12" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="304.02,-1111.62 314.13,-1108.45 304.25,-1104.62 304.02,-1111.62" style=""/>
+</g>
+<!-- Collectible1155.initialize&#45;&gt;Collectible1155._grantRole -->
+<g id="edge4" class="edge" data-name="Collectible1155.initialize-&gt;Collectible1155._grantRole">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M156.97,-1119.2C197.28,-1121.01 258.55,-1121.23 304.09,-1119.88" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="304.25,-1123.38 314.13,-1119.55 304.02,-1116.38 304.25,-1123.38" style=""/>
+</g>
+<!-- Collectible1155._initialize -->
+<g id="node21" class="node" pointer-events="visible" data-name="Collectible1155._initialize">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="365.57" cy="-1168" rx="49.8" ry="18" style=""/>
+<text text-anchor="middle" x="365.57" y="-1163.8" font-family="Times,serif" font-size="14.00" style="">_initialize</text>
+</g>
+<!-- Collectible1155.initialize&#45;&gt;Collectible1155._initialize -->
+<g id="edge5" class="edge" data-name="Collectible1155.initialize-&gt;Collectible1155._initialize">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M153.64,-1122.38C196.26,-1131.6 264.98,-1146.46 312.34,-1156.7" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="311.88,-1160.19 322.4,-1158.88 313.36,-1153.34 311.88,-1160.19" style=""/>
+</g>
+<!-- Collectible1155.__EIP712_init -->
+<g id="node22" class="node" pointer-events="visible" data-name="Collectible1155.__EIP712_init">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="365.57" cy="-1222" rx="67.24" ry="18" style=""/>
+<text text-anchor="middle" x="365.57" y="-1217.8" font-family="Times,serif" font-size="14.00" style="">__EIP712_init</text>
+</g>
+<!-- Collectible1155.initialize&#45;&gt;Collectible1155.__EIP712_init -->
+<g id="edge6" class="edge" data-name="Collectible1155.initialize-&gt;Collectible1155.__EIP712_init">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M142.63,-1128.17C162.33,-1138.54 189.19,-1153.32 211.8,-1168 228.58,-1178.89 229.67,-1186.57 247.8,-1195 262.8,-1201.98 279.74,-1207.22 295.98,-1211.14" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="295.44,-1214.61 305.97,-1213.41 297,-1207.78 295.44,-1214.61" style=""/>
+</g>
+<!-- Collectible1155.type -->
+<g id="node23" class="node" pointer-events="visible" data-name="Collectible1155.type">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="365.57" cy="-952" rx="27.83" ry="18" style=""/>
+<text text-anchor="middle" x="365.57" y="-947.8" font-family="Times,serif" font-size="14.00" style="">type</text>
+</g>
+<!-- Collectible1155.initialize&#45;&gt;Collectible1155.type -->
+<g id="edge7" class="edge" data-name="Collectible1155.initialize-&gt;Collectible1155.type">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M126.97,-1096.41C147.96,-1067.23 194.13,-1009.04 247.8,-979 272.48,-965.19 303.86,-958.43 327.87,-955.13" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="328.51,-958.58 338,-953.88 327.65,-951.64 328.51,-958.58" style=""/>
+</g>
+<!-- Collectible1155.mint -->
+<g id="node3" class="node" pointer-events="visible" data-name="Collectible1155.mint">
+
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="113.9" cy="-788" rx="28.99" ry="18" style=""/>
+<text text-anchor="middle" x="113.9" y="-783.8" font-family="Times,serif" font-size="14.00" style="">mint</text>
+</g>
+<!-- Collectible1155._onlyCreatorOrHasRole -->
+<g id="node15" class="node" pointer-events="visible" data-name="Collectible1155._onlyCreatorOrHasRole">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="365.57" cy="-494" rx="105.37" ry="18" style=""/>
+<text text-anchor="middle" x="365.57" y="-489.8" font-family="Times,serif" font-size="14.00" style="">_onlyCreatorOrHasRole</text>
+</g>
+<!-- Collectible1155.mint&#45;&gt;Collectible1155._onlyCreatorOrHasRole -->
+<g id="edge11" class="edge" data-name="Collectible1155.mint-&gt;Collectible1155._onlyCreatorOrHasRole">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M130.4,-772.8C151.46,-751.39 189.09,-710.33 211.8,-669 236.18,-624.66 215.76,-600.16 247.8,-561 264.32,-540.82 288.61,-525.51 310.77,-514.65" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="312.54,-517.68 320.11,-510.26 309.57,-511.35 312.54,-517.68" style=""/>
+</g>
+<!-- Collectible1155._onlyExists -->
+<g id="node16" class="node" pointer-events="visible" data-name="Collectible1155._onlyExists">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="365.57" cy="-844" rx="56.79" ry="18" style=""/>
+<text text-anchor="middle" x="365.57" y="-839.8" font-family="Times,serif" font-size="14.00" style="">_onlyExists</text>
+</g>
+<!-- Collectible1155.mint&#45;&gt;Collectible1155._onlyExists -->
+<g id="edge8" class="edge" data-name="Collectible1155.mint-&gt;Collectible1155._onlyExists">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M141.15,-793.89C180.79,-802.78 256.83,-819.83 309.1,-831.56" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="308.37,-834.98 318.89,-833.76 309.9,-828.15 308.37,-834.98" style=""/>
+</g>
+<!-- Collectible1155._onlyMarketplaceOrMinter -->
+<g id="node17" class="node" pointer-events="visible" data-name="Collectible1155._onlyMarketplaceOrMinter">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="365.57" cy="-696" rx="117.53" ry="18" style=""/>
+<text text-anchor="middle" x="365.57" y="-691.8" font-family="Times,serif" font-size="14.00" style="">_onlyMarketplaceOrMinter</text>
+</g>
+<!-- Collectible1155.mint&#45;&gt;Collectible1155._onlyMarketplaceOrMinter -->
+<g id="edge13" class="edge" data-name="Collectible1155.mint-&gt;Collectible1155._onlyMarketplaceOrMinter">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M139.3,-779.01C178.57,-764.54 256.78,-735.72 309.89,-716.15" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="311.33,-719.35 319.5,-712.61 308.91,-712.78 311.33,-719.35" style=""/>
+</g>
+<!-- Collectible1155._notFrozenToken -->
+<g id="node24" class="node" pointer-events="visible" data-name="Collectible1155._notFrozenToken">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="365.57" cy="-770" rx="79.88" ry="18" style=""/>
+<text text-anchor="middle" x="365.57" y="-765.8" font-family="Times,serif" font-size="14.00" style="">_notFrozenToken</text>
+</g>
+<!-- Collectible1155.mint&#45;&gt;Collectible1155._notFrozenToken -->
+<g id="edge9" class="edge" data-name="Collectible1155.mint-&gt;Collectible1155._notFrozenToken">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M142.57,-786C175.41,-783.64 231.71,-779.58 279.39,-776.14" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="279.7,-779.63 289.42,-775.42 279.2,-772.65 279.7,-779.63" style=""/>
+</g>
+<!-- Collectible1155._msgSender -->
+<g id="node25" class="node" pointer-events="visible" data-name="Collectible1155._msgSender">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="641.94" cy="-592" rx="58.56" ry="18" style=""/>
+<text text-anchor="middle" x="641.94" y="-587.8" font-family="Times,serif" font-size="14.00" style="">_msgSender</text>
+</g>
+<!-- Collectible1155.mint&#45;&gt;Collectible1155._msgSender -->
+<g id="edge10" class="edge" data-name="Collectible1155.mint-&gt;Collectible1155._msgSender">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M141.85,-792.72C217.38,-805.34 429.13,-836.29 483.33,-797 524.98,-766.81 489.78,-729.1 519.33,-687 541.32,-655.67 576.63,-629.73 603.56,-612.91" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="605.62,-615.76 612.34,-607.56 601.97,-609.78 605.62,-615.76" style=""/>
+</g>
+<!-- Collectible1155._mint -->
+<g id="node26" class="node" pointer-events="visible" data-name="Collectible1155._mint">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="365.57" cy="-898" rx="33.64" ry="18" style=""/>
+<text text-anchor="middle" x="365.57" y="-893.8" font-family="Times,serif" font-size="14.00" style="">_mint</text>
+</g>
+<!-- Collectible1155.mint&#45;&gt;Collectible1155._mint -->
+<g id="edge12" class="edge" data-name="Collectible1155.mint-&gt;Collectible1155._mint">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M137.16,-798.61C162.59,-814.95 206.08,-844.72 247.8,-862 273.76,-872.75 304.81,-879.67 328.37,-885.13" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="327.76,-888.59 338.3,-887.47 329.36,-881.77 327.76,-888.59" style=""/>
+</g>
+<!-- Collectible1155.mint&#45;&gt;Collectible1155._mint -->
+<g id="edge14" class="edge" data-name="Collectible1155.mint-&gt;Collectible1155._mint">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M128.05,-803.75C151.03,-824.84 200.56,-860.43 247.8,-880 271.56,-889.84 299.59,-896.47 322.23,-899.69" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="321.86,-903.17 332.22,-900.92 322.72,-896.22 321.86,-903.17" style=""/>
+</g>
+<!-- Collectible1155._setURI -->
+<g id="node27" class="node" pointer-events="visible" data-name="Collectible1155._setURI">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="365.57" cy="-588" rx="43.45" ry="18" style=""/>
+<text text-anchor="middle" x="365.57" y="-583.8" font-family="Times,serif" font-size="14.00" style="">_setURI</text>
+</g>
+<!-- Collectible1155.mint&#45;&gt;Collectible1155._setURI -->
+<g id="edge15" class="edge" data-name="Collectible1155.mint-&gt;Collectible1155._setURI">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M128.57,-772.22C147.8,-749.79 183.65,-707.16 211.8,-669 228.93,-645.79 224.08,-631.41 247.8,-615 266.71,-601.92 291.05,-595.11 312.61,-591.58" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="313.21,-595.03 322.61,-590.14 312.22,-588.1 313.21,-595.03" style=""/>
+</g>
+<!-- Collectible1155.mintBatch -->
+<g id="node4" class="node" pointer-events="visible" data-name="Collectible1155.mintBatch">
+
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="113.9" cy="-642" rx="51.04" ry="18" style=""/>
+<text text-anchor="middle" x="113.9" y="-637.8" font-family="Times,serif" font-size="14.00" style="">mintBatch</text>
+</g>
+<!-- Collectible1155.mintBatch&#45;&gt;Collectible1155._onlyExists -->
+<g id="edge18" class="edge" data-name="Collectible1155.mintBatch-&gt;Collectible1155._onlyExists">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M128.9,-659.24C160.02,-697.43 233.37,-786.64 247.8,-797 267.2,-810.92 291.31,-821.52 312.58,-829.1" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="311.53,-832.44 322.12,-832.37 313.8,-825.81 311.53,-832.44" style=""/>
+</g>
+<!-- Collectible1155.mintBatch&#45;&gt;Collectible1155._onlyMarketplaceOrMinter -->
+<g id="edge22" class="edge" data-name="Collectible1155.mintBatch-&gt;Collectible1155._onlyMarketplaceOrMinter">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M158.11,-651.34C193.38,-658.97 244.14,-669.95 286.5,-679.11" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="286,-682.59 296.51,-681.28 287.48,-675.75 286,-682.59" style=""/>
+</g>
+<!-- Collectible1155.mintBatch&#45;&gt;Collectible1155._notFrozenToken -->
+<g id="edge19" class="edge" data-name="Collectible1155.mintBatch-&gt;Collectible1155._notFrozenToken">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M133.75,-659.02C158.31,-680.37 203.39,-716.74 247.8,-738 262.64,-745.1 279.32,-750.85 295.32,-755.42" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="294.61,-758.85 305.18,-758.1 296.45,-752.1 294.61,-758.85" style=""/>
+</g>
+<!-- Collectible1155.mintBatch&#45;&gt;Collectible1155._msgSender -->
+<g id="edge16" class="edge" data-name="Collectible1155.mintBatch-&gt;Collectible1155._msgSender">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M158.55,-633.11C176.23,-628.05 196.13,-620.38 211.8,-609 233.39,-593.34 223.95,-572.93 247.8,-561 294.62,-537.59 431.24,-555.93 483.33,-561 517.74,-564.35 555.79,-571.73 585.88,-578.45" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="585.24,-581.89 595.77,-580.69 586.79,-575.06 585.24,-581.89" style=""/>
+</g>
+<!-- Collectible1155.mintBatch&#45;&gt;Collectible1155._setURI -->
+<g id="edge23" class="edge" data-name="Collectible1155.mintBatch-&gt;Collectible1155._setURI">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M158.11,-632.66C202.35,-623.09 270.96,-608.25 316.8,-598.33" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="317.75,-601.71 326.79,-596.17 316.27,-594.86 317.75,-601.71" style=""/>
+</g>
+<!-- Collectible1155._checkRole -->
+<g id="node28" class="node" pointer-events="visible" data-name="Collectible1155._checkRole">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="641.94" cy="-714" rx="56.74" ry="18" style=""/>
+<text text-anchor="middle" x="641.94" y="-709.8" font-family="Times,serif" font-size="14.00" style="">_checkRole</text>
+</g>
+<!-- Collectible1155.mintBatch&#45;&gt;Collectible1155._checkRole -->
+<g id="edge17" class="edge" data-name="Collectible1155.mintBatch-&gt;Collectible1155._checkRole">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M134.41,-658.73C158.96,-678.57 203.32,-710.51 247.8,-723 363.71,-755.54 506.47,-738.98 584.09,-725.53" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="584.92,-728.93 594.15,-723.74 583.69,-722.04 584.92,-728.93" style=""/>
+</g>
+<!-- Collectible1155._onlyCreator -->
+<g id="node29" class="node" pointer-events="visible" data-name="Collectible1155._onlyCreator">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="365.57" cy="-440" rx="61.98" ry="18" style=""/>
+<text text-anchor="middle" x="365.57" y="-435.8" font-family="Times,serif" font-size="14.00" style="">_onlyCreator</text>
+</g>
+<!-- Collectible1155.mintBatch&#45;&gt;Collectible1155._onlyCreator -->
+<g id="edge20" class="edge" data-name="Collectible1155.mintBatch-&gt;Collectible1155._onlyCreator">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M162.06,-635.68C179.86,-631.03 198.91,-622.97 211.8,-609 255.97,-561.16 201.28,-512.55 247.8,-467 260.17,-454.89 276.82,-447.8 293.68,-443.75" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="294.51,-447.15 303.59,-441.7 293.09,-440.29 294.51,-447.15" style=""/>
+</g>
+<!-- Collectible1155._mintBatch -->
+<g id="node30" class="node" pointer-events="visible" data-name="Collectible1155._mintBatch">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="365.57" cy="-642" rx="56.19" ry="18" style=""/>
+<text text-anchor="middle" x="365.57" y="-637.8" font-family="Times,serif" font-size="14.00" style="">_mintBatch</text>
+</g>
+<!-- Collectible1155.mintBatch&#45;&gt;Collectible1155._mintBatch -->
+<g id="edge21" class="edge" data-name="Collectible1155.mintBatch-&gt;Collectible1155._mintBatch">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M163.04,-636.54C202.66,-635 259.1,-634.84 302.18,-636.06" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="302.16,-639.57 312.27,-636.39 302.38,-632.57 302.16,-639.57" style=""/>
+</g>
+<!-- Collectible1155.mintBatch&#45;&gt;Collectible1155._mintBatch -->
+<g id="edge24" class="edge" data-name="Collectible1155.mintBatch-&gt;Collectible1155._mintBatch">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M163.04,-647.46C202.66,-649 259.1,-649.16 302.18,-647.94" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="302.38,-651.43 312.27,-647.61 302.16,-644.43 302.38,-651.43" style=""/>
+</g>
+<!-- Collectible1155.setTokenURI -->
+<g id="node5" class="node" pointer-events="visible" data-name="Collectible1155.setTokenURI">
+
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="113.9" cy="-582" rx="63.13" ry="18" style=""/>
+<text text-anchor="middle" x="113.9" y="-577.8" font-family="Times,serif" font-size="14.00" style="">setTokenURI</text>
+</g>
+<!-- Collectible1155._freezeToken -->
+<g id="node14" class="node" pointer-events="visible" data-name="Collectible1155._freezeToken">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="365.57" cy="-312" rx="64.22" ry="18" style=""/>
+<text text-anchor="middle" x="365.57" y="-307.8" font-family="Times,serif" font-size="14.00" style="">_freezeToken</text>
+</g>
+<!-- Collectible1155.setTokenURI&#45;&gt;Collectible1155._freezeToken -->
+<g id="edge28" class="edge" data-name="Collectible1155.setTokenURI-&gt;Collectible1155._freezeToken">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M174.07,-576.59C188.19,-572.57 202,-565.91 211.8,-555 276.86,-482.61 181.15,-409.92 247.8,-339 259.25,-326.82 275.01,-319.63 291.25,-315.49" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="292.35,-318.83 301.39,-313.29 290.87,-311.99 292.35,-318.83" style=""/>
+</g>
+<!-- Collectible1155.setTokenURI&#45;&gt;Collectible1155._onlyCreatorOrHasRole -->
+<g id="edge25" class="edge" data-name="Collectible1155.setTokenURI-&gt;Collectible1155._onlyCreatorOrHasRole">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M166.16,-571.87C181.34,-567.78 197.67,-562.27 211.8,-555 230.08,-545.6 229.51,-535.36 247.8,-526 259.93,-519.8 273.39,-514.69 286.74,-510.51" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="287.83,-513.84 296.42,-507.63 285.84,-507.13 287.83,-513.84" style=""/>
+</g>
+<!-- Collectible1155.setTokenURI&#45;&gt;Collectible1155._msgSender -->
+<g id="edge26" class="edge" data-name="Collectible1155.setTokenURI-&gt;Collectible1155._msgSender">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M159.93,-569.5C196.69,-559.34 243.27,-546.6 247.8,-546 351.57,-532.2 381.72,-520.83 483.33,-546 500.89,-550.35 502.35,-558.76 519.33,-565 538.43,-572.02 559.92,-577.52 579.47,-581.68" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="578.98,-585.16 589.48,-583.73 580.39,-578.3 578.98,-585.16" style=""/>
+</g>
+<!-- Collectible1155.setTokenURI&#45;&gt;Collectible1155._setURI -->
+<g id="edge27" class="edge" data-name="Collectible1155.setTokenURI-&gt;Collectible1155._setURI">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M176.94,-583.49C218.43,-584.49 272.44,-585.79 311.86,-586.73" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="311.97,-590.24 322.05,-586.98 312.14,-583.24 311.97,-590.24" style=""/>
+</g>
+<!-- Collectible1155.uri -->
+<g id="node6" class="node" pointer-events="visible" data-name="Collectible1155.uri">
+
+<ellipse fill="#ff9797" stroke="#ff9797" stroke-width="3" cx="641.94" cy="-312" rx="27" ry="18" style=""/>
+<text text-anchor="middle" x="641.94" y="-307.8" font-family="Times,serif" font-size="14.00" style="">uri</text>
+</g>
+<!-- ERC1155URIStorage.uri -->
+<g id="node37" class="node" pointer-events="visible" data-name="ERC1155URIStorage.uri">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="861.56" cy="-312" rx="27" ry="18" style=""/>
+<text text-anchor="middle" x="861.56" y="-307.8" font-family="Times,serif" font-size="14.00" style="">uri</text>
+</g>
+<!-- Collectible1155.uri&#45;&gt;ERC1155URIStorage.uri -->
+<g id="edge29" class="edge" data-name="Collectible1155.uri-&gt;ERC1155URIStorage.uri">
+
+<path fill="none" stroke="white" stroke-width="2" d="M669.19,-312C707.94,-312 780.56,-312 824.35,-312" style=""/>
+<polygon fill="white" stroke="white" stroke-width="2" points="824.55,-315.5 834.55,-312 824.55,-308.5 824.55,-315.5" style=""/>
+</g>
+<!-- Collectible1155.supportsInterface -->
+<g id="node7" class="node" pointer-events="visible" data-name="Collectible1155.supportsInterface">
+
+<ellipse fill="#ff9797" stroke="#ff9797" stroke-width="3" cx="113.9" cy="-420" rx="78.14" ry="18" style=""/>
+<text text-anchor="middle" x="113.9" y="-415.8" font-family="Times,serif" font-size="14.00" style="">supportsInterface</text>
+</g>
+<!-- Collectible1155.supportsInterface&#45;&gt;Collectible1155.type -->
+<g id="edge30" class="edge" data-name="Collectible1155.supportsInterface-&gt;Collectible1155.type">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M184.21,-428.01C194.81,-432.16 204.6,-438.22 211.8,-447 279.37,-529.35 178.42,-844.17 247.8,-925 267.25,-947.65 301.56,-953.39 327.98,-954.06" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="328.02,-957.56 338.03,-954.09 328.04,-950.56 328.02,-957.56" style=""/>
+</g>
+<!-- ERC1155BurnableLite.supportsInterface -->
+<g id="node38" class="node" pointer-events="visible" data-name="ERC1155BurnableLite.supportsInterface">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="641.94" cy="-34" rx="78.14" ry="18" style=""/>
+<text text-anchor="middle" x="641.94" y="-29.8" font-family="Times,serif" font-size="14.00" style="">supportsInterface</text>
+</g>
+<!-- Collectible1155.supportsInterface&#45;&gt;ERC1155BurnableLite.supportsInterface -->
+<g id="edge31" class="edge" data-name="Collectible1155.supportsInterface-&gt;ERC1155BurnableLite.supportsInterface">
+
+<path fill="none" stroke="white" stroke-width="2" d="M182.59,-411.18C193.49,-407.12 203.81,-401.3 211.8,-393 259.66,-343.3 196.28,-287.88 247.8,-242 326.53,-171.9 404.71,-284.22 483.33,-214 535.43,-167.47 469.62,-110.08 519.33,-61 529.24,-51.22 541.85,-44.65 555.18,-40.29" style=""/>
+<polygon fill="white" stroke="white" stroke-width="2" points="556.33,-43.6 564.99,-37.5 554.42,-36.87 556.33,-43.6" style=""/>
+</g>
+<!-- Collectible1155.setBaseURI -->
+<g id="node8" class="node" pointer-events="visible" data-name="Collectible1155.setBaseURI">
+
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="113.9" cy="-915" rx="57.33" ry="18" style=""/>
+<text text-anchor="middle" x="113.9" y="-910.8" font-family="Times,serif" font-size="14.00" style="">setBaseURI</text>
+</g>
+<!-- Collectible1155._freezeBaseURI -->
+<g id="node13" class="node" pointer-events="visible" data-name="Collectible1155._freezeBaseURI">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="365.57" cy="-366" rx="74.69" ry="18" style=""/>
+<text text-anchor="middle" x="365.57" y="-361.8" font-family="Times,serif" font-size="14.00" style="">_freezeBaseURI</text>
+</g>
+<!-- Collectible1155.setBaseURI&#45;&gt;Collectible1155._freezeBaseURI -->
+<g id="edge33" class="edge" data-name="Collectible1155.setBaseURI-&gt;Collectible1155._freezeBaseURI">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M138.34,-898.53C161.45,-880.82 195.6,-850.39 211.8,-815 249.15,-733.46 194.33,-485.01 247.8,-413 259.4,-397.39 277.04,-386.95 295.12,-379.98" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="296.33,-383.26 304.59,-376.64 294,-376.66 296.33,-383.26" style=""/>
+</g>
+<!-- Collectible1155.setBaseURI&#45;&gt;Collectible1155._setBaseURI -->
+<g id="edge32" class="edge" data-name="Collectible1155.setBaseURI-&gt;Collectible1155._setBaseURI">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M142.64,-930.6C169.01,-944.88 210.11,-965.75 247.8,-979 265.36,-985.17 284.9,-990.33 302.9,-994.42" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="302.19,-997.85 312.71,-996.59 303.7,-991.01 302.19,-997.85" style=""/>
+</g>
+<!-- Collectible1155.freezeBaseURI -->
+<g id="node9" class="node" pointer-events="visible" data-name="Collectible1155.freezeBaseURI">
+
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="113.9" cy="-474" rx="70.03" ry="18" style=""/>
+<text text-anchor="middle" x="113.9" y="-469.8" font-family="Times,serif" font-size="14.00" style="">freezeBaseURI</text>
+</g>
+<!-- ERC1155BurnableLite._freezeBaseURI -->
+<g id="node39" class="node" pointer-events="visible" data-name="ERC1155BurnableLite._freezeBaseURI">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="641.94" cy="-142" rx="74.69" ry="18" style=""/>
+<text text-anchor="middle" x="641.94" y="-137.8" font-family="Times,serif" font-size="14.00" style="">_freezeBaseURI</text>
+</g>
+<!-- Collectible1155.freezeBaseURI&#45;&gt;ERC1155BurnableLite._freezeBaseURI -->
+<g id="edge34" class="edge" data-name="Collectible1155.freezeBaseURI-&gt;ERC1155BurnableLite._freezeBaseURI">
+
+<path fill="none" stroke="white" stroke-width="2" d="M178.21,-466.85C190.74,-462.76 202.79,-456.5 211.8,-447 262.56,-393.48 194.67,-336.15 247.8,-285 324.46,-211.2 391.97,-296.55 483.33,-242 505.32,-228.87 499.1,-212.71 519.33,-197 539.43,-181.39 564.66,-169.05 586.92,-160.05" style=""/>
+<polygon fill="white" stroke="white" stroke-width="2" points="588.22,-163.3 596.26,-156.4 585.67,-156.78 588.22,-163.3" style=""/>
+</g>
+<!-- Collectible1155._beforeTokenTransfer -->
+<g id="node10" class="node" pointer-events="visible" data-name="Collectible1155._beforeTokenTransfer">
+
+<ellipse fill="#f2c383" stroke="#f2c383" stroke-width="3" cx="113.9" cy="-366" rx="97.8" ry="18" style=""/>
+<text text-anchor="middle" x="113.9" y="-361.8" font-family="Times,serif" font-size="14.00" style="">_beforeTokenTransfer</text>
+</g>
+<!-- ERC1155SupplyLite._beforeTokenTransfer -->
+<g id="node41" class="node" pointer-events="visible" data-name="ERC1155SupplyLite._beforeTokenTransfer">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="365.57" cy="-159" rx="97.8" ry="18" style=""/>
+<text text-anchor="middle" x="365.57" y="-154.8" font-family="Times,serif" font-size="14.00" style="">_beforeTokenTransfer</text>
+</g>
+<!-- Collectible1155._beforeTokenTransfer&#45;&gt;ERC1155SupplyLite._beforeTokenTransfer -->
+<g id="edge35" class="edge" data-name="Collectible1155._beforeTokenTransfer-&gt;ERC1155SupplyLite._beforeTokenTransfer">
+
+<path fill="none" stroke="white" stroke-width="2" d="M188.66,-354.29C197.23,-350.49 205.23,-345.52 211.8,-339 252.86,-298.3 210.32,-258.01 247.8,-214 261.6,-197.8 281.23,-186.05 300.46,-177.68" style=""/>
+<polygon fill="white" stroke="white" stroke-width="2" points="301.92,-180.87 309.85,-173.84 299.27,-174.39 301.92,-180.87" style=""/>
+</g>
+<!-- Collectible1155._afterTokenTransfer -->
+<g id="node11" class="node" pointer-events="visible" data-name="Collectible1155._afterTokenTransfer">
+
+<ellipse fill="#f2c383" stroke="#f2c383" stroke-width="3" cx="113.9" cy="-312" rx="90.86" ry="18" style=""/>
+<text text-anchor="middle" x="113.9" y="-307.8" font-family="Times,serif" font-size="14.00" style="">_afterTokenTransfer</text>
+</g>
+<!-- ERC1155Royalty._afterTokenTransfer -->
+<g id="node42" class="node" pointer-events="visible" data-name="ERC1155Royalty._afterTokenTransfer">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="365.57" cy="-74" rx="90.86" ry="18" style=""/>
+<text text-anchor="middle" x="365.57" y="-69.8" font-family="Times,serif" font-size="14.00" style="">_afterTokenTransfer</text>
+</g>
+<!-- Collectible1155._afterTokenTransfer&#45;&gt;ERC1155Royalty._afterTokenTransfer -->
+<g id="edge36" class="edge" data-name="Collectible1155._afterTokenTransfer-&gt;ERC1155Royalty._afterTokenTransfer">
+
+<path fill="none" stroke="white" stroke-width="2" d="M123.9,-294.1C142.58,-258.45 188.82,-177.82 247.8,-129 265.84,-114.07 288.61,-102.16 309.24,-93.3" style=""/>
+<polygon fill="white" stroke="white" stroke-width="2" points="310.64,-96.51 318.54,-89.44 307.96,-90.04 310.64,-96.51" style=""/>
+</g>
+<!-- Collectible1155.freezeToken -->
+<g id="node12" class="node" pointer-events="visible" data-name="Collectible1155.freezeToken">
+
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="113.9" cy="-528" rx="59.07" ry="18" style=""/>
+<text text-anchor="middle" x="113.9" y="-523.8" font-family="Times,serif" font-size="14.00" style="">freezeToken</text>
+</g>
+<!-- Collectible1155.freezeToken&#45;&gt;Collectible1155._freezeToken -->
+<g id="edge39" class="edge" data-name="Collectible1155.freezeToken-&gt;Collectible1155._freezeToken">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M170.9,-522.99C185.97,-519.05 201.05,-512.34 211.8,-501 262.56,-447.48 195.87,-391.38 247.8,-339 259.51,-327.19 275.29,-320.13 291.45,-315.99" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="292.51,-319.34 301.53,-313.78 291.01,-312.5 292.51,-319.34" style=""/>
+</g>
+<!-- Collectible1155.freezeToken&#45;&gt;Collectible1155._msgSender -->
+<g id="edge38" class="edge" data-name="Collectible1155.freezeToken-&gt;Collectible1155._msgSender">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M169.73,-521.78C184.77,-517.81 200.13,-511.39 211.8,-501 243.37,-472.91 212.72,-436.55 247.8,-413 269.53,-398.41 462.8,-396.77 483.33,-413 537.78,-456.06 469.89,-516.26 519.33,-565 533.56,-579.03 553.36,-586.45 572.85,-590.2" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="572.56,-593.7 582.99,-591.85 573.68,-586.79 572.56,-593.7" style=""/>
+</g>
+<!-- Collectible1155.freezeToken&#45;&gt;Collectible1155._onlyCreator -->
+<g id="edge37" class="edge" data-name="Collectible1155.freezeToken-&gt;Collectible1155._onlyCreator">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M165.53,-518.82C181.01,-514.74 197.66,-508.99 211.8,-501 230.96,-490.17 228.41,-477.4 247.8,-467 263.21,-458.74 281.08,-453 298.14,-449" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="299.03,-452.39 308.06,-446.85 297.54,-445.55 299.03,-452.39" style=""/>
+</g>
+<!-- Collectible1155._freezeBaseURI&#45;&gt;Collectible1155.uri -->
+<g id="edge42" class="edge" data-name="Collectible1155._freezeBaseURI-&gt;Collectible1155.uri">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M424.08,-354.68C478.9,-343.89 559.68,-327.99 605.61,-318.95" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="606.54,-322.34 615.68,-316.97 605.19,-315.47 606.54,-322.34" style=""/>
+</g>
+<!-- Collectible1155.PermanentURI -->
+<g id="node31" class="node" pointer-events="visible" data-name="Collectible1155.PermanentURI">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="641.94" cy="-366" rx="68.93" ry="18" style=""/>
+<text text-anchor="middle" x="641.94" y="-361.8" font-family="Times,serif" font-size="14.00" style="">PermanentURI</text>
+</g>
+<!-- Collectible1155._freezeBaseURI&#45;&gt;Collectible1155.PermanentURI -->
+<g id="edge41" class="edge" data-name="Collectible1155._freezeBaseURI-&gt;Collectible1155.PermanentURI">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M440.46,-366C478.19,-366 524.11,-366 562.48,-366" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="562.58,-369.5 572.58,-366 562.58,-362.5 562.58,-369.5" style=""/>
+</g>
+<!-- Collectible1155._freezeBaseURI&#45;&gt;ERC1155BurnableLite._freezeBaseURI -->
+<g id="edge40" class="edge" data-name="Collectible1155._freezeBaseURI-&gt;ERC1155BurnableLite._freezeBaseURI">
+
+<path fill="none" stroke="white" stroke-width="2" d="M438.78,-361.93C455.18,-357.82 471.29,-350.79 483.33,-339 529.85,-293.45 477.53,-246.92 519.33,-197 534.56,-178.82 557.05,-166.38 578.56,-158" style=""/>
+<polygon fill="white" stroke="white" stroke-width="2" points="579.83,-161.27 588.02,-154.55 577.43,-154.69 579.83,-161.27" style=""/>
+</g>
+<!-- Collectible1155._freezeToken&#45;&gt;Collectible1155.uri -->
+<g id="edge45" class="edge" data-name="Collectible1155._freezeToken-&gt;Collectible1155.uri">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M429.86,-312C484.07,-312 560.22,-312 604.7,-312" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="604.75,-315.5 614.75,-312 604.75,-308.5 604.75,-315.5" style=""/>
+</g>
+<!-- Collectible1155._freezeToken&#45;&gt;Collectible1155.PermanentURI -->
+<g id="edge44" class="edge" data-name="Collectible1155._freezeToken-&gt;Collectible1155.PermanentURI">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M418.5,-322.22C463.32,-331.04 528.25,-343.82 576.4,-353.3" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="575.92,-356.77 586.41,-355.27 577.27,-349.9 575.92,-356.77" style=""/>
+</g>
+<!-- ERC1155BurnableLite._freezeToken -->
+<g id="node40" class="node" pointer-events="visible" data-name="ERC1155BurnableLite._freezeToken">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="641.94" cy="-88" rx="64.22" ry="18" style=""/>
+<text text-anchor="middle" x="641.94" y="-83.8" font-family="Times,serif" font-size="14.00" style="">_freezeToken</text>
+</g>
+<!-- Collectible1155._freezeToken&#45;&gt;ERC1155BurnableLite._freezeToken -->
+<g id="edge43" class="edge" data-name="Collectible1155._freezeToken-&gt;ERC1155BurnableLite._freezeToken">
+
+<path fill="none" stroke="white" stroke-width="2" d="M405.2,-297.72C430.88,-286.35 463.43,-267.99 483.33,-242 519,-195.42 476.66,-155.27 519.33,-115 532.53,-102.54 550.16,-95.34 567.88,-91.31" style=""/>
+<polygon fill="white" stroke="white" stroke-width="2" points="568.57,-94.74 577.71,-89.37 567.22,-87.87 568.57,-94.74" style=""/>
+</g>
+<!-- Collectible1155._isCreatorOf -->
+<g id="node32" class="node" pointer-events="visible" data-name="Collectible1155._isCreatorOf">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="641.94" cy="-430" rx="61.41" ry="18" style=""/>
+<text text-anchor="middle" x="641.94" y="-425.8" font-family="Times,serif" font-size="14.00" style="">_isCreatorOf</text>
+</g>
+<!-- Collectible1155._onlyCreatorOrHasRole&#45;&gt;Collectible1155._isCreatorOf -->
+<g id="edge46" class="edge" data-name="Collectible1155._onlyCreatorOrHasRole-&gt;Collectible1155._isCreatorOf">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M430.32,-479.79C447.56,-475.8 466.19,-471.36 483.33,-467 499.42,-462.91 503.22,-461.02 519.33,-457 539.52,-451.96 561.72,-446.89 581.56,-442.53" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="582.37,-445.94 591.4,-440.38 580.88,-439.1 582.37,-445.94" style=""/>
+</g>
+<!-- Collectible1155.hasRole -->
+<g id="node33" class="node" pointer-events="visible" data-name="Collectible1155.hasRole">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="641.94" cy="-484" rx="42.3" ry="18" style=""/>
+<text text-anchor="middle" x="641.94" y="-479.8" font-family="Times,serif" font-size="14.00" style="">hasRole</text>
+</g>
+<!-- Collectible1155._onlyCreatorOrHasRole&#45;&gt;Collectible1155.hasRole -->
+<g id="edge47" class="edge" data-name="Collectible1155._onlyCreatorOrHasRole-&gt;Collectible1155.hasRole">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M468.73,-490.28C509.88,-488.78 555.53,-487.11 589.49,-485.88" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="589.77,-489.37 599.63,-485.51 589.51,-482.37 589.77,-489.37" style=""/>
+</g>
+<!-- Collectible1155.ERC1155__Unauthorized -->
+<g id="node34" class="node" pointer-events="visible" data-name="Collectible1155.ERC1155__Unauthorized">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="641.94" cy="-538" rx="111.19" ry="18" style=""/>
+<text text-anchor="middle" x="641.94" y="-533.8" font-family="Times,serif" font-size="14.00" style="">ERC1155__Unauthorized</text>
+</g>
+<!-- Collectible1155._onlyCreatorOrHasRole&#45;&gt;Collectible1155.ERC1155__Unauthorized -->
+<g id="edge48" class="edge" data-name="Collectible1155._onlyCreatorOrHasRole-&gt;Collectible1155.ERC1155__Unauthorized">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M443,-506.26C476.77,-511.67 516.69,-518.07 551.81,-523.71" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="551.63,-527.22 562.06,-525.35 552.74,-520.31 551.63,-527.22" style=""/>
+</g>
+<!-- Collectible1155.exists -->
+<g id="node35" class="node" pointer-events="visible" data-name="Collectible1155.exists">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="641.94" cy="-871" rx="33.07" ry="18" style=""/>
+<text text-anchor="middle" x="641.94" y="-866.8" font-family="Times,serif" font-size="14.00" style="">exists</text>
+</g>
+<!-- Collectible1155._onlyExists&#45;&gt;Collectible1155.exists -->
+<g id="edge49" class="edge" data-name="Collectible1155._onlyExists-&gt;Collectible1155.exists">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M419.79,-849.24C472.21,-854.4 551.19,-862.17 599.21,-866.89" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="598.97,-870.39 609.26,-867.88 599.65,-863.42 598.97,-870.39" style=""/>
+</g>
+<!-- Collectible1155.ERC1155__TokenUnexisted -->
+<g id="node36" class="node" pointer-events="visible" data-name="Collectible1155.ERC1155__TokenUnexisted">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="641.94" cy="-817" rx="122.73" ry="18" style=""/>
+<text text-anchor="middle" x="641.94" y="-812.8" font-family="Times,serif" font-size="14.00" style="">ERC1155__TokenUnexisted</text>
+</g>
+<!-- Collectible1155._onlyExists&#45;&gt;Collectible1155.ERC1155__TokenUnexisted -->
+<g id="edge50" class="edge" data-name="Collectible1155._onlyExists-&gt;Collectible1155.ERC1155__TokenUnexisted">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M419.79,-838.76C450.98,-835.69 491.57,-831.7 529.45,-827.97" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="529.93,-831.44 539.54,-826.98 529.24,-824.48 529.93,-831.44" style=""/>
+</g>
+<!-- Collectible1155._onlyMarketplaceOrMinter&#45;&gt;Collectible1155._msgSender -->
+<g id="edge51" class="edge" data-name="Collectible1155._onlyMarketplaceOrMinter-&gt;Collectible1155._msgSender">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M439.24,-681.89C454.01,-678.27 469.31,-673.97 483.33,-669 526.43,-653.71 573.21,-629.86 604.51,-612.76" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="606.24,-615.8 613.31,-607.9 602.86,-609.67 606.24,-615.8" style=""/>
+</g>
+<!-- Collectible1155._onlyMarketplaceOrMinter&#45;&gt;Collectible1155._checkRole -->
+<g id="edge53" class="edge" data-name="Collectible1155._onlyMarketplaceOrMinter-&gt;Collectible1155._checkRole">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M474.22,-703.06C508.75,-705.33 545.9,-707.76 576.35,-709.76" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="576.2,-713.26 586.41,-710.42 576.66,-706.28 576.2,-713.26" style=""/>
+</g>
+<!-- admin.marketplace -->
+<g id="node43" class="node" pointer-events="visible" data-name="admin.marketplace">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="641.94" cy="-227" rx="58.44" ry="18" style=""/>
+<text text-anchor="middle" x="641.94" y="-222.8" font-family="Times,serif" font-size="14.00" style="">marketplace</text>
+</g>
+<!-- Collectible1155._onlyMarketplaceOrMinter&#45;&gt;admin.marketplace -->
+<g id="edge52" class="edge" data-name="Collectible1155._onlyMarketplaceOrMinter-&gt;admin.marketplace">
+
+<path fill="none" stroke="white" stroke-width="2" d="M461.5,-685.44C469.73,-681.34 477.24,-675.97 483.33,-669 540.16,-603.96 469.19,-352.33 519.33,-282 534.35,-260.94 559.39,-247.79 582.86,-239.65" style=""/>
+<polygon fill="white" stroke="white" stroke-width="2" points="583.99,-242.97 592.44,-236.57 581.85,-236.3 583.99,-242.97" style=""/>
+</g>
+<!-- key -->
+<g id="node44" class="node" pointer-events="visible" data-name="key">
+
+<polygon fill="#edad56" stroke="transparent" stroke-width="3" points="178.9,-1377 48.9,-1377 48.9,-1289 178.9,-1289 178.9,-1377" style=""/>
+<text text-anchor="start" x="98.54" y="-1358.4" font-family="Times,serif" font-size="14.00" style="">Internal Call</text>
+<text text-anchor="start" x="94.65" y="-1338.4" font-family="Times,serif" font-size="14.00" style="">External Call</text>
+<text text-anchor="start" x="72.1" y="-1318.4" font-family="Times,serif" font-size="14.00" style="">Defined Contract</text>
+<text text-anchor="start" x="58.5" y="-1298.4" font-family="Times,serif" font-size="14.00" style="">Undefined Contract</text>
+</g>
+<!-- key2 -->
+<g id="node45" class="node" pointer-events="visible" data-name="key2">
+
+<polygon fill="#edad56" stroke="transparent" stroke-width="3" points="392.57,-1377 338.57,-1377 338.57,-1289 392.57,-1289 392.57,-1377" style=""/>
+<text text-anchor="start" x="355.57" y="-1358.4" font-family="Times,serif" font-size="14.00" style="">   </text>
+<text text-anchor="start" x="355.57" y="-1338.4" font-family="Times,serif" font-size="14.00" style="">   </text>
+<polygon fill="#445773" stroke="transparent" points="353.57,-1313 353.57,-1333 378.57,-1333 378.57,-1313 353.57,-1313" style=""/>
+<text text-anchor="start" x="355.57" y="-1318.4" font-family="Times,serif" font-size="14.00" style="">   </text>
+<polygon fill="none" stroke="#e8726d" points="355.57,-1295 355.57,-1311 376.57,-1311 376.57,-1295 355.57,-1295" style=""/>
+</g>
+<!-- key&#45;&gt;key2 -->
+<g id="edge54" class="edge" data-name="key-&gt;key2">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M171.9,-1363C248.75,-1363 270.43,-1363 342.54,-1363" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="342.57,-1366.5 352.57,-1363 342.57,-1359.5 342.57,-1366.5" style=""/>
+</g>
+<!-- key&#45;&gt;key2 -->
+<g id="edge55" class="edge" data-name="key-&gt;key2">
+
+<path fill="none" stroke="white" stroke-width="2" d="M171.9,-1343C248.75,-1343 270.43,-1343 342.54,-1343" style=""/>
+<polygon fill="white" stroke="white" stroke-width="2" points="342.57,-1346.5 352.57,-1343 342.57,-1339.5 342.57,-1346.5" style=""/>
+</g>
+</g>
+</svg>

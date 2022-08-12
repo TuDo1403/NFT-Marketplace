@@ -1,0 +1,194 @@
+digraph G {
+  graph [ ratio = "auto", page = "100", compound =true, bgcolor = "#2e3e56" ];
+  node [ style = "filled", fillcolor = "#edad56", color = "#edad56", penwidth =3 ];
+  edge [ color = "#fcfcfc", penwidth =2, fontname = "helvetica Neue Ultra Light" ];
+subgraph "clusterCollectible1155" {
+  graph [ label = "Collectible1155", color = "#445773", fontcolor = "#f0f0f0", style = "rounded", bgcolor = "#445773" ];
+  "Collectible1155.<Constructor>" [ label = "<Constructor>", color = "brown", fillcolor = "#FF9797" ];
+  "Collectible1155.initialize" [ label = "initialize", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+  "Collectible1155.mint" [ label = "mint", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+  "Collectible1155.mintBatch" [ label = "mintBatch", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+  "Collectible1155.setTokenURI" [ label = "setTokenURI", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+  "Collectible1155.uri" [ label = "uri", color = "#FF9797", fillcolor = "#FF9797" ];
+  "Collectible1155.supportsInterface" [ label = "supportsInterface", color = "#FF9797", fillcolor = "#FF9797" ];
+  "Collectible1155.setBaseURI" [ label = "setBaseURI", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+  "Collectible1155.freezeBaseURI" [ label = "freezeBaseURI", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+  "Collectible1155._beforeTokenTransfer" [ label = "_beforeTokenTransfer", color = "#f2c383", fillcolor = "#f2c383" ];
+  "Collectible1155._afterTokenTransfer" [ label = "_afterTokenTransfer", color = "#f2c383", fillcolor = "#f2c383" ];
+  "Collectible1155.freezeToken" [ label = "freezeToken", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+  "Collectible1155._freezeBaseURI" [ label = "_freezeBaseURI" ];
+  "Collectible1155._freezeToken" [ label = "_freezeToken" ];
+  "Collectible1155._onlyCreatorOrHasRole" [ label = "_onlyCreatorOrHasRole" ];
+  "Collectible1155._onlyExists" [ label = "_onlyExists" ];
+  "Collectible1155._onlyMarketplaceOrMinter" [ label = "_onlyMarketplaceOrMinter" ];
+  "Collectible1155.NFT__StringTooLong" [ label = "NFT__StringTooLong" ];
+  "Collectible1155._setBaseURI" [ label = "_setBaseURI" ];
+  "Collectible1155._grantRole" [ label = "_grantRole" ];
+  "Collectible1155._initialize" [ label = "_initialize" ];
+  "Collectible1155.__EIP712_init" [ label = "__EIP712_init" ];
+  "Collectible1155.type" [ label = "type" ];
+  "Collectible1155._notFrozenToken" [ label = "_notFrozenToken" ];
+  "Collectible1155._msgSender" [ label = "_msgSender" ];
+  "Collectible1155._mint" [ label = "_mint" ];
+  "Collectible1155._setURI" [ label = "_setURI" ];
+  "Collectible1155._checkRole" [ label = "_checkRole" ];
+  "Collectible1155._onlyCreator" [ label = "_onlyCreator" ];
+  "Collectible1155._mintBatch" [ label = "_mintBatch" ];
+  "Collectible1155.PermanentURI" [ label = "PermanentURI" ];
+  "Collectible1155._isCreatorOf" [ label = "_isCreatorOf" ];
+  "Collectible1155.hasRole" [ label = "hasRole" ];
+  "Collectible1155.ERC1155__Unauthorized" [ label = "ERC1155__Unauthorized" ];
+  "Collectible1155.exists" [ label = "exists" ];
+  "Collectible1155.ERC1155__TokenUnexisted" [ label = "ERC1155__TokenUnexisted" ];
+}
+
+subgraph "clusterERC1155URIStorage" {
+  graph [ label = "ERC1155URIStorage", color = "#e8726d", fontcolor = "#f0f0f0", style = "rounded,dashed", bgcolor = "#3b4b63" ];
+  "ERC1155URIStorage.uri" [ label = "uri" ];
+}
+
+subgraph "clusterERC1155BurnableLite" {
+  graph [ label = "ERC1155BurnableLite", color = "#e8726d", fontcolor = "#f0f0f0", style = "rounded,dashed", bgcolor = "#3b4b63" ];
+  "ERC1155BurnableLite.supportsInterface" [ label = "supportsInterface" ];
+  "ERC1155BurnableLite._freezeBaseURI" [ label = "_freezeBaseURI" ];
+  "ERC1155BurnableLite._freezeToken" [ label = "_freezeToken" ];
+}
+
+subgraph "clusterERC1155SupplyLite" {
+  graph [ label = "ERC1155SupplyLite", color = "#e8726d", fontcolor = "#f0f0f0", style = "rounded,dashed", bgcolor = "#3b4b63" ];
+  "ERC1155SupplyLite._beforeTokenTransfer" [ label = "_beforeTokenTransfer" ];
+}
+
+subgraph "clusterERC1155Royalty" {
+  graph [ label = "ERC1155Royalty", color = "#e8726d", fontcolor = "#f0f0f0", style = "rounded,dashed", bgcolor = "#3b4b63" ];
+  "ERC1155Royalty._afterTokenTransfer" [ label = "_afterTokenTransfer" ];
+}
+
+subgraph "clusteradmin" {
+  graph [ label = "admin", color = "#e8726d", fontcolor = "#f0f0f0", style = "rounded,dashed", bgcolor = "#3b4b63" ];
+  "admin.marketplace" [ label = "marketplace" ];
+}
+
+  "Collectible1155.initialize";
+  "Collectible1155.NFT__StringTooLong";
+  "Collectible1155._setBaseURI";
+  "Collectible1155._grantRole";
+  "Collectible1155._initialize";
+  "Collectible1155.__EIP712_init";
+  "Collectible1155.type";
+  "Collectible1155.mint";
+  "Collectible1155._onlyExists";
+  "Collectible1155._notFrozenToken";
+  "Collectible1155._msgSender";
+  "Collectible1155._onlyCreatorOrHasRole";
+  "Collectible1155._mint";
+  "Collectible1155._onlyMarketplaceOrMinter";
+  "Collectible1155._setURI";
+  "Collectible1155.mintBatch";
+  "Collectible1155._checkRole";
+  "Collectible1155._onlyCreator";
+  "Collectible1155._mintBatch";
+  "Collectible1155.setTokenURI";
+  "Collectible1155._freezeToken";
+  "Collectible1155.uri";
+  "ERC1155URIStorage.uri";
+  "Collectible1155.supportsInterface";
+  "ERC1155BurnableLite.supportsInterface";
+  "Collectible1155.setBaseURI";
+  "Collectible1155._freezeBaseURI";
+  "Collectible1155.freezeBaseURI";
+  "ERC1155BurnableLite._freezeBaseURI";
+  "Collectible1155._beforeTokenTransfer";
+  "ERC1155SupplyLite._beforeTokenTransfer";
+  "Collectible1155._afterTokenTransfer";
+  "ERC1155Royalty._afterTokenTransfer";
+  "Collectible1155.freezeToken";
+  "Collectible1155.PermanentURI";
+  "ERC1155BurnableLite._freezeToken";
+  "Collectible1155._isCreatorOf";
+  "Collectible1155.hasRole";
+  "Collectible1155.ERC1155__Unauthorized";
+  "Collectible1155.exists";
+  "Collectible1155.ERC1155__TokenUnexisted";
+  "admin.marketplace";
+  "Collectible1155.initialize" -> "Collectible1155.NFT__StringTooLong" [ color = "#1bc6a6" ];
+  "Collectible1155.initialize" -> "Collectible1155._setBaseURI" [ color = "#1bc6a6" ];
+  "Collectible1155.initialize" -> "Collectible1155._grantRole" [ color = "#1bc6a6" ];
+  "Collectible1155.initialize" -> "Collectible1155._grantRole" [ color = "#1bc6a6" ];
+  "Collectible1155.initialize" -> "Collectible1155._initialize" [ color = "#1bc6a6" ];
+  "Collectible1155.initialize" -> "Collectible1155.__EIP712_init" [ color = "#1bc6a6" ];
+  "Collectible1155.initialize" -> "Collectible1155.type" [ color = "#1bc6a6" ];
+  "Collectible1155.mint" -> "Collectible1155._onlyExists" [ color = "#1bc6a6" ];
+  "Collectible1155.mint" -> "Collectible1155._notFrozenToken" [ color = "#1bc6a6" ];
+  "Collectible1155.mint" -> "Collectible1155._msgSender" [ color = "#1bc6a6" ];
+  "Collectible1155.mint" -> "Collectible1155._onlyCreatorOrHasRole" [ color = "#1bc6a6" ];
+  "Collectible1155.mint" -> "Collectible1155._mint" [ color = "#1bc6a6" ];
+  "Collectible1155.mint" -> "Collectible1155._onlyMarketplaceOrMinter" [ color = "#1bc6a6" ];
+  "Collectible1155.mint" -> "Collectible1155._mint" [ color = "#1bc6a6" ];
+  "Collectible1155.mint" -> "Collectible1155._setURI" [ color = "#1bc6a6" ];
+  "Collectible1155.mintBatch" -> "Collectible1155._msgSender" [ color = "#1bc6a6" ];
+  "Collectible1155.mintBatch" -> "Collectible1155._checkRole" [ color = "#1bc6a6" ];
+  "Collectible1155.mintBatch" -> "Collectible1155._onlyExists" [ color = "#1bc6a6" ];
+  "Collectible1155.mintBatch" -> "Collectible1155._notFrozenToken" [ color = "#1bc6a6" ];
+  "Collectible1155.mintBatch" -> "Collectible1155._onlyCreator" [ color = "#1bc6a6" ];
+  "Collectible1155.mintBatch" -> "Collectible1155._mintBatch" [ color = "#1bc6a6" ];
+  "Collectible1155.mintBatch" -> "Collectible1155._onlyMarketplaceOrMinter" [ color = "#1bc6a6" ];
+  "Collectible1155.mintBatch" -> "Collectible1155._setURI" [ color = "#1bc6a6" ];
+  "Collectible1155.mintBatch" -> "Collectible1155._mintBatch" [ color = "#1bc6a6" ];
+  "Collectible1155.setTokenURI" -> "Collectible1155._onlyCreatorOrHasRole" [ color = "#1bc6a6" ];
+  "Collectible1155.setTokenURI" -> "Collectible1155._msgSender" [ color = "#1bc6a6" ];
+  "Collectible1155.setTokenURI" -> "Collectible1155._setURI" [ color = "#1bc6a6" ];
+  "Collectible1155.setTokenURI" -> "Collectible1155._freezeToken" [ color = "#1bc6a6" ];
+  "Collectible1155.uri" -> "ERC1155URIStorage.uri" [ color = "white" ];
+  "Collectible1155.supportsInterface" -> "Collectible1155.type" [ color = "#1bc6a6" ];
+  "Collectible1155.supportsInterface" -> "ERC1155BurnableLite.supportsInterface" [ color = "white" ];
+  "Collectible1155.setBaseURI" -> "Collectible1155._setBaseURI" [ color = "#1bc6a6" ];
+  "Collectible1155.setBaseURI" -> "Collectible1155._freezeBaseURI" [ color = "#1bc6a6" ];
+  "Collectible1155.freezeBaseURI" -> "ERC1155BurnableLite._freezeBaseURI" [ color = "white" ];
+  "Collectible1155._beforeTokenTransfer" -> "ERC1155SupplyLite._beforeTokenTransfer" [ color = "white" ];
+  "Collectible1155._afterTokenTransfer" -> "ERC1155Royalty._afterTokenTransfer" [ color = "white" ];
+  "Collectible1155.freezeToken" -> "Collectible1155._onlyCreator" [ color = "#1bc6a6" ];
+  "Collectible1155.freezeToken" -> "Collectible1155._msgSender" [ color = "#1bc6a6" ];
+  "Collectible1155.freezeToken" -> "Collectible1155._freezeToken" [ color = "#1bc6a6" ];
+  "Collectible1155._freezeBaseURI" -> "ERC1155BurnableLite._freezeBaseURI" [ color = "white" ];
+  "Collectible1155._freezeBaseURI" -> "Collectible1155.PermanentURI" [ color = "#1bc6a6" ];
+  "Collectible1155._freezeBaseURI" -> "Collectible1155.uri" [ color = "#1bc6a6" ];
+  "Collectible1155._freezeToken" -> "ERC1155BurnableLite._freezeToken" [ color = "white" ];
+  "Collectible1155._freezeToken" -> "Collectible1155.PermanentURI" [ color = "#1bc6a6" ];
+  "Collectible1155._freezeToken" -> "Collectible1155.uri" [ color = "#1bc6a6" ];
+  "Collectible1155._onlyCreatorOrHasRole" -> "Collectible1155._isCreatorOf" [ color = "#1bc6a6" ];
+  "Collectible1155._onlyCreatorOrHasRole" -> "Collectible1155.hasRole" [ color = "#1bc6a6" ];
+  "Collectible1155._onlyCreatorOrHasRole" -> "Collectible1155.ERC1155__Unauthorized" [ color = "#1bc6a6" ];
+  "Collectible1155._onlyExists" -> "Collectible1155.exists" [ color = "#1bc6a6" ];
+  "Collectible1155._onlyExists" -> "Collectible1155.ERC1155__TokenUnexisted" [ color = "#1bc6a6" ];
+  "Collectible1155._onlyMarketplaceOrMinter" -> "Collectible1155._msgSender" [ color = "#1bc6a6" ];
+  "Collectible1155._onlyMarketplaceOrMinter" -> "admin.marketplace" [ color = "white" ];
+  "Collectible1155._onlyMarketplaceOrMinter" -> "Collectible1155._checkRole" [ color = "#1bc6a6" ];
+
+
+rankdir=LR
+node [shape=plaintext]
+subgraph cluster_01 { 
+label = "Legend";
+key [label=<<table border="0" cellpadding="2" cellspacing="0" cellborder="0">
+  <tr><td align="right" port="i1">Internal Call</td></tr>
+  <tr><td align="right" port="i2">External Call</td></tr>
+  <tr><td align="right" port="i3">Defined Contract</td></tr>
+  <tr><td align="right" port="i4">Undefined Contract</td></tr>
+  </table>>]
+key2 [label=<<table border="0" cellpadding="2" cellspacing="0" cellborder="0">
+  <tr><td port="i1">&nbsp;&nbsp;&nbsp;</td></tr>
+  <tr><td port="i2">&nbsp;&nbsp;&nbsp;</td></tr>
+  <tr><td port="i3" bgcolor="#445773">&nbsp;&nbsp;&nbsp;</td></tr>
+  <tr><td port="i4">
+    <table border="1" cellborder="0" cellspacing="0" cellpadding="7" color="#e8726d">
+      <tr>
+       <td></td>
+      </tr>
+     </table>
+  </td></tr>
+  </table>>]
+key:i1:e -> key2:i1:w [color="#1bc6a6"]
+key:i2:e -> key2:i2:w [color="white"]
+}
+}
